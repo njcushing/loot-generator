@@ -1,0 +1,12 @@
+{
+    "name": "loot-generator",
+    "version": "1.0.0",
+    "private": true,
+    "license": "MIT",
+    "workspaces": [
+        "frontend"
+    ],
+    "scripts": {
+        "install": "cd ./packages/frontend && npm install"
+    }
+}
