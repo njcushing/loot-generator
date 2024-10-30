@@ -8,7 +8,8 @@
     ],
     "scripts": {
         "install": "cd ./packages/frontend && npm install",
-        "dev": "npm run watch:front",
+        "dev": "npm run start:front",
+        "start:front": "vite ./packages/frontend",
         "watch:front": "vite build --watch ./packages/frontend"
     }
 }
