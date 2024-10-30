@@ -1,2 +1,6 @@
+# Distribution directories
+dist/
+
 # Environment variable files
 .env
+dist
