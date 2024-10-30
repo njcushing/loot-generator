@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Pages } from "./pages";
+import config from "./appconfig.json";
 
 export function App() {
     // Calculate 'vw' and 'vh' units
@@ -18,6 +19,13 @@ export function App() {
             window.removeEventListener("resize", setUnits);
         };
     }, []);
+
+    const [rootElement] = useState<HTMLElement>(document.getElementById("root") as HTMLElement);
+
+    // Use applicable app config values
+    useEffect(() => {
+        rootElement.style.maxWidth = config.displayMaxWidth;
+    }, [rootElement]);
 
     return <Pages.LootGenerator />;
 }
