@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import useResizeObserverElement from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
+import { Generate } from "@/features/Generate";
 import { version } from "../../../package.json";
 import styles from "./index.module.css";
 
@@ -31,7 +32,7 @@ export function LootGenerator() {
             <div className={styles["right-panel"]}>
                 <Structural.TabSelector
                     tabs={{
-                        generate: { name: "Generate", content: <p>Generate</p>, position: "left" },
+                        generate: { name: "Generate", content: <Generate />, position: "left" },
                         code: { name: "Code", content: <p>Code</p>, position: "left" },
                         data: { name: "Data", content: <p>Data</p>, position: "left" },
                     }}
