@@ -20,7 +20,9 @@ export function Loot() {
                 return (
                     <Fragment key={key}>
                         <li className={styles["item"]}>
-                            <p className={styles["item-name"]}>{item.name || key}</p>
+                            <p className={`${styles["item-name"]} truncate-ellipsis`}>
+                                {item.name || key}
+                            </p>
                             <p className={styles["item-quantity"]}>{item.quantity}</p>
                         </li>
                         {i < Object.keys(mockData).length - 1 && (

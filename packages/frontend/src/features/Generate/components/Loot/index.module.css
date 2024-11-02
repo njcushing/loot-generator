@@ -1,9 +1,10 @@
 .loot {
-    overflow-y: scroll;
-
     display: flex;
     flex-direction: column;
     gap: 4px;
+
+    overflow-x: hidden;
+    overflow-y: scroll;
 
     border: 1px solid #000;
 
@@ -13,9 +14,8 @@
 }
 
 .item {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 1rem;
 }
 
