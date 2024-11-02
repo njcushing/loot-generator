@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Pages } from "./pages";
 import config from "./appconfig.json";
+import "./index.css";
 
 export function App() {
     // Calculate 'vw' and 'vh' units
