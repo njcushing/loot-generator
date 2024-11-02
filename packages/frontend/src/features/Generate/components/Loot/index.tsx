@@ -1,4 +1,3 @@
-import { Fragment } from "react/jsx-runtime";
 import { mockData } from "./utils/mockData";
 import styles from "./index.module.css";
 
@@ -18,17 +17,15 @@ export function Loot() {
             {Object.keys(mockData).map((key, i) => {
                 const item = mockData[key];
                 return (
-                    <Fragment key={key}>
-                        <li className={styles["item"]}>
-                            <p className={`${styles["item-name"]} truncate-ellipsis`}>
-                                {item.name || key}
-                            </p>
-                            <p className={styles["item-quantity"]}>{item.quantity}</p>
-                        </li>
-                        {i < Object.keys(mockData).length - 1 && (
-                            <div className={styles["separator"]}></div>
-                        )}
-                    </Fragment>
+                    <li
+                        className={`${styles["item"]} ${styles[i % 2 === 0 ? "even" : "odd"]}`}
+                        key={key}
+                    >
+                        <p className={`${styles["item-name"]} truncate-ellipsis`}>
+                            {item.name || key}
+                        </p>
+                        <p className={styles["item-quantity"]}>{item.quantity}</p>
+                    </li>
                 );
             })}
         </ul>
