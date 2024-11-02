@@ -1,0 +1,52 @@
+.page {
+    box-sizing: border-box;
+
+    display: grid;
+    grid-template-columns: 40% auto;
+    gap: 12px;
+
+    color: black;
+    font-family: Roboto;
+
+    min-height: calc(var(--vh, 1vh) * 100);
+    height: 100%;
+    width: 100%;
+    padding: 16px;
+}
+
+.left-panel,
+.right-panel {
+    background-color: var(--background-secondary, white);
+    -webkit-box-shadow: 0px 10px 10px 0px rgba(158, 158, 158, 1);
+    -moz-box-shadow: 0px 10px 10px 0px rgba(158, 158, 158, 1);
+    box-shadow: 0px 10px 10px 0px rgba(158, 158, 158, 1);
+
+    padding: 12px;
+}
+
+.left-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.title,
+.name,
+.version {
+    text-align: center;
+
+    width: 100%;
+}
+
+.title {
+    font-size: 1.6rem;
+}
+
+.name {
+    font-size: 1rem;
+}
+
+.version {
+    color: grey;
+    font-size: 0.8rem;
+}
