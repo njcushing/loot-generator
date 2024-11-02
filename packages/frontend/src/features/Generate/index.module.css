@@ -1,12 +1,14 @@
 .generate {
-    display: flex;
+    display: grid;
+    grid-template-rows: 1fr auto auto;
+    gap: 6px;
 
     width: 100%;
     height: 100%;
 }
 
 .generation-quantity-buttons {
-    align-self: end;
+    justify-self: end;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -16,38 +18,76 @@
     width: 100%;
 }
 
-.generation-quantity-button {
+.generation-quantity-button,
+.generate-button,
+.reset-button {
+    align-self: center;
+
     position: relative;
 
     pointer-events: auto;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
-    gap: 0.6rem;
-
     font-family: Roboto;
-    font-size: 1rem;
-    font-weight: var(--text-bold-font-weight);
     border: none;
     outline-width: 1px;
     outline-style: solid;
-    background-color: #fff;
 
+    height: min-content;
     padding: 0.4rem 1rem;
 }
 
+.generation-quantity-button {
+    font-size: 1rem;
+    font-weight: var(--text-bold-font-weight);
+    background-color: #fff;
+}
+
 @media (hover: hover) {
-    .generation-quantity-button:hover:not(:disabled) {
+    .generation-quantity-button:hover:not(:disabled),
+    .generate-button:hover:not(:disabled),
+    .reset-button:hover:not(:disabled) {
         cursor: pointer;
         outline: 3px solid var(--outline-tertiary, grey);
         background-color: #ececec;
     }
 }
 
-.generation-quantity-button:focus:not(:disabled) {
+.generation-quantity-button:focus:not(:disabled),
+.generate-button:focus:not(:disabled),
+.reset-button:focus:not(:disabled) {
     cursor: pointer;
     outline: 3px solid var(--outline-tertiary, grey);
     background-color: #d4d4d4;
+}
+
+.generate-and-reset-buttons {
+    justify-self: end;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    width: 100%;
+}
+
+.generate-button {
+    left: 50%;
+    transform: translateX(-50%);
+
+    flex: 0 1 auto;
+
+    font-size: 1.4rem;
+    font-weight: var(--text-bold-font-weight);
+    background-color: #fff;
+}
+
+.reset-button {
+    flex: 0 1 auto;
+
+    font-size: 1rem;
+    font-weight: var(--text-bold-font-weight);
+    background-color: #fff;
+
+    margin-left: auto;
 }
