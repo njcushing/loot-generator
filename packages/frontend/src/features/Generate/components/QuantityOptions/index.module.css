@@ -1,25 +1,15 @@
-.generate {
-    display: grid;
-    grid-template-rows: 1fr auto auto;
-    gap: 12px;
-
-    width: 100%;
-    height: 100%;
-}
-
-.generate-and-reset-buttons {
+.generation-quantity-buttons {
     justify-self: end;
     display: flex;
     flex-direction: row;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 8px;
 
     width: 100%;
 }
 
-.generate-button,
-.reset-button {
+.generation-quantity-button {
     align-self: center;
 
     position: relative;
@@ -35,38 +25,22 @@
     padding: 0.4rem 1rem;
 }
 
-.generate-button {
-    left: 50%;
-    transform: translateX(-50%);
-
-    flex: 0 1 auto;
-
-    font-size: 1.4rem;
-    font-weight: var(--text-bold-font-weight);
-    background-color: #fff;
-}
-
-.reset-button {
-    flex: 0 1 auto;
-
+.generation-quantity-button {
     font-size: 1rem;
     font-weight: var(--text-bold-font-weight);
     background-color: #fff;
-
-    margin-left: auto;
 }
 
 @media (hover: hover) {
-    .generate-button:hover:not(:disabled),
-    .reset-button:hover:not(:disabled) {
+    .generation-quantity-button:hover:not(:disabled) {
         cursor: pointer;
         outline: 3px solid var(--outline-tertiary, grey);
         background-color: #ececec;
     }
 }
 
-.generate-button:focus:not(:disabled),
-.reset-button:focus:not(:disabled) {
+.generation-quantity-button:focus:not(:disabled),
+.generation-quantity-button.selected {
     cursor: pointer;
     outline: 3px solid var(--outline-tertiary, grey);
     background-color: #d4d4d4;
