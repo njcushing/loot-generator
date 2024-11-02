@@ -1,7 +1,7 @@
 .generate {
     display: grid;
     grid-template-rows: 1fr auto auto;
-    gap: 6px;
+    gap: 12px;
 
     width: 100%;
     height: 100%;
@@ -53,6 +53,7 @@
 }
 
 .generation-quantity-button:focus:not(:disabled),
+.generation-quantity-button.selected,
 .generate-button:focus:not(:disabled),
 .reset-button:focus:not(:disabled) {
     cursor: pointer;
