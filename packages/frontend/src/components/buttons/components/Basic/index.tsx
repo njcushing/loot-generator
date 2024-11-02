@@ -56,7 +56,7 @@ export const Basic = forwardRef<HTMLButtonElement, TBasic>(
         }: TBasic,
         ref,
     ) => {
-        const concatenatedStyles = { ...style, ...defaultStyles };
+        const concatenatedStyles = { ...defaultStyles, ...style };
 
         return (
             <button
