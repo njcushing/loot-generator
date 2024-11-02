@@ -1,0 +1,170 @@
+.button {
+    position: relative;
+
+    pointer-events: auto;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 0.6rem;
+
+    font-family: Roboto;
+    font-size: 1rem;
+    font-weight: var(--text-bold-font-weight);
+    border: none;
+    outline-width: 1px;
+    outline-style: solid;
+
+    padding: 0.4rem 1rem;
+}
+
+.button[data-shape|="sharp"] {
+    border-radius: 0px;
+}
+.button[data-shape|="rounded"] {
+    border-radius: 9999px;
+}
+
+@media (hover: hover) {
+    .button:hover:not(:disabled) {
+        cursor: pointer;
+        outline: 3px solid var(--outline-tertiary, grey);
+    }
+}
+
+.button:focus:not(:disabled) {
+    cursor: pointer;
+    outline: 3px solid var(--outline-tertiary, grey);
+}
+
+.symbol {
+    font-size: inherit;
+}
+
+/* Palettes */
+
+.button[data-palette|="primary"] {
+    --button-basic-color: var(--button-primary-text);
+    --button-basic-background-color: var(--button-primary);
+    --button-basic-outline-color: var(--button-primary-border);
+    --button-basic-hover-color: var(--button-primary-hover);
+    --button-basic-focus-color: var(--button-primary-focus);
+    --button-basic-disabled-color: var(--button-primary-disabled);
+}
+
+.button[data-palette|="secondary"] {
+    --button-basic-color: var(--button-secondary-text);
+    --button-basic-background-color: var(--button-secondary);
+    --button-basic-outline-color: var(--button-secondary-border);
+    --button-basic-hover-color: var(--button-secondary-hover);
+    --button-basic-focus-color: var(--button-secondary-focus);
+    --button-basic-disabled-color: var(--button-secondary-disabled);
+}
+
+.button[data-palette|="bare"] {
+    --button-basic-color: var(--text-primary);
+    --button-basic-background-color: transparent;
+    --button-basic-outline-color: transparent;
+    --button-basic-hover-color: underline;
+    --button-basic-focus-color: underline;
+    --button-basic-disabled-color: none;
+}
+
+.button[data-palette|="red"] {
+    --button-basic-color: rgb(255, 255, 255);
+    --button-basic-background-color: rgb(228, 28, 28);
+    --button-basic-outline-color: transparent;
+    --button-basic-hover-color: rgb(255, 51, 51);
+    --button-basic-focus-color: rgb(196, 16, 16);
+    --button-basic-disabled-color: rgb(128, 128, 128);
+}
+
+.button[data-palette|="orange"] {
+    --button-basic-color: rgb(255, 255, 255);
+    --button-basic-background-color: rgb(252, 127, 11);
+    --button-basic-outline-color: transparent;
+    --button-basic-hover-color: rgb(255, 150, 51);
+    --button-basic-focus-color: rgb(228, 114, 8);
+    --button-basic-disabled-color: rgb(128, 128, 128);
+}
+
+.button[data-palette|="gold"] {
+    --button-basic-color: rgb(255, 255, 255);
+    --button-basic-background-color: rgb(238, 156, 5);
+    --button-basic-outline-color: transparent;
+    --button-basic-hover-color: rgb(216, 143, 7);
+    --button-basic-focus-color: rgb(196, 129, 4);
+    --button-basic-disabled-color: rgb(128, 128, 128);
+}
+
+.button[data-palette|="green"] {
+    --button-basic-color: rgb(255, 255, 255);
+    --button-basic-background-color: rgb(12, 214, 22);
+    --button-basic-outline-color: transparent;
+    --button-basic-hover-color: rgb(47, 240, 57);
+    --button-basic-focus-color: rgb(5, 185, 14);
+    --button-basic-disabled-color: rgb(128, 128, 128);
+}
+
+.button[data-palette|="lightblue"] {
+    --button-basic-color: rgb(255, 255, 255);
+    --button-basic-background-color: rgb(15, 185, 236);
+    --button-basic-outline-color: transparent;
+    --button-basic-hover-color: rgb(45, 206, 255);
+    --button-basic-focus-color: rgb(7, 159, 206);
+    --button-basic-disabled-color: rgb(128, 128, 128);
+}
+
+.button[data-palette|="blue"] {
+    --button-basic-color: rgb(255, 255, 255);
+    --button-basic-background-color: rgb(62, 119, 231);
+    --button-basic-outline-color: transparent;
+    --button-basic-hover-color: rgb(80, 135, 247);
+    --button-basic-focus-color: rgb(30, 97, 230);
+    --button-basic-disabled-color: rgb(128, 128, 128);
+}
+
+.button[data-palette|="black"] {
+    --button-basic-color: rgb(255, 255, 255);
+    --button-basic-background-color: rgb(0, 0, 0);
+    --button-basic-outline-color: transparent;
+    --button-basic-hover-color: rgb(41, 41, 41);
+    --button-basic-focus-color: rgb(0, 0, 0);
+    --button-basic-disabled-color: rgb(128, 128, 128);
+}
+
+/* Apply Style Rules */
+
+.button {
+    color: var(--button-basic-color);
+    background-color: var(--button-basic-background-color);
+    outline-color: var(--button-basic-outline-color);
+}
+@media (hover: hover) {
+    .button:hover {
+        background-color: var(--button-basic-hover-color);
+    }
+}
+.button:focus {
+    background-color: var(--button-basic-focus-color);
+}
+.button:disabled {
+    background-color: var(--button-basic-disabled-color);
+}
+
+/* Animations */
+
+.button[data-animation|="squishy"] {
+    transition: transform 0.25s cubic-bezier(0.51, -1.14, 0.45, 1.95) 0s;
+}
+
+@media (hover: hover) {
+    .button[data-animation|="squishy"]:hover {
+        transform: scale(92%);
+    }
+}
+
+.button[data-animation|="squishy"]:focus {
+    transform: scale(92%);
+}
