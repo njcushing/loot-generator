@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Theme } from "./themes";
 import { Pages } from "./pages";
 import config from "./appconfig.json";
 import "./index.css";
@@ -28,5 +29,9 @@ export function App() {
         rootElement.style.maxWidth = config.displayMaxWidth;
     }, [rootElement]);
 
-    return <Pages.LootGenerator />;
+    return (
+        <Theme>
+            <Pages.LootGenerator />
+        </Theme>
+    );
 }
