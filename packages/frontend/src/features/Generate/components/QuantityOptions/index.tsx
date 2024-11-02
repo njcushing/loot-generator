@@ -9,7 +9,7 @@ export type TQuantityOptions = {
 };
 
 export function QuantityOptions({ newQuantitySelected }: TQuantityOptions) {
-    const { lootGeneratorState, setLootGeneratorState } = useContext(LootGeneratorContext);
+    const { lootGeneratorState, setLootGeneratorStateProperty } = useContext(LootGeneratorContext);
 
     const quantityOptionSelected = useMemo<number>(() => {
         return lootGeneratorState.quantityOptionSelected;
@@ -37,10 +37,7 @@ export function QuantityOptions({ newQuantitySelected }: TQuantityOptions) {
                         type="button"
                         className={`${styles["generation-quantity-button"]} ${styles[quantityOptionSelected === i ? "selected" : ""]}`}
                         onClick={(e) => {
-                            setLootGeneratorState({
-                                ...lootGeneratorState,
-                                quantityOptionSelected: i,
-                            });
+                            setLootGeneratorStateProperty("quantityOptionSelected", i);
                             e.currentTarget.blur();
                         }}
                         onMouseLeave={(e) => {

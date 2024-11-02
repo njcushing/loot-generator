@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useRef, useMemo } from "react";
+import { createContext, useState, useEffect, useRef, useMemo, useCallback } from "react";
 import useResizeObserverElement from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
 import { Generate } from "@/features/Generate";
@@ -17,12 +17,12 @@ const defaultLootGeneratorState: LootGeneratorState = {
 
 interface LootGeneratorContext {
     lootGeneratorState: LootGeneratorState;
-    setLootGeneratorState: React.Dispatch<React.SetStateAction<LootGeneratorState>>;
+    setLootGeneratorStateProperty: (property: keyof LootGeneratorState, value: number) => void;
 }
 
 const defaultLootGeneratorContext: LootGeneratorContext = {
     lootGeneratorState: defaultLootGeneratorState,
-    setLootGeneratorState: () => {},
+    setLootGeneratorStateProperty: () => {},
 };
 
 export const LootGeneratorContext = createContext<LootGeneratorContext>(
@@ -42,11 +42,22 @@ export function LootGenerator() {
         else setLayout("thin");
     }, [containerSize]);
 
+    const setLootGeneratorStateProperty = useCallback(
+        <K extends keyof LootGeneratorState>(property: K, value: LootGeneratorState[K]) => {
+            setLootGeneratorState((current) => {
+                const mutableState = { ...current };
+                mutableState[property] = value;
+                return mutableState;
+            });
+        },
+        [],
+    );
+
     return (
         <LootGeneratorContext.Provider
             value={useMemo(
-                () => ({ lootGeneratorState, setLootGeneratorState }),
-                [lootGeneratorState, setLootGeneratorState],
+                () => ({ lootGeneratorState, setLootGeneratorStateProperty }),
+                [lootGeneratorState, setLootGeneratorStateProperty],
             )}
         >
             <div className={`${styles["page"]} ${styles[`${layout}`]}`} ref={containerRef}>
