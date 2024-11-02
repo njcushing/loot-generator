@@ -1,11 +1,38 @@
-import { useState, useEffect, useRef } from "react";
+import { createContext, useState, useEffect, useRef, useMemo } from "react";
 import useResizeObserverElement from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
 import { Generate } from "@/features/Generate";
 import { version } from "../../../package.json";
 import styles from "./index.module.css";
 
+export type LootGeneratorState = {
+    quantityOptionSelected: number;
+    customQuantity: number;
+};
+
+const defaultLootGeneratorState: LootGeneratorState = {
+    quantityOptionSelected: 0,
+    customQuantity: 50,
+};
+
+interface LootGeneratorContext {
+    lootGeneratorState: LootGeneratorState;
+    setLootGeneratorState: React.Dispatch<React.SetStateAction<LootGeneratorState>>;
+}
+
+const defaultLootGeneratorContext: LootGeneratorContext = {
+    lootGeneratorState: defaultLootGeneratorState,
+    setLootGeneratorState: () => {},
+};
+
+export const LootGeneratorContext = createContext<LootGeneratorContext>(
+    defaultLootGeneratorContext,
+);
+
 export function LootGenerator() {
+    const [lootGeneratorState, setLootGeneratorState] =
+        useState<LootGeneratorState>(defaultLootGeneratorState);
+
     const containerRef = useRef<HTMLDivElement>(null);
     const [containerSize] = useResizeObserverElement({ ref: containerRef });
     const [layout, setLayout] = useState<"wide" | "thin">("wide");
@@ -16,28 +43,35 @@ export function LootGenerator() {
     }, [containerSize]);
 
     return (
-        <div className={`${styles["page"]} ${styles[`${layout}`]}`} ref={containerRef}>
-            <div className={styles["left-panel"]}>
-                <h1 className={styles["title"]}>Loot Generator</h1>
-                <p className={styles["name"]}>by njcushing</p>
-                <p className={styles["version"]}>{`v${version}`}</p>
-                <Structural.TabSelector
-                    tabs={{
-                        design: { name: "Design", content: <p>Design</p>, position: "left" },
-                        code: { name: "Code", content: <p>Code</p>, position: "left" },
-                        about: { name: "About", content: <p>About</p>, position: "right" },
-                    }}
-                />
+        <LootGeneratorContext.Provider
+            value={useMemo(
+                () => ({ lootGeneratorState, setLootGeneratorState }),
+                [lootGeneratorState, setLootGeneratorState],
+            )}
+        >
+            <div className={`${styles["page"]} ${styles[`${layout}`]}`} ref={containerRef}>
+                <div className={styles["left-panel"]}>
+                    <h1 className={styles["title"]}>Loot Generator</h1>
+                    <p className={styles["name"]}>by njcushing</p>
+                    <p className={styles["version"]}>{`v${version}`}</p>
+                    <Structural.TabSelector
+                        tabs={{
+                            design: { name: "Design", content: <p>Design</p>, position: "left" },
+                            code: { name: "Code", content: <p>Code</p>, position: "left" },
+                            about: { name: "About", content: <p>About</p>, position: "right" },
+                        }}
+                    />
+                </div>
+                <div className={styles["right-panel"]}>
+                    <Structural.TabSelector
+                        tabs={{
+                            generate: { name: "Generate", content: <Generate />, position: "left" },
+                            code: { name: "Code", content: <p>Code</p>, position: "left" },
+                            data: { name: "Data", content: <p>Data</p>, position: "left" },
+                        }}
+                    />
+                </div>
             </div>
-            <div className={styles["right-panel"]}>
-                <Structural.TabSelector
-                    tabs={{
-                        generate: { name: "Generate", content: <Generate />, position: "left" },
-                        code: { name: "Code", content: <p>Code</p>, position: "left" },
-                        data: { name: "Data", content: <p>Data</p>, position: "left" },
-                    }}
-                />
-            </div>
-        </div>
+        </LootGeneratorContext.Provider>
     );
 }
