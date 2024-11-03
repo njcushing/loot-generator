@@ -1,3 +1,6 @@
+import { useContext } from "react";
+import { LootGeneratorContext } from "@/pages/LootGenerator";
+import { sortLoot } from "@/utils/sortLoot/sortLoot";
 import { mockData } from "./utils/mockData";
 import styles from "./index.module.css";
 
@@ -10,9 +13,11 @@ export type Item = {
 export type Items = Map<string, Item>;
 
 export function Loot() {
+    const { lootGeneratorState } = useContext(LootGeneratorContext);
+
     return (
         <ul className={styles["loot"]}>
-            {[...mockData.keys()].map((key, i) => {
+            {[...sortLoot(mockData, lootGeneratorState.sortOptions).keys()].map((key, i) => {
                 const item = mockData.get(key);
                 return (
                     item && (
