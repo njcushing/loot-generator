@@ -8,12 +8,14 @@ import { version } from "../../../package.json";
 import styles from "./index.module.css";
 
 export type LootGeneratorState = {
+    quantitySelected: number;
     quantityOptionSelected: number;
     customQuantity: number;
     sortOptions: SortOptions;
 };
 
 const defaultLootGeneratorState: LootGeneratorState = {
+    quantitySelected: 1,
     quantityOptionSelected: 0,
     customQuantity: 50,
     sortOptions: new Map(),

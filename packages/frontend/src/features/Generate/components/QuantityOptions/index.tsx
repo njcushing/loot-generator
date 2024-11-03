@@ -4,11 +4,7 @@ import styles from "./index.module.css";
 
 type QuantityOption = { text: string; value: number };
 
-export type TQuantityOptions = {
-    newQuantitySelected: (value: number) => unknown;
-};
-
-export function QuantityOptions({ newQuantitySelected }: TQuantityOptions) {
+export function QuantityOptions() {
     const { lootGeneratorState, setLootGeneratorStateProperty } = useContext(LootGeneratorContext);
 
     const quantityOptionSelected = useMemo<number>(() => {
@@ -25,8 +21,11 @@ export function QuantityOptions({ newQuantitySelected }: TQuantityOptions) {
     }, [lootGeneratorState.customQuantity]);
 
     useEffect(() => {
-        newQuantitySelected(quantityOptions[quantityOptionSelected].value);
-    }, [newQuantitySelected, quantityOptionSelected, quantityOptions]);
+        setLootGeneratorStateProperty(
+            "quantitySelected",
+            quantityOptions[quantityOptionSelected].value,
+        );
+    }, [setLootGeneratorStateProperty, quantityOptionSelected, quantityOptions]);
 
     return (
         <div className={styles["generation-quantity-options"]}>
