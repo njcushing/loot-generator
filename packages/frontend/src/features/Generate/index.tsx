@@ -55,7 +55,13 @@ export function Generate() {
                                     },
                                     "generate-button",
                                 )}
-                                {createButton("Reset", () => {}, "reset-button")}
+                                {createButton(
+                                    "Reset",
+                                    () => {
+                                        setLootGeneratorStateProperty("loot", new Map());
+                                    },
+                                    "reset-button",
+                                )}
                             </div>
                         </div>
                     ),
