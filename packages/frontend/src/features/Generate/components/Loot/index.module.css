@@ -20,10 +20,10 @@
     padding: 6px;
 }
 
-.item.even {
+.item:nth-child(2n-1) {
     background-color: rgba(0, 0, 0, 0.16);
 }
 
-.item.odd {
+.item:nth-child(2n) {
     background-color: rgba(0, 0, 0, 0.1);
 }

@@ -9,14 +9,11 @@ export function Loot() {
     return (
         <ul className={styles["loot"]}>
             {[...sortLoot(lootGeneratorState.loot, lootGeneratorState.sortOptions).keys()].map(
-                (key, i) => {
+                (key) => {
                     const item = lootGeneratorState.loot.get(key);
                     return (
                         item && (
-                            <li
-                                className={`${styles["item"]} ${styles[i % 2 === 0 ? "even" : "odd"]}`}
-                                key={key}
-                            >
+                            <li className={styles["item"]} key={key}>
                                 <p className={`${styles["item-name"]} truncate-ellipsis`}>
                                     {item.name || key}
                                 </p>
