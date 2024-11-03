@@ -2,12 +2,13 @@ import { createContext, useState, useEffect, useRef, useMemo, useCallback } from
 import useResizeObserverElement from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
 import { Generate } from "@/features/Generate";
-import { SortOptions } from "@/utils/types";
+import { Loot, SortOptions } from "@/utils/types";
 import { Design } from "@/features/Design";
 import { version } from "../../../package.json";
 import styles from "./index.module.css";
 
 export type LootGeneratorState = {
+    loot: Loot;
     quantitySelected: number;
     quantityOptionSelected: number;
     customQuantity: number;
@@ -15,6 +16,7 @@ export type LootGeneratorState = {
 };
 
 const defaultLootGeneratorState: LootGeneratorState = {
+    loot: new Map(),
     quantitySelected: 1,
     quantityOptionSelected: 0,
     customQuantity: 50,
