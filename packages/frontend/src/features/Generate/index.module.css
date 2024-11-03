@@ -1,4 +1,4 @@
-.generate {
+.results {
     display: grid;
     grid-template-rows: 1fr auto auto;
     gap: 12px;

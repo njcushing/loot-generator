@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { TabSelector } from "@/components/structural/components/TabSelector";
 import { Loot } from "./components/Loot";
 import { QuantityOptions } from "./components/QuantityOptions";
 import styles from "./index.module.css";
@@ -28,13 +29,26 @@ export function Generate() {
     );
 
     return (
-        <div className={styles["generate"]}>
-            <Loot />
-            <QuantityOptions newQuantitySelected={(value) => setCurrentQuantity(value)} />
-            <div className={styles["generate-and-reset-buttons"]}>
-                {createButton("Generate", () => {}, "generate-button")}
-                {createButton("Reset", () => {}, "reset-button")}
-            </div>
-        </div>
+        <TabSelector
+            tabs={{
+                results: {
+                    name: "Results",
+                    content: (
+                        <div className={styles["results"]}>
+                            <Loot />
+                            <QuantityOptions
+                                newQuantitySelected={(value) => setCurrentQuantity(value)}
+                            />
+                            <div className={styles["generate-and-reset-buttons"]}>
+                                {createButton("Generate", () => {}, "generate-button")}
+                                {createButton("Reset", () => {}, "reset-button")}
+                            </div>
+                        </div>
+                    ),
+                    position: "left",
+                },
+                sort: { name: "Sort", content: <p>Sort</p>, position: "left" },
+            }}
+        />
     );
 }
