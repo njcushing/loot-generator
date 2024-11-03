@@ -3,6 +3,7 @@ import useResizeObserverElement from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
 import { Generate } from "@/features/Generate";
 import { SortOptions } from "@/utils/sortLoot/sortLoot";
+import { Design } from "@/features/Design";
 import { version } from "../../../package.json";
 import styles from "./index.module.css";
 
@@ -73,8 +74,7 @@ export function LootGenerator() {
                     <p className={styles["version"]}>{`v${version}`}</p>
                     <Structural.TabSelector
                         tabs={{
-                            design: { name: "Design", content: <p>Design</p>, position: "left" },
-                            code: { name: "Code", content: <p>Code</p>, position: "left" },
+                            design: { name: "Design", content: <Design />, position: "left" },
                             about: { name: "About", content: <p>About</p>, position: "right" },
                         }}
                     />
