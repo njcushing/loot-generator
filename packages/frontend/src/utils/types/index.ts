@@ -9,7 +9,7 @@ export type GenerationCriteria = {
 export type ItemInformation = { name?: string; sprite?: URL };
 export type LootItem = { information: ItemInformation } & GenerationCriteria;
 export type LootTable = { loot: (LootItem | LootTable)[] } & GenerationCriteria;
-export type LootTableBase = LootTable[];
+export type LootTableBase = Omit<LootTable, "weight" | "rolls">;
 
 export type Item = ItemInformation & { quantity: number; value?: number };
 export type Loot = Map<string, Item>;
