@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { TabSelector } from "@/components/structural/components/TabSelector";
 import { Loot } from "./components/Loot";
 import { QuantityOptions } from "./components/QuantityOptions";
+import { SortOptions } from "./components/SortOptions";
 import styles from "./index.module.css";
 
 export function Generate() {
@@ -47,7 +48,7 @@ export function Generate() {
                     ),
                     position: "left",
                 },
-                sort: { name: "Sort", content: <p>Sort</p>, position: "left" },
+                sort: { name: "Sort", content: <SortOptions />, position: "left" },
             }}
         />
     );
