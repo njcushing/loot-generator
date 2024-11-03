@@ -20,7 +20,10 @@ const defaultLootGeneratorState: LootGeneratorState = {
 
 interface LootGeneratorContext {
     lootGeneratorState: LootGeneratorState;
-    setLootGeneratorStateProperty: (property: keyof LootGeneratorState, value: number) => void;
+    setLootGeneratorStateProperty: <K extends keyof LootGeneratorState>(
+        property: K,
+        value: LootGeneratorState[K],
+    ) => void;
 }
 
 const defaultLootGeneratorContext: LootGeneratorContext = {
