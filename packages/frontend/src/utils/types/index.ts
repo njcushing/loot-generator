@@ -7,7 +7,11 @@ export type GenerationCriteria = {
 };
 
 export type ItemInformation = { name?: string; sprite?: URL };
-export type LootItem = { type: "item"; information: ItemInformation } & GenerationCriteria;
+export type LootItem = {
+    type: "item";
+    key: string;
+    information: ItemInformation;
+} & GenerationCriteria;
 export type LootTable = { type: "table"; loot: (LootItem | LootTable)[] } & GenerationCriteria;
 export type LootTableBase = Omit<LootTable, "type" | "weight" | "rolls">;
 
