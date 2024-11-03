@@ -1,11 +1,15 @@
-import { useCallback } from "react";
+import { useContext, useCallback } from "react";
+import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { TabSelector } from "@/components/structural/components/TabSelector";
+import { generateLoot } from "@/utils/generateLoot";
 import { Loot } from "./components/Loot";
 import { QuantityOptions } from "./components/QuantityOptions";
 import { SortOptions } from "./components/SortOptions";
 import styles from "./index.module.css";
 
 export function Generate() {
+    const { lootGeneratorState, setLootGeneratorStateProperty } = useContext(LootGeneratorContext);
+
     const createButton = useCallback(
         (text: string, onClickHandler: () => void, className: string) => {
             return (
@@ -37,7 +41,20 @@ export function Generate() {
                             <Loot />
                             <QuantityOptions />
                             <div className={styles["generate-and-reset-buttons"]}>
-                                {createButton("Generate", () => {}, "generate-button")}
+                                {createButton(
+                                    "Generate",
+                                    () => {
+                                        setLootGeneratorStateProperty(
+                                            "loot",
+                                            generateLoot(
+                                                lootGeneratorState.lootTable,
+                                                lootGeneratorState.quantitySelected,
+                                                lootGeneratorState.loot,
+                                            ),
+                                        );
+                                    },
+                                    "generate-button",
+                                )}
                                 {createButton("Reset", () => {}, "reset-button")}
                             </div>
                         </div>
