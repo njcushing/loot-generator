@@ -1,4 +1,13 @@
-.generation-quantity-buttons {
+.generation-quantity-options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    width: 100%;
+}
+
+.quantity-buttons {
     justify-self: end;
     display: flex;
     flex-direction: row;
@@ -44,4 +53,28 @@
     cursor: pointer;
     outline: 3px solid var(--outline-tertiary, grey);
     background-color: #d4d4d4;
+}
+
+.custom-quantity-field {
+    align-self: center;
+
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+
+    text-wrap: nowrap;
+}
+
+.custom-quantity-field input {
+    color: black;
+    font-family: Roboto;
+    font-size: 1rem;
+
+    border: none;
+    outline: 1px solid black;
+
+    min-width: 100px;
+    width: 100%;
+    max-width: 200px;
+    padding: 4px;
 }
