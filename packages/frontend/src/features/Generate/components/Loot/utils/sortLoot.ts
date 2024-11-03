@@ -1,13 +1,15 @@
 import { Items } from "..";
 
 export type SortCriteria = "name" | "quantity";
-export type SortDirection = "ascending" | "descending";
+export type SortOrder = "ascending" | "descending";
 
-export const sortLoot = (loot: Items, sorts: [SortCriteria, SortDirection][]): Items => {
+export type SortOptions = Map<SortCriteria, SortOrder>;
+
+export const sortLoot = (loot: Items, sorts: SortOptions): Items => {
     let mutableLoot = new Map([...loot.entries()]);
 
-    sorts.forEach((sort) => {
-        const [criteria, direction] = sort;
+    [...sorts.keys()].forEach((criteria) => {
+        const order = sorts.get(criteria);
         switch (criteria) {
             case "name":
                 // Sort by 'name' as a priority, and fall back on key in its absence
@@ -26,7 +28,7 @@ export const sortLoot = (loot: Items, sorts: [SortCriteria, SortDirection][]): I
                         else if (nameB) result = keyA.localeCompare(nameB);
                         else result = keyA.localeCompare(keyB);
 
-                        return result * (direction === "descending" ? -1 : 1);
+                        return result * (order === "descending" ? -1 : 1);
                     }),
                 );
                 break;
@@ -36,7 +38,7 @@ export const sortLoot = (loot: Items, sorts: [SortCriteria, SortDirection][]): I
                         const quantityA = a[1].quantity;
                         const quantityB = b[1].quantity;
 
-                        return (quantityA - quantityB) * (direction === "descending" ? -1 : 1);
+                        return (quantityA - quantityB) * (order === "descending" ? -1 : 1);
                     }),
                 );
                 break;
