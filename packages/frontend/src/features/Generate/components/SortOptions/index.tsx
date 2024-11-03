@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect, useCallback } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
-import { SortCriteria, SortOrder } from "@/utils/sortLoot/sortLoot";
+import { SortCriteria, SortOrder } from "@/utils/types";
 import styles from "./index.module.css";
 
 export function SortOptions() {

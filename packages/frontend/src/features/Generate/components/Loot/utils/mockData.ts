@@ -1,6 +1,6 @@
-import { Items } from "..";
+import { Loot } from "@/utils/types";
 
-export const mockData: Items = new Map([
+export const mockData: Loot = new Map([
     ["apple", { name: "Apple", quantity: 5 }],
     ["banana", { name: "Banana", quantity: 8 }],
     ["orange", { name: "Orange", quantity: 14 }],

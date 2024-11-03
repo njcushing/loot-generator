@@ -4,14 +4,6 @@ import { sortLoot } from "@/utils/sortLoot/sortLoot";
 import { mockData } from "./utils/mockData";
 import styles from "./index.module.css";
 
-export type Item = {
-    name?: string;
-    quantity: number;
-    value?: number;
-};
-
-export type Items = Map<string, Item>;
-
 export function Loot() {
     const { lootGeneratorState } = useContext(LootGeneratorContext);
 

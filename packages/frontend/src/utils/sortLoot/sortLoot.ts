@@ -1,11 +1,6 @@
-import { Items } from "../../features/Generate/components/Loot";
+import { Loot, SortOptions } from "../types";
 
-export type SortCriteria = "name" | "quantity";
-export type SortOrder = "ascending" | "descending";
-
-export type SortOptions = Map<SortCriteria, SortOrder>;
-
-export const sortLoot = (loot: Items, sorts: SortOptions): Items => {
+export const sortLoot = (loot: Loot, sorts: SortOptions): Loot => {
     let mutableLoot = new Map([...loot.entries()]);
 
     [...sorts.keys()].forEach((criteria) => {
