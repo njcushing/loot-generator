@@ -1,8 +1,8 @@
 export type GenerationCriteria = {
     weight: number;
-    rolls: {
-        required: number;
-        maximum: number;
+    rolls?: {
+        required?: number;
+        maximum?: number;
     };
 };
 
