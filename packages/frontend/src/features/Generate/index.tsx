@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { Loot } from "./components/Loot";
 import { QuantityOptions } from "./components/QuantityOptions";
 import styles from "./index.module.css";
 
@@ -28,7 +29,7 @@ export function Generate() {
 
     return (
         <div className={styles["generate"]}>
-            <div></div>
+            <Loot />
             <QuantityOptions newQuantitySelected={(value) => setCurrentQuantity(value)} />
             <div className={styles["generate-and-reset-buttons"]}>
                 {createButton("Generate", () => {}, "generate-button")}
