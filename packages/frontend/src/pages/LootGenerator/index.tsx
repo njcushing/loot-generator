@@ -23,7 +23,7 @@ const defaultLootGeneratorState: LootGeneratorState = {
     quantitySelected: 1,
     quantityOptionSelected: 0,
     customQuantity: 50,
-    sortOptions: new Map(),
+    sortOptions: new Map([["quantity", "descending"]]),
 };
 
 interface LootGeneratorContext {
