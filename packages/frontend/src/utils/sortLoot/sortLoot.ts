@@ -1,4 +1,4 @@
-import { Items } from "..";
+import { Items } from "../../features/Generate/components/Loot";
 
 export type SortCriteria = "name" | "quantity";
 export type SortOrder = "ascending" | "descending";
