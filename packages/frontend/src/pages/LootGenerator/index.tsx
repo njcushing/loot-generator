@@ -2,15 +2,15 @@ import { createContext, useState, useEffect, useRef, useMemo, useCallback } from
 import useResizeObserverElement from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
 import { Generate } from "@/features/Generate";
-import { LootTableBase, Loot, SortOptions } from "@/utils/types";
+import { LootTable, Loot, SortOptions } from "@/utils/types";
 import { Design } from "@/features/Design";
-import { exampleLootTableBase } from "@/features/Design/utils/exampleLootTableBase";
+import { exampleLootTable } from "@/features/Design/utils/exampleLootTable";
 import { version } from "../../../package.json";
 import styles from "./index.module.css";
 
 export type LootGeneratorState = {
     loot: Loot;
-    lootTable: LootTableBase;
+    lootTable: LootTable;
     quantitySelected: number;
     quantityOptionSelected: number;
     customQuantity: number;
@@ -19,7 +19,7 @@ export type LootGeneratorState = {
 
 const defaultLootGeneratorState: LootGeneratorState = {
     loot: new Map(),
-    lootTable: exampleLootTableBase,
+    lootTable: exampleLootTable,
     quantitySelected: 1,
     quantityOptionSelected: 0,
     customQuantity: 50,

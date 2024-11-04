@@ -1,6 +1,6 @@
 import { useContext, useCallback } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
-import { LootItem, LootTable, LootTableBase } from "@/utils/types";
+import { LootItem, LootTable } from "@/utils/types";
 import styles from "./index.module.css";
 
 export function Interactive() {
@@ -29,7 +29,7 @@ export function Interactive() {
     }, []);
 
     const createTableField = useCallback(
-        (entry: LootTable | LootTableBase) => {
+        (entry: LootTable) => {
             return (
                 <div className={styles["table"]} key={entry.key}>
                     <button

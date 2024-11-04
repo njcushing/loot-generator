@@ -18,7 +18,6 @@ export type LootTable = {
     name?: string;
     loot: (LootItem | LootTable)[];
 } & GenerationCriteria;
-export type LootTableBase = Omit<LootTable, "type" | "weight" | "rolls">;
 
 export type Item = ItemInformation & { quantity: number; value?: number };
 export type Loot = Map<string, Item>;

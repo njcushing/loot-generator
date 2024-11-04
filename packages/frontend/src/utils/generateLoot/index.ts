@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid";
-import { LootItem, LootTable, LootTableBase, Loot } from "../types";
+import { LootItem, LootTable, Loot } from "../types";
 
 export const createLootItem = (props: Omit<LootItem, "type" | "key">): LootItem => ({
     ...props,
@@ -11,15 +11,10 @@ export const createLootTable = (props: Omit<LootTable, "type" | "key">): LootTab
     type: "table",
     key: uuid(),
 });
-export const createLootTableBase = (props: Omit<LootTableBase, "type" | "key">): LootTableBase => ({
-    ...props,
-    key: "base",
-});
 
-type Table = LootTable | LootTableBase;
-type SummedTable = Table & { totalWeight: number };
+type SummedTable = LootTable & { totalWeight: number };
 
-const sumWeights = <K extends Table>(lootTable: K): K & { totalWeight: number } => {
+const sumWeights = <K extends LootTable>(lootTable: K): K & { totalWeight: number } => {
     const mutableLootTable = { ...lootTable, totalWeight: 0 };
     mutableLootTable.loot.forEach((entry, i) => {
         mutableLootTable.totalWeight += entry.weight;
@@ -73,13 +68,13 @@ const rollTable = (currentLoot: Loot, summedTable: SummedTable): [Loot, SummedTa
 };
 
 export const generateLoot = (
-    lootTableBase: LootTableBase,
+    lootTable: LootTable,
     rolls: number = 1,
     appendToExisting: Loot = new Map(),
 ): Loot => {
     let loot = new Map(appendToExisting);
 
-    let summedTable = sumWeights(lootTableBase);
+    let summedTable = sumWeights(lootTable);
 
     for (let i = 0; i < rolls; i++) [loot, summedTable] = rollTable(loot, summedTable);
 
