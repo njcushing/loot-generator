@@ -44,7 +44,7 @@ export function Interactive() {
                         }}
                     >
                         <p className={styles["symbol"]}>+</p>
-                        <p className={styles["table-name"]}>Table</p>
+                        <p className={styles["table-name"]}>{entry.name || "Unnamed Table"}</p>
                     </button>
                     <div className={styles["table-entries"]}>
                         {entry.loot.map((subEntry) => {
