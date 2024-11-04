@@ -6,7 +6,7 @@ export const createLootItem = (properties: Omit<LootItem, "type" | "key">): Loot
     type: "item",
     key: uuid(),
 });
-export const createLootTable = (properties: Omit<LootTable, "type">): LootTable => ({
+export const createLootTable = (properties: Omit<LootTable, "type" | "key">): LootTable => ({
     ...properties,
     type: "table",
     key: uuid(),
