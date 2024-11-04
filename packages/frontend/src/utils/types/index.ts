@@ -14,6 +14,7 @@ export type LootItem = {
 } & GenerationCriteria;
 export type LootTable = {
     type: "table";
+    key: string;
     name?: string;
     loot: (LootItem | LootTable)[];
 } & GenerationCriteria;
