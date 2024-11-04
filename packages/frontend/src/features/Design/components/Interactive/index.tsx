@@ -1,6 +1,6 @@
 import { useContext, useCallback } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
-import { LootItem } from "@/utils/types";
+import { LootItem, LootTable, LootTableBase } from "@/utils/types";
 import { v4 as uuid } from "uuid";
 import styles from "./index.module.css";
 
@@ -29,12 +29,39 @@ export function Interactive() {
         );
     }, []);
 
+    const createTableField = useCallback(
+        (entry: LootTable | LootTableBase) => {
+            return (
+                <div className={styles["table"]} key={uuid()}>
+                    <button
+                        type="button"
+                        className={styles["expand-collapse-button"]}
+                        onClick={(e) => {
+                            e.currentTarget.blur();
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.blur();
+                        }}
+                    >
+                        <p className={styles["symbol"]}>+</p>
+                        <p className={styles["table-name"]}>Table</p>
+                    </button>
+                    <div className={styles["table-entries"]}>
+                        {entry.loot.map((subEntry) => {
+                            if (subEntry.type === "item") return createItemField(subEntry);
+                            if (subEntry.type === "table") return createTableField(subEntry);
+                            return null;
+                        })}
+                    </div>
+                </div>
+            );
+        },
+        [createItemField],
+    );
+
     return (
         <div className={styles["interactive"]}>
-            {lootGeneratorState.lootTable.loot.map((entry) => {
-                if (entry.type === "item") return createItemField(entry);
-                return null;
-            })}
+            {lootGeneratorState.lootTable && createTableField(lootGeneratorState.lootTable)}
         </div>
     );
 }

@@ -13,7 +13,17 @@
     padding: 8px;
 }
 
+.item,
+.table {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    gap: 1px;
+}
+
 .expand-collapse-button {
+    box-sizing: border-box;
+
     position: relative;
 
     justify-self: end;
@@ -28,8 +38,7 @@
     pointer-events: auto;
 
     border: none;
-    outline-width: 1px;
-    outline-style: solid;
+    outline: 1px solid black;
 
     width: 100%;
     padding: 0px 4px;
@@ -38,23 +47,21 @@
 @media (hover: hover) {
     .expand-collapse-button:hover:not(:disabled) {
         z-index: 1;
+
         cursor: pointer;
-        outline: 3px solid var(--outline-tertiary, grey);
+
+        outline-width: 3px;
         background-color: #ececec;
     }
 }
 
 .expand-collapse-button:focus:not(:disabled) {
     z-index: 1;
+
     cursor: pointer;
-    outline: 3px solid var(--outline-tertiary, grey);
+
+    outline-width: 3px;
     background-color: #d4d4d4;
-}
-
-.item {
-    display: flex;
-
-    border: 1px solid #000;
 }
 
 .symbol {
@@ -63,6 +70,11 @@
     font-weight: 200;
 }
 
-.item-name {
+.item-name,
+.table-name {
     font-size: 1rem;
+}
+
+.table-entries {
+    width: calc(100% - 16px);
 }
