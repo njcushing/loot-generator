@@ -12,7 +12,11 @@ export type LootItem = {
     key: string;
     information: ItemInformation;
 } & GenerationCriteria;
-export type LootTable = { type: "table"; loot: (LootItem | LootTable)[] } & GenerationCriteria;
+export type LootTable = {
+    type: "table";
+    name?: string;
+    loot: (LootItem | LootTable)[];
+} & GenerationCriteria;
 export type LootTableBase = Omit<LootTable, "type" | "weight" | "rolls">;
 
 export type Item = ItemInformation & { quantity: number; value?: number };
