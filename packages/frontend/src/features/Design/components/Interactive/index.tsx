@@ -1,7 +1,6 @@
 import { useContext, useCallback } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootItem, LootTable, LootTableBase } from "@/utils/types";
-import { v4 as uuid } from "uuid";
 import styles from "./index.module.css";
 
 export function Interactive() {
@@ -9,7 +8,7 @@ export function Interactive() {
 
     const createItemField = useCallback((entry: LootItem) => {
         return (
-            <div className={styles["item"]} key={uuid()}>
+            <div className={styles["item"]} key={entry.key}>
                 <button
                     type="button"
                     className={styles["expand-collapse-button"]}
@@ -32,7 +31,7 @@ export function Interactive() {
     const createTableField = useCallback(
         (entry: LootTable | LootTableBase) => {
             return (
-                <div className={styles["table"]} key={uuid()}>
+                <div className={styles["table"]} key={entry.key}>
                     <button
                         type="button"
                         className={styles["expand-collapse-button"]}
