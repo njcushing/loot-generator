@@ -1,7 +1,7 @@
 import { LootTableBase } from "@/utils/types";
-import { createLootItem, createLootTable } from "@/utils/generateLoot";
+import { createLootItem, createLootTable, createLootTableBase } from "@/utils/generateLoot";
 
-export const exampleLootTableBase: LootTableBase = {
+export const exampleLootTableBase: LootTableBase = createLootTableBase({
     loot: [
         createLootItem({ information: { name: "Apple" }, weight: 10 }),
         createLootItem({ information: { name: "Banana" }, weight: 10 }),
@@ -17,4 +17,4 @@ export const exampleLootTableBase: LootTableBase = {
             ],
         }),
     ],
-};
+});

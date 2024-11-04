@@ -1,15 +1,19 @@
 import { v4 as uuid } from "uuid";
 import { LootItem, LootTable, LootTableBase, Loot } from "../types";
 
-export const createLootItem = (properties: Omit<LootItem, "type" | "key">): LootItem => ({
-    ...properties,
+export const createLootItem = (props: Omit<LootItem, "type" | "key">): LootItem => ({
+    ...props,
     type: "item",
     key: uuid(),
 });
-export const createLootTable = (properties: Omit<LootTable, "type" | "key">): LootTable => ({
-    ...properties,
+export const createLootTable = (props: Omit<LootTable, "type" | "key">): LootTable => ({
+    ...props,
     type: "table",
     key: uuid(),
+});
+export const createLootTableBase = (props: Omit<LootTableBase, "type" | "key">): LootTableBase => ({
+    ...props,
+    key: "base",
 });
 
 type Table = LootTable | LootTableBase;
