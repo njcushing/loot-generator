@@ -97,7 +97,7 @@ export function Interactive() {
         );
     }, []);
 
-    const createItemField = useCallback(
+    const createItemMenu = useCallback(
         (entry: LootItem) => {
             const { key, information } = entry;
             const { name } = information;
@@ -113,7 +113,7 @@ export function Interactive() {
         [createToggleButton, createDeleteButton],
     );
 
-    const createTableField = useCallback(
+    const createTableMenu = useCallback(
         (entry: LootTable) => {
             const { key, name } = entry;
             const menuState = menuStates.get(key);
@@ -126,8 +126,8 @@ export function Interactive() {
                     {menuState === "expanded" && (
                         <div className={styles["table-entries"]}>
                             {entry.loot.map((subEntry) => {
-                                if (subEntry.type === "item") return createItemField(subEntry);
-                                if (subEntry.type === "table") return createTableField(subEntry);
+                                if (subEntry.type === "item") return createItemMenu(subEntry);
+                                if (subEntry.type === "table") return createTableMenu(subEntry);
                                 return null;
                             })}
                         </div>
@@ -135,12 +135,12 @@ export function Interactive() {
                 </div>
             );
         },
-        [menuStates, createItemField, createToggleButton, createDeleteButton],
+        [menuStates, createItemMenu, createToggleButton, createDeleteButton],
     );
 
     return (
         <div className={styles["interactive"]}>
-            {lootGeneratorState.lootTable && createTableField(lootGeneratorState.lootTable)}
+            {lootGeneratorState.lootTable && createTableMenu(lootGeneratorState.lootTable)}
         </div>
     );
 }
