@@ -71,6 +71,23 @@ export function Interactive() {
         [menuStates, toggleMenuState],
     );
 
+    const createDeleteButton = useCallback(() => {
+        return (
+            <button
+                type="button"
+                className={`${styles["delete-menu-item-button"]} material-symbols-sharp`}
+                onClick={(e) => {
+                    e.currentTarget.blur();
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.blur();
+                }}
+            >
+                Delete
+            </button>
+        );
+    }, []);
+
     const createItemField = useCallback(
         (entry: LootItem) => {
             const { key, information } = entry;
@@ -82,23 +99,12 @@ export function Interactive() {
                         <p className={`${styles["item-name"]} ${styles[!name ? "unnamed" : ""]}`}>
                             {name || "Unnamed Item"}
                         </p>
-                        <button
-                            type="button"
-                            className={`${styles["delete-menu-item-button"]} material-symbols-sharp`}
-                            onClick={(e) => {
-                                e.currentTarget.blur();
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.blur();
-                            }}
-                        >
-                            Delete
-                        </button>
+                        {createDeleteButton()}
                     </div>
                 </div>
             );
         },
-        [createToggleButton],
+        [createToggleButton, createDeleteButton],
     );
 
     const createTableField = useCallback(
@@ -112,18 +118,7 @@ export function Interactive() {
                         <p className={`${styles["table-name"]} ${styles[!name ? "unnamed" : ""]}`}>
                             {name || "Unnamed Table"}
                         </p>
-                        <button
-                            type="button"
-                            className={`${styles["delete-menu-item-button"]} material-symbols-sharp`}
-                            onClick={(e) => {
-                                e.currentTarget.blur();
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.blur();
-                            }}
-                        >
-                            Delete
-                        </button>
+                        {createDeleteButton()}
                     </div>
                     {menuState === "expanded" && (
                         <div className={styles["table-entries"]}>
@@ -137,7 +132,7 @@ export function Interactive() {
                 </div>
             );
         },
-        [menuStates, createItemField, createToggleButton],
+        [menuStates, createItemField, createToggleButton, createDeleteButton],
     );
 
     return (
