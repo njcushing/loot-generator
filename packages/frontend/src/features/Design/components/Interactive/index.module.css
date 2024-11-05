@@ -32,8 +32,6 @@
     pointer-events: none;
 
     outline: 1px solid black;
-
-    padding: 2px;
 }
 
 .item-menu-bar {
@@ -53,7 +51,7 @@
 
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
-    align-items: center;
+    align-content: center;
     gap: 6px;
 
     pointer-events: auto;
@@ -62,7 +60,8 @@
     background-color: transparent;
 
     width: 100%;
-    padding: 0px;
+    height: 100%;
+    padding: 2px;
 }
 
 @media (hover: hover) {
@@ -92,6 +91,8 @@
     font-size: 1rem;
     text-align: start;
     text-wrap: nowrap;
+
+    height: 100%;
 }
 
 .unnamed {
@@ -119,7 +120,7 @@
 
     height: 100%;
     aspect-ratio: 1;
-    padding: 0px;
+    padding: 2px;
 }
 
 @media (hover: hover) {
