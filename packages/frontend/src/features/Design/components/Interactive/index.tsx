@@ -49,29 +49,36 @@ export function Interactive() {
         });
     }, []);
 
+    const createToggleButton = useCallback(
+        (key: string) => {
+            const menuState = menuStates.get(key);
+            return (
+                <button
+                    type="button"
+                    className={styles["expand-collapse-button"]}
+                    onClick={(e) => {
+                        toggleMenuState(key);
+                        e.currentTarget.blur();
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.blur();
+                    }}
+                >
+                    <p className={styles["symbol"]}>{menuState === "collapsed" ? "+" : "-"}</p>
+                </button>
+            );
+        },
+        [menuStates, toggleMenuState],
+    );
+
     const createItemField = useCallback(
         (entry: LootItem) => {
             const { key, information } = entry;
             const { name } = information;
-            const menuState = menuStates.get(key);
             return (
                 <div className={styles["item"]} key={key}>
                     <div className={styles["item-menu-bar"]}>
-                        <button
-                            type="button"
-                            className={styles["expand-collapse-button"]}
-                            onClick={(e) => {
-                                toggleMenuState(key);
-                                e.currentTarget.blur();
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.blur();
-                            }}
-                        >
-                            <p className={styles["symbol"]}>
-                                {menuState === "collapsed" ? "+" : "-"}
-                            </p>
-                        </button>
+                        {createToggleButton(key)}
                         <p className={`${styles["item-name"]} ${styles[!name ? "unnamed" : ""]}`}>
                             {name || "Unnamed Item"}
                         </p>
@@ -91,7 +98,7 @@ export function Interactive() {
                 </div>
             );
         },
-        [menuStates, toggleMenuState],
+        [createToggleButton],
     );
 
     const createTableField = useCallback(
@@ -101,21 +108,7 @@ export function Interactive() {
             return (
                 <div className={styles["table"]} key={key}>
                     <div className={styles["table-menu-bar"]}>
-                        <button
-                            type="button"
-                            className={styles["expand-collapse-button"]}
-                            onClick={(e) => {
-                                toggleMenuState(key);
-                                e.currentTarget.blur();
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.blur();
-                            }}
-                        >
-                            <p className={styles["symbol"]}>
-                                {menuState === "collapsed" ? "+" : "-"}
-                            </p>
-                        </button>
+                        {createToggleButton(key)}
                         <p className={`${styles["table-name"]} ${styles[!name ? "unnamed" : ""]}`}>
                             {name || "Unnamed Table"}
                         </p>
@@ -144,7 +137,7 @@ export function Interactive() {
                 </div>
             );
         },
-        [menuStates, createItemField, toggleMenuState],
+        [menuStates, createItemField, createToggleButton],
     );
 
     return (
