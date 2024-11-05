@@ -56,22 +56,38 @@ export function Interactive() {
             const menuState = menuStates.get(key);
             return (
                 <div className={styles["item"]} key={key}>
-                    <button
-                        type="button"
-                        className={styles["expand-collapse-button"]}
-                        onClick={(e) => {
-                            toggleMenuState(key);
-                            e.currentTarget.blur();
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.blur();
-                        }}
-                    >
-                        <p className={styles["symbol"]}>{menuState === "collapsed" ? "+" : "-"}</p>
+                    <div className={styles["item-menu-bar"]}>
+                        <button
+                            type="button"
+                            className={styles["expand-collapse-button"]}
+                            onClick={(e) => {
+                                toggleMenuState(key);
+                                e.currentTarget.blur();
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.blur();
+                            }}
+                        >
+                            <p className={styles["symbol"]}>
+                                {menuState === "collapsed" ? "+" : "-"}
+                            </p>
+                        </button>
                         <p className={`${styles["item-name"]} ${styles[!name ? "unnamed" : ""]}`}>
                             {name || "Unnamed Item"}
                         </p>
-                    </button>
+                        <button
+                            type="button"
+                            className={`${styles["delete-menu-item-button"]} material-symbols-sharp`}
+                            onClick={(e) => {
+                                e.currentTarget.blur();
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.blur();
+                            }}
+                        >
+                            Delete
+                        </button>
+                    </div>
                 </div>
             );
         },
@@ -84,22 +100,38 @@ export function Interactive() {
             const menuState = menuStates.get(key);
             return (
                 <div className={styles["table"]} key={key}>
-                    <button
-                        type="button"
-                        className={styles["expand-collapse-button"]}
-                        onClick={(e) => {
-                            toggleMenuState(key);
-                            e.currentTarget.blur();
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.blur();
-                        }}
-                    >
-                        <p className={styles["symbol"]}>{menuState === "collapsed" ? "+" : "-"}</p>
+                    <div className={styles["table-menu-bar"]}>
+                        <button
+                            type="button"
+                            className={styles["expand-collapse-button"]}
+                            onClick={(e) => {
+                                toggleMenuState(key);
+                                e.currentTarget.blur();
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.blur();
+                            }}
+                        >
+                            <p className={styles["symbol"]}>
+                                {menuState === "collapsed" ? "+" : "-"}
+                            </p>
+                        </button>
                         <p className={`${styles["table-name"]} ${styles[!name ? "unnamed" : ""]}`}>
                             {name || "Unnamed Table"}
                         </p>
-                    </button>
+                        <button
+                            type="button"
+                            className={`${styles["delete-menu-item-button"]} material-symbols-sharp`}
+                            onClick={(e) => {
+                                e.currentTarget.blur();
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.blur();
+                            }}
+                        >
+                            Delete
+                        </button>
+                    </div>
                     {menuState === "expanded" && (
                         <div className={styles["table-entries"]}>
                             {entry.loot.map((subEntry) => {

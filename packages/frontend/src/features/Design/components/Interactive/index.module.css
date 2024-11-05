@@ -5,6 +5,8 @@
 
     overflow-y: auto;
 
+    pointer-events: none;
+
     border: 1px solid #000;
     background-color: #fff;
 
@@ -17,8 +19,28 @@
 .table {
     display: flex;
     flex-direction: column;
-    align-items: end;
     gap: 1px;
+}
+
+.item-menu-bar,
+.table-menu-bar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-content: end;
+    align-items: center;
+    gap: 6px;
+
+    pointer-events: none;
+
+    outline: 1px solid black;
+}
+
+.item-menu-bar {
+    background-color: rgb(170, 238, 149);
+}
+
+.table-menu-bar {
+    background-color: rgb(186, 240, 228);
 }
 
 .expand-collapse-button {
@@ -26,79 +48,78 @@
 
     position: relative;
 
-    justify-self: end;
-    align-self: center;
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 6px;
+    place-self: center;
 
     pointer-events: auto;
 
     border: none;
-    outline: 1px solid black;
+    background-color: transparent;
 
-    width: 100%;
-    padding: 0px 4px;
+    height: 1.6rem;
+    aspect-ratio: 0.8;
+    padding: 0px;
 }
 
 @media (hover: hover) {
-    .expand-collapse-button:hover:not(:disabled) {
-        z-index: 1;
-
+    .expand-collapse-button:hover {
         cursor: pointer;
+    }
+}
+
+.expand-collapse-button {
+    cursor: pointer;
+}
+
+@media (hover: hover) {
+    .item-menu-bar:has(> .expand-collapse-button:hover),
+    .table-menu-bar:has(> .expand-collapse-button:hover) {
+        z-index: 1;
 
         outline-width: 3px;
     }
-}
 
-.expand-collapse-button:focus:not(:disabled) {
-    z-index: 1;
-
-    cursor: pointer;
-
-    outline-width: 3px;
-}
-
-.item > .expand-collapse-button {
-    background-color: rgb(170, 238, 149);
-}
-
-.table > .expand-collapse-button {
-    background-color: rgb(186, 240, 228);
-}
-
-@media (hover: hover) {
-    .item > .expand-collapse-button:hover {
+    .item-menu-bar:has(> .expand-collapse-button:hover) {
         background-color: rgb(151, 226, 128);
     }
 
-    .table > .expand-collapse-button:hover {
+    .table-menu-bar:has(> .expand-collapse-button:hover) {
         background-color: rgb(157, 224, 210);
     }
 }
 
-.item > .expand-collapse-button:focus {
+.item-menu-bar:has(> .expand-collapse-button:focus),
+.table-menu-bar:has(> .expand-collapse-button:focus) {
+    z-index: 1;
+
+    outline-width: 3px;
+}
+
+.item-menu-bar:has(> .expand-collapse-button:focus) {
     background-color: rgb(132, 206, 110);
 }
 
-.table > .expand-collapse-button:focus {
+.table-menu-bar:has(> .expand-collapse-button:focus) {
     background-color: rgb(139, 206, 191);
 }
 
 .symbol {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     font-family: Roboto;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     font-weight: 200;
 
-    width: 1rem;
+    width: 100%;
+    height: 100%;
 }
 
 .item-name,
 .table-name {
     font-size: 1rem;
+    text-align: start;
+    text-wrap: nowrap;
 }
 
 .item-name.unnamed,
@@ -107,5 +128,24 @@
 }
 
 .table-entries {
+    align-self: end;
+
     width: calc(100% - 16px);
+}
+
+.delete-menu-item-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    pointer-events: all;
+
+    color: rgba(0, 0, 0, 0.4);
+
+    border: none;
+    background-color: transparent;
+
+    height: 100%;
+    aspect-ratio: 1;
+    padding: 0px;
 }
