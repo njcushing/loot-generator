@@ -96,7 +96,9 @@ export function Interactive() {
                 <div className={styles["item"]} key={key}>
                     <div className={styles["item-menu-bar"]}>
                         {createToggleButton(key)}
-                        <p className={`${styles["item-name"]} ${styles[!name ? "unnamed" : ""]}`}>
+                        <p
+                            className={`${styles["item-name"]} ${styles[!name ? "unnamed" : ""]} truncate-ellipsis`}
+                        >
                             {name || "Unnamed Item"}
                         </p>
                         {createDeleteButton()}
@@ -115,7 +117,9 @@ export function Interactive() {
                 <div className={styles["table"]} key={key}>
                     <div className={styles["table-menu-bar"]}>
                         {createToggleButton(key)}
-                        <p className={`${styles["table-name"]} ${styles[!name ? "unnamed" : ""]}`}>
+                        <p
+                            className={`${styles["table-name"]} ${styles[!name ? "unnamed" : ""]} truncate-ellipsis`}
+                        >
                             {name || "Unnamed Table"}
                         </p>
                         {createDeleteButton()}
