@@ -50,7 +50,11 @@ export function Interactive() {
     }, []);
 
     const createToggleButton = useCallback(
-        (key: string) => {
+        (
+            key: string,
+            name: LootItem["information"]["name"] | LootTable["name"],
+            type: LootItem["type"] | LootTable["type"],
+        ) => {
             const menuState = menuStates.get(key);
             return (
                 <button
@@ -65,6 +69,11 @@ export function Interactive() {
                     }}
                 >
                     <p className={styles["symbol"]}>{menuState === "collapsed" ? "+" : "-"}</p>
+                    <p
+                        className={`${styles["name"]} ${styles[!name ? "unnamed" : ""]} truncate-ellipsis`}
+                    >
+                        {name || (type === "item" ? "Unnamed Item" : "Unnamed Table")}
+                    </p>
                 </button>
             );
         },
@@ -95,12 +104,7 @@ export function Interactive() {
             return (
                 <div className={styles["item"]} key={key}>
                     <div className={styles["item-menu-bar"]}>
-                        {createToggleButton(key)}
-                        <p
-                            className={`${styles["item-name"]} ${styles[!name ? "unnamed" : ""]} truncate-ellipsis`}
-                        >
-                            {name || "Unnamed Item"}
-                        </p>
+                        {createToggleButton(key, name, "item")}
                         {createDeleteButton()}
                     </div>
                 </div>
@@ -116,12 +120,7 @@ export function Interactive() {
             return (
                 <div className={styles["table"]} key={key}>
                     <div className={styles["table-menu-bar"]}>
-                        {createToggleButton(key)}
-                        <p
-                            className={`${styles["table-name"]} ${styles[!name ? "unnamed" : ""]} truncate-ellipsis`}
-                        >
-                            {name || "Unnamed Table"}
-                        </p>
+                        {createToggleButton(key, name, "table")}
                         {createDeleteButton()}
                     </div>
                     {menuState === "expanded" && (
