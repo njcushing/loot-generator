@@ -92,6 +92,8 @@
     font-family: Roboto;
     font-size: 1.4rem;
     font-weight: 200;
+
+    width: 1rem;
 }
 
 .item-name,
