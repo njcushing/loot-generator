@@ -101,6 +101,11 @@
     font-size: 1rem;
 }
 
+.item-name.unnamed,
+.table-name.unnamed {
+    font-style: italic;
+}
+
 .table-entries {
     width: calc(100% - 16px);
 }

@@ -51,7 +51,8 @@ export function Interactive() {
 
     const createItemField = useCallback(
         (entry: LootItem) => {
-            const { key } = entry;
+            const { key, information } = entry;
+            const { name } = information;
             const menuState = menuStates.get(key);
             return (
                 <div className={styles["item"]} key={key}>
@@ -67,8 +68,8 @@ export function Interactive() {
                         }}
                     >
                         <p className={styles["symbol"]}>{menuState === "collapsed" ? "+" : "-"}</p>
-                        <p className={styles["item-name"]}>
-                            {entry.information.name || "Unnamed Item"}
+                        <p className={`${styles["item-name"]} ${styles[!name ? "unnamed" : ""]}`}>
+                            {name || "Unnamed Item"}
                         </p>
                     </button>
                 </div>
@@ -79,7 +80,7 @@ export function Interactive() {
 
     const createTableField = useCallback(
         (entry: LootTable) => {
-            const { key } = entry;
+            const { key, name } = entry;
             const menuState = menuStates.get(key);
             return (
                 <div className={styles["table"]} key={key}>
@@ -95,7 +96,9 @@ export function Interactive() {
                         }}
                     >
                         <p className={styles["symbol"]}>{menuState === "collapsed" ? "+" : "-"}</p>
-                        <p className={styles["table-name"]}>{entry.name || "Unnamed Table"}</p>
+                        <p className={`${styles["table-name"]} ${styles[!name ? "unnamed" : ""]}`}>
+                            {name || "Unnamed Table"}
+                        </p>
                     </button>
                     {menuState === "expanded" && (
                         <div className={styles["table-entries"]}>
