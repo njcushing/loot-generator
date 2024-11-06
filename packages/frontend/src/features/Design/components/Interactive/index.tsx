@@ -99,7 +99,7 @@ export function Interactive() {
 
     const createItemMenu = useCallback(
         (entry: LootItem) => {
-            const { key, information } = entry;
+            const { key, information, weight } = entry;
             const { name } = information;
             const menuState = menuStates.get(key);
             return (
@@ -119,6 +119,15 @@ export function Interactive() {
                                     defaultValue={name || ""}
                                 ></input>
                             </label>
+                            <label htmlFor={`${key}-item-weight`}>
+                                Weight:
+                                <input
+                                    type="number"
+                                    id={`${key}-item-weight`}
+                                    className={styles["number-input"]}
+                                    value={weight || 1}
+                                />
+                            </label>
                         </div>
                     )}
                 </div>
@@ -129,7 +138,7 @@ export function Interactive() {
 
     const createTableMenu = useCallback(
         (entry: LootTable) => {
-            const { key, name } = entry;
+            const { key, name, weight } = entry;
             const menuState = menuStates.get(key);
             return (
                 <div className={styles["table"]} key={key}>
@@ -148,6 +157,15 @@ export function Interactive() {
                                         className={styles["text-input"]}
                                         defaultValue={name || ""}
                                     ></input>
+                                </label>
+                                <label htmlFor={`${key}-table-weight`}>
+                                    Weight:
+                                    <input
+                                        type="number"
+                                        id={`${key}-table-weight`}
+                                        className={styles["number-input"]}
+                                        value={weight || 1}
+                                    />
                                 </label>
                             </div>
                             <div className={styles["table-entries"]}>
