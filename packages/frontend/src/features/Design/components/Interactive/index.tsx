@@ -109,7 +109,17 @@ export function Interactive() {
                         {createDeleteButton()}
                     </div>
                     {menuState === "expanded" && (
-                        <div className={styles["item-menu-properties"]}></div>
+                        <div className={styles["item-menu-properties"]}>
+                            <label htmlFor={`${key}-item-name`}>
+                                Name:{" "}
+                                <input
+                                    type="text"
+                                    id={`${key}-item-name`}
+                                    className={styles["text-input"]}
+                                    defaultValue={name || ""}
+                                ></input>
+                            </label>
+                        </div>
                     )}
                 </div>
             );
@@ -129,7 +139,17 @@ export function Interactive() {
                     </div>
                     {menuState === "expanded" && (
                         <>
-                            <div className={styles["table-menu-properties"]}></div>
+                            <div className={styles["table-menu-properties"]}>
+                                <label htmlFor={`${key}-table-name`}>
+                                    Name:{" "}
+                                    <input
+                                        type="text"
+                                        id={`${key}-table-name`}
+                                        className={styles["text-input"]}
+                                        defaultValue={name || ""}
+                                    ></input>
+                                </label>
+                            </div>
                             <div className={styles["table-entries"]}>
                                 {entry.loot.map((subEntry) => {
                                     if (subEntry.type === "item") return createItemMenu(subEntry);
