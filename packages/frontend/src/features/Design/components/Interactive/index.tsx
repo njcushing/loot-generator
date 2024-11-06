@@ -101,16 +101,20 @@ export function Interactive() {
         (entry: LootItem) => {
             const { key, information } = entry;
             const { name } = information;
+            const menuState = menuStates.get(key);
             return (
                 <div className={styles["item"]} key={key}>
                     <div className={styles["item-menu-bar"]}>
                         {createToggleButton(key, name, "item")}
                         {createDeleteButton()}
                     </div>
+                    {menuState === "expanded" && (
+                        <div className={styles["item-menu-properties"]}></div>
+                    )}
                 </div>
             );
         },
-        [createToggleButton, createDeleteButton],
+        [menuStates, createToggleButton, createDeleteButton],
     );
 
     const createTableMenu = useCallback(
