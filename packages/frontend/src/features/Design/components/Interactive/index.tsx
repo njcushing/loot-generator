@@ -80,6 +80,23 @@ export function Interactive() {
         [menuStates, toggleMenuState],
     );
 
+    const createNewEntryButton = useCallback(() => {
+        return (
+            <button
+                type="button"
+                className={`${styles["new-entry-button"]} material-symbols-sharp`}
+                onClick={(e) => {
+                    e.currentTarget.blur();
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.blur();
+                }}
+            >
+                Add_Circle
+            </button>
+        );
+    }, []);
+
     const createDeleteButton = useCallback(() => {
         return (
             <button
@@ -144,6 +161,7 @@ export function Interactive() {
                 <div className={styles["table"]} key={key}>
                     <div className={styles["table-menu-bar"]}>
                         {createToggleButton(key, name, "table")}
+                        {createNewEntryButton()}
                         {createDeleteButton()}
                     </div>
                     {menuState === "expanded" && (
@@ -180,7 +198,7 @@ export function Interactive() {
                 </div>
             );
         },
-        [menuStates, createItemMenu, createToggleButton, createDeleteButton],
+        [menuStates, createItemMenu, createToggleButton, createNewEntryButton, createDeleteButton],
     );
 
     return (

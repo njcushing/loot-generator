@@ -25,7 +25,7 @@
 .item-menu-bar,
 .table-menu-bar {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr repeat(2, auto);
     align-content: end;
     align-items: center;
 
@@ -105,7 +105,8 @@
     width: calc(100% - 16px);
 }
 
-.delete-menu-item-button {
+.delete-menu-item-button,
+.new-entry-button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -124,14 +125,16 @@
 }
 
 @media (hover: hover) {
-    .delete-menu-item-button:hover {
+    .delete-menu-item-button:hover,
+    .new-entry-button:hover {
         cursor: pointer;
 
         color: rgba(0, 0, 0, 0.6);
     }
 }
 
-.delete-menu-item-button:focus {
+.delete-menu-item-button:focus,
+.new-entry-button:focus {
     cursor: pointer;
 
     color: rgba(0, 0, 0, 0.8);
@@ -141,7 +144,8 @@
     .item-menu-bar:has(> .expand-collapse-button:hover),
     .table-menu-bar:has(> .expand-collapse-button:hover),
     .item-menu-bar:has(> .delete-menu-item-button:hover),
-    .table-menu-bar:has(> .delete-menu-item-button:hover) {
+    .table-menu-bar:has(> .delete-menu-item-button:hover),
+    .table-menu-bar:has(> .new-entry-button:hover) {
         z-index: 1;
 
         outline-width: 3px;
@@ -164,7 +168,8 @@
 .item-menu-bar:has(> .expand-collapse-button:focus),
 .table-menu-bar:has(> .expand-collapse-button:focus),
 .item-menu-bar:has(> .delete-menu-item-button:focus),
-.table-menu-bar:has(> .delete-menu-item-button:focus) {
+.table-menu-bar:has(> .delete-menu-item-button:focus),
+.table-menu-bar:has(> .new-entry-button:focus) {
     z-index: 1;
 
     outline-width: 3px;
