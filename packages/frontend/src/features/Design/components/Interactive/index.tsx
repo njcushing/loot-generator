@@ -128,13 +128,16 @@ export function Interactive() {
                         {createDeleteButton()}
                     </div>
                     {menuState === "expanded" && (
-                        <div className={styles["table-entries"]}>
-                            {entry.loot.map((subEntry) => {
-                                if (subEntry.type === "item") return createItemMenu(subEntry);
-                                if (subEntry.type === "table") return createTableMenu(subEntry);
-                                return null;
-                            })}
-                        </div>
+                        <>
+                            <div className={styles["table-menu-properties"]}></div>
+                            <div className={styles["table-entries"]}>
+                                {entry.loot.map((subEntry) => {
+                                    if (subEntry.type === "item") return createItemMenu(subEntry);
+                                    if (subEntry.type === "table") return createTableMenu(subEntry);
+                                    return null;
+                                })}
+                            </div>
+                        </>
                     )}
                 </div>
             );
