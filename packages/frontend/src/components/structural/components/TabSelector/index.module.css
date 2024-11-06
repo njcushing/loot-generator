@@ -3,6 +3,7 @@
     grid-template-rows: auto 1fr;
 
     width: 100%;
+    min-height: 0;
     height: 100%;
 }
 
