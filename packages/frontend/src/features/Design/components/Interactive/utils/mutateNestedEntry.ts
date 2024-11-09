@@ -23,14 +23,12 @@ export const mutateNestedField = (
     for (let i = 0; i < fieldPath.length; i++) {
         const fieldName = fieldPath[i];
         const field = nestedEntry[fieldName];
-        if (typeof field !== "undefined") {
-            if (i === fieldPath.length - 1) {
-                nestedEntry[fieldName] = value;
-                return;
-            }
-            if (typeof field === "object" && field !== null) {
-                nestedEntry = field as LootItem | LootTable;
-            }
+        if (i === fieldPath.length - 1) {
+            nestedEntry[fieldName] = value;
+            return;
+        }
+        if (typeof field === "object" && field !== null) {
+            nestedEntry = field as LootItem | LootTable;
         } else return;
     }
 };
