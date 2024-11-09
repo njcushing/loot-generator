@@ -1,0 +1,20 @@
+label {
+    display: flex;
+    gap: 8px;
+
+    text-wrap: nowrap;
+
+    width: 100%;
+}
+
+input {
+    color: black;
+    font-family: Roboto;
+    font-size: 1rem;
+
+    border: none;
+    outline: 1px solid black;
+
+    width: 100%;
+    padding: 4px;
+}
