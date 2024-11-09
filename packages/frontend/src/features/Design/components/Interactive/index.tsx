@@ -1,10 +1,22 @@
-import { useContext, useState, useCallback, useEffect } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootItem, LootTable } from "@/utils/types";
 import * as manageMenuStates from "./utils/manageMenuStates";
 import styles from "./index.module.css";
 import { ToggleButton } from "./components/ToggleButton";
 import { Inputs } from "./inputs";
+
+interface InteractiveContext {
+    menuStates: manageMenuStates.MenuStates;
+    setMenuStates: React.Dispatch<React.SetStateAction<manageMenuStates.MenuStates>>;
+}
+
+const defaultInteractiveContext: InteractiveContext = {
+    menuStates: new Map(),
+    setMenuStates: () => {},
+};
+
+export const InteractiveContext = createContext<InteractiveContext>(defaultInteractiveContext);
 
 export function Interactive() {
     const { lootGeneratorState } = useContext(LootGeneratorContext);
@@ -22,15 +34,6 @@ export function Interactive() {
         });
     }, [lootGeneratorState.lootTable]);
 
-    const toggleMenuState = useCallback((key: string) => {
-        setMenuStates((currentMenuStates) => {
-            const newMenuStates = new Map(currentMenuStates);
-            const currentState = newMenuStates.get(key);
-            newMenuStates.set(key, currentState === "collapsed" ? "expanded" : "collapsed");
-            return newMenuStates;
-        });
-    }, []);
-
     const createToggleButton = useCallback(
         (
             key: string,
@@ -41,18 +44,11 @@ export function Interactive() {
             if (typeof menuState === "undefined") return null;
             return (
                 <div className={styles["toggle-button-container"]}>
-                    <ToggleButton
-                        menuState={menuState}
-                        name={name}
-                        type={type}
-                        toggleMenuState={() => {
-                            toggleMenuState(key);
-                        }}
-                    />
+                    <ToggleButton entryKey={key} name={name} type={type} />
                 </div>
             );
         },
-        [menuStates, toggleMenuState],
+        [menuStates],
     );
 
     const createNewEntryButton = useCallback(() => {
@@ -165,8 +161,12 @@ export function Interactive() {
     );
 
     return (
-        <div className={styles["interactive"]}>
-            {lootGeneratorState.lootTable && createTableMenu(lootGeneratorState.lootTable)}
-        </div>
+        <InteractiveContext.Provider
+            value={useMemo(() => ({ menuStates, setMenuStates }), [menuStates, setMenuStates])}
+        >
+            <div className={styles["interactive"]}>
+                {lootGeneratorState.lootTable && createTableMenu(lootGeneratorState.lootTable)}
+            </div>
+        </InteractiveContext.Provider>
     );
 }

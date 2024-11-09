@@ -1,21 +1,36 @@
+import { useContext, useCallback, useMemo } from "react";
 import { LootItem, LootTable } from "@/utils/types";
-import { MenuStates } from "../../utils/manageMenuStates";
+import { InteractiveContext } from "../..";
 import styles from "./index.module.css";
 
 export type TToggleButton = {
-    menuState: MenuStates extends Map<unknown, infer I> ? I : never;
+    entryKey: (LootItem | LootTable)["key"];
     name: LootItem["information"]["name"] | LootTable["name"];
     type: LootItem["type"] | LootTable["type"];
-    toggleMenuState: () => unknown;
 };
 
-export function ToggleButton({ menuState, name, type, toggleMenuState }: TToggleButton) {
+export function ToggleButton({ entryKey, name, type }: TToggleButton) {
+    const { menuStates, setMenuStates } = useContext(InteractiveContext);
+    const menuState = useMemo(
+        () => menuStates.get(entryKey) || "collapsed",
+        [entryKey, menuStates],
+    );
+
+    const toggleMenuState = useCallback(() => {
+        setMenuStates((currentMenuStates) => {
+            const newMenuStates = new Map(currentMenuStates);
+            const currentState = newMenuStates.get(entryKey);
+            newMenuStates.set(entryKey, currentState === "collapsed" ? "expanded" : "collapsed");
+            return newMenuStates;
+        });
+    }, [entryKey, setMenuStates]);
+
     return (
         <button
             type="button"
             className={styles["toggle-button"]}
             onClick={(e) => {
-                if (toggleMenuState) toggleMenuState();
+                toggleMenuState();
                 e.currentTarget.blur();
             }}
             onMouseLeave={(e) => {
