@@ -1,6 +1,7 @@
 import { useContext, useState, useCallback, useEffect } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootItem, LootTable } from "@/utils/types";
+import { findNestedEntry, mutateNestedField } from "./utils/mutateNestedEntry";
 import styles from "./index.module.css";
 
 type MenuStates = Map<string, "collapsed" | "expanded">;
@@ -29,7 +30,7 @@ const updateStates = (
 };
 
 export function Interactive() {
-    const { lootGeneratorState } = useContext(LootGeneratorContext);
+    const { lootGeneratorState, setLootGeneratorStateProperty } = useContext(LootGeneratorContext);
 
     const [menuStates, setMenuStates] = useState<Map<string, "collapsed" | "expanded">>(() => {
         return updateStates(lootGeneratorState.lootTable, new Map(), new Map());
@@ -39,6 +40,17 @@ export function Interactive() {
             return updateStates(lootGeneratorState.lootTable, currentMenuStates, new Map());
         });
     }, [lootGeneratorState.lootTable]);
+
+    const editEntry = useCallback(
+        (key: string, fieldPath: string[], value: unknown) => {
+            const copy: LootTable = JSON.parse(JSON.stringify(lootGeneratorState.lootTable));
+            const entry = findNestedEntry(key, copy);
+            if (!entry) return;
+            mutateNestedField(fieldPath, value, entry);
+            setLootGeneratorStateProperty("lootTable", copy);
+        },
+        [lootGeneratorState.lootTable, setLootGeneratorStateProperty],
+    );
 
     const toggleMenuState = useCallback((key: string) => {
         setMenuStates((currentMenuStates) => {
@@ -134,6 +146,9 @@ export function Interactive() {
                                     id={`${key}-item-name`}
                                     className={styles["text-input"]}
                                     defaultValue={name || ""}
+                                    onChange={(e) => {
+                                        editEntry(key, ["information", "name"], e.target.value);
+                                    }}
                                 ></input>
                             </label>
                             <label htmlFor={`${key}-item-weight`}>
@@ -143,6 +158,9 @@ export function Interactive() {
                                     id={`${key}-item-weight`}
                                     className={styles["number-input"]}
                                     value={weight || 1}
+                                    onChange={(e) => {
+                                        editEntry(key, ["weight"], Number(e.target.value));
+                                    }}
                                 />
                             </label>
                         </div>
@@ -150,7 +168,7 @@ export function Interactive() {
                 </div>
             );
         },
-        [menuStates, createToggleButton, createDeleteButton],
+        [menuStates, editEntry, createToggleButton, createDeleteButton],
     );
 
     const createTableMenu = useCallback(
@@ -174,6 +192,7 @@ export function Interactive() {
                                         id={`${key}-table-name`}
                                         className={styles["text-input"]}
                                         defaultValue={name || ""}
+                                        onChange={(e) => editEntry(key, ["name"], e.target.value)}
                                     ></input>
                                 </label>
                                 <label htmlFor={`${key}-table-weight`}>
@@ -183,6 +202,9 @@ export function Interactive() {
                                         id={`${key}-table-weight`}
                                         className={styles["number-input"]}
                                         value={weight || 1}
+                                        onChange={(e) => {
+                                            editEntry(key, ["weight"], Number(e.target.value));
+                                        }}
                                     />
                                 </label>
                             </div>
@@ -198,7 +220,14 @@ export function Interactive() {
                 </div>
             );
         },
-        [menuStates, createItemMenu, createToggleButton, createNewEntryButton, createDeleteButton],
+        [
+            menuStates,
+            editEntry,
+            createToggleButton,
+            createNewEntryButton,
+            createDeleteButton,
+            createItemMenu,
+        ],
     );
 
     return (
