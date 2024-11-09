@@ -1,15 +1,17 @@
 import { v4 as uuid } from "uuid";
 import { LootItem, LootTable, Loot } from "../types";
 
-export const createLootItem = (props: Omit<LootItem, "type" | "key">): LootItem => ({
+export const createLootItem = (props: Omit<LootItem, "type" | "key" | "custom">): LootItem => ({
     ...props,
     type: "item",
     key: uuid(),
+    custom: {},
 });
-export const createLootTable = (props: Omit<LootTable, "type" | "key">): LootTable => ({
+export const createLootTable = (props: Omit<LootTable, "type" | "key" | "custom">): LootTable => ({
     ...props,
     type: "table",
     key: uuid(),
+    custom: {},
 });
 
 type SummedTable = LootTable & { totalWeight: number };
