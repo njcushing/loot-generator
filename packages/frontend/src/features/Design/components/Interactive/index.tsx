@@ -2,12 +2,12 @@ import { useContext, useState, useCallback, useEffect } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootItem, LootTable } from "@/utils/types";
 import * as manageMenuStates from "./utils/manageMenuStates";
-import { findNestedEntry, mutateNestedField } from "./utils/mutateNestedEntry";
 import styles from "./index.module.css";
 import { ToggleButton } from "./components/ToggleButton";
+import { Inputs } from "./inputs";
 
 export function Interactive() {
-    const { lootGeneratorState, setLootGeneratorStateProperty } = useContext(LootGeneratorContext);
+    const { lootGeneratorState } = useContext(LootGeneratorContext);
 
     const [menuStates, setMenuStates] = useState<Map<string, "collapsed" | "expanded">>(() => {
         return manageMenuStates.update(lootGeneratorState.lootTable, new Map(), new Map());
@@ -21,17 +21,6 @@ export function Interactive() {
             );
         });
     }, [lootGeneratorState.lootTable]);
-
-    const editEntry = useCallback(
-        (key: string, fieldPath: string[], value: unknown) => {
-            const copy: LootTable = JSON.parse(JSON.stringify(lootGeneratorState.lootTable));
-            const entry = findNestedEntry(key, copy);
-            if (!entry) return;
-            mutateNestedField(fieldPath, value, entry);
-            setLootGeneratorStateProperty("lootTable", copy);
-        },
-        [lootGeneratorState.lootTable, setLootGeneratorStateProperty],
-    );
 
     const toggleMenuState = useCallback((key: string) => {
         setMenuStates((currentMenuStates) => {
@@ -113,36 +102,24 @@ export function Interactive() {
                     </div>
                     {menuState === "expanded" && (
                         <div className={styles["item-menu-properties"]}>
-                            <label htmlFor={`${key}-item-name`}>
-                                Name:{" "}
-                                <input
-                                    type="text"
-                                    id={`${key}-item-name`}
-                                    className={styles["text-input"]}
-                                    defaultValue={name || ""}
-                                    onChange={(e) => {
-                                        editEntry(key, ["information", "name"], e.target.value);
-                                    }}
-                                ></input>
-                            </label>
-                            <label htmlFor={`${key}-item-weight`}>
-                                Weight:
-                                <input
-                                    type="number"
-                                    id={`${key}-item-weight`}
-                                    className={styles["number-input"]}
-                                    value={weight || 1}
-                                    onChange={(e) => {
-                                        editEntry(key, ["weight"], Number(e.target.value));
-                                    }}
-                                />
-                            </label>
+                            <Inputs.Text
+                                entryKey={key}
+                                labelText="Name"
+                                defaultValue={name || ""}
+                                fieldPath={["information", "name"]}
+                            />
+                            <Inputs.Numeric
+                                entryKey={key}
+                                labelText="Name"
+                                defaultValue={weight || 1}
+                                fieldPath={["weight"]}
+                            />
                         </div>
                     )}
                 </div>
             );
         },
-        [menuStates, editEntry, createToggleButton, createDeleteButton],
+        [menuStates, createToggleButton, createDeleteButton],
     );
 
     const createTableMenu = useCallback(
@@ -159,28 +136,18 @@ export function Interactive() {
                     {menuState === "expanded" && (
                         <>
                             <div className={styles["table-menu-properties"]}>
-                                <label htmlFor={`${key}-table-name`}>
-                                    Name:{" "}
-                                    <input
-                                        type="text"
-                                        id={`${key}-table-name`}
-                                        className={styles["text-input"]}
-                                        defaultValue={name || ""}
-                                        onChange={(e) => editEntry(key, ["name"], e.target.value)}
-                                    ></input>
-                                </label>
-                                <label htmlFor={`${key}-table-weight`}>
-                                    Weight:
-                                    <input
-                                        type="number"
-                                        id={`${key}-table-weight`}
-                                        className={styles["number-input"]}
-                                        value={weight || 1}
-                                        onChange={(e) => {
-                                            editEntry(key, ["weight"], Number(e.target.value));
-                                        }}
-                                    />
-                                </label>
+                                <Inputs.Text
+                                    entryKey={key}
+                                    labelText="Name"
+                                    defaultValue={name || ""}
+                                    fieldPath={["name"]}
+                                />
+                                <Inputs.Numeric
+                                    entryKey={key}
+                                    labelText="Name"
+                                    defaultValue={weight || 1}
+                                    fieldPath={["weight"]}
+                                />
                             </div>
                             <div className={styles["table-entries"]}>
                                 {entry.loot.map((subEntry) => {
@@ -194,14 +161,7 @@ export function Interactive() {
                 </div>
             );
         },
-        [
-            menuStates,
-            editEntry,
-            createToggleButton,
-            createNewEntryButton,
-            createDeleteButton,
-            createItemMenu,
-        ],
+        [menuStates, createToggleButton, createNewEntryButton, createDeleteButton, createItemMenu],
     );
 
     return (
