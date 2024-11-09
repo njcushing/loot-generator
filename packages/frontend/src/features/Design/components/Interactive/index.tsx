@@ -34,23 +34,6 @@ export function Interactive() {
         });
     }, [lootGeneratorState.lootTable]);
 
-    const createToggleButton = useCallback(
-        (
-            key: string,
-            name: LootItem["information"]["name"] | LootTable["name"],
-            type: LootItem["type"] | LootTable["type"],
-        ) => {
-            const menuState = menuStates.get(key);
-            if (typeof menuState === "undefined") return null;
-            return (
-                <div className={styles["toggle-button-container"]}>
-                    <ToggleButton entryKey={key} name={name} type={type} />
-                </div>
-            );
-        },
-        [menuStates],
-    );
-
     const createNewEntryButton = useCallback(() => {
         return (
             <button
@@ -93,7 +76,9 @@ export function Interactive() {
             return (
                 <div className={styles["item"]} key={key}>
                     <div className={styles["item-menu-bar"]}>
-                        {createToggleButton(key, name, "item")}
+                        <div className={styles["toggle-button-container"]}>
+                            <ToggleButton entry={entry} />
+                        </div>
                         {createDeleteButton()}
                     </div>
                     {menuState === "expanded" && (
@@ -115,7 +100,7 @@ export function Interactive() {
                 </div>
             );
         },
-        [menuStates, createToggleButton, createDeleteButton],
+        [menuStates, createDeleteButton],
     );
 
     const createTableMenu = useCallback(
@@ -125,7 +110,9 @@ export function Interactive() {
             return (
                 <div className={styles["table"]} key={key}>
                     <div className={styles["table-menu-bar"]}>
-                        {createToggleButton(key, name, "table")}
+                        <div className={styles["toggle-button-container"]}>
+                            <ToggleButton entry={entry} />
+                        </div>
                         {createNewEntryButton()}
                         {createDeleteButton()}
                     </div>
@@ -157,7 +144,7 @@ export function Interactive() {
                 </div>
             );
         },
-        [menuStates, createToggleButton, createNewEntryButton, createDeleteButton, createItemMenu],
+        [menuStates, createNewEntryButton, createDeleteButton, createItemMenu],
     );
 
     return (

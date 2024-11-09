@@ -4,26 +4,27 @@ import { InteractiveContext } from "../..";
 import styles from "./index.module.css";
 
 export type TToggleButton = {
-    entryKey: (LootItem | LootTable)["key"];
-    name: LootItem["information"]["name"] | LootTable["name"];
-    type: LootItem["type"] | LootTable["type"];
+    entry: LootItem | LootTable;
 };
 
-export function ToggleButton({ entryKey, name, type }: TToggleButton) {
+export function ToggleButton({ entry }: TToggleButton) {
     const { menuStates, setMenuStates } = useContext(InteractiveContext);
     const menuState = useMemo(
-        () => menuStates.get(entryKey) || "collapsed",
-        [entryKey, menuStates],
+        () => menuStates.get(entry.key) || "collapsed",
+        [entry.key, menuStates],
     );
 
     const toggleMenuState = useCallback(() => {
         setMenuStates((currentMenuStates) => {
             const newMenuStates = new Map(currentMenuStates);
-            const currentState = newMenuStates.get(entryKey);
-            newMenuStates.set(entryKey, currentState === "collapsed" ? "expanded" : "collapsed");
+            const currentState = newMenuStates.get(entry.key);
+            newMenuStates.set(entry.key, currentState === "collapsed" ? "expanded" : "collapsed");
             return newMenuStates;
         });
-    }, [entryKey, setMenuStates]);
+    }, [entry.key, setMenuStates]);
+
+    const { type } = entry;
+    const { name } = type === "table" ? entry : entry.information;
 
     return (
         <button
