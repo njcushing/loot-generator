@@ -4,6 +4,7 @@ import { LootItem, LootTable } from "@/utils/types";
 import * as manageMenuStates from "./utils/manageMenuStates";
 import { findNestedEntry, mutateNestedField } from "./utils/mutateNestedEntry";
 import styles from "./index.module.css";
+import { ToggleButton } from "./components/ToggleButton";
 
 export function Interactive() {
     const { lootGeneratorState, setLootGeneratorStateProperty } = useContext(LootGeneratorContext);
@@ -48,25 +49,18 @@ export function Interactive() {
             type: LootItem["type"] | LootTable["type"],
         ) => {
             const menuState = menuStates.get(key);
+            if (typeof menuState === "undefined") return null;
             return (
-                <button
-                    type="button"
-                    className={styles["expand-collapse-button"]}
-                    onClick={(e) => {
-                        toggleMenuState(key);
-                        e.currentTarget.blur();
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.blur();
-                    }}
-                >
-                    <p className={styles["symbol"]}>{menuState === "collapsed" ? "+" : "-"}</p>
-                    <p
-                        className={`${styles["name"]} ${styles[!name ? "unnamed" : ""]} truncate-ellipsis`}
-                    >
-                        {name || (type === "item" ? "Unnamed Item" : "Unnamed Table")}
-                    </p>
-                </button>
+                <div className={styles["toggle-button-container"]}>
+                    <ToggleButton
+                        menuState={menuState}
+                        name={name}
+                        type={type}
+                        toggleMenuState={() => {
+                            toggleMenuState(key);
+                        }}
+                    />
+                </div>
             );
         },
         [menuStates, toggleMenuState],

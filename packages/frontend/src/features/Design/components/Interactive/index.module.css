@@ -42,63 +42,6 @@
     background-color: rgb(186, 240, 228);
 }
 
-.expand-collapse-button {
-    box-sizing: border-box;
-
-    position: relative;
-
-    place-self: center;
-
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-content: center;
-    gap: 6px;
-
-    pointer-events: auto;
-
-    border: none;
-    background-color: transparent;
-
-    width: 100%;
-    height: 100%;
-    padding: 2px;
-}
-
-@media (hover: hover) {
-    .expand-collapse-button:hover {
-        cursor: pointer;
-    }
-}
-
-.expand-collapse-button:focus {
-    cursor: pointer;
-}
-
-.symbol {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    font-family: Roboto;
-    font-size: 1.6rem;
-    font-weight: 200;
-
-    height: 100%;
-    aspect-ratio: 1;
-}
-
-.name {
-    font-size: 1rem;
-    text-align: start;
-    text-wrap: nowrap;
-
-    height: 100%;
-}
-
-.unnamed {
-    font-style: italic;
-}
-
 .table-entries {
     align-self: end;
 
@@ -141,8 +84,8 @@
 }
 
 @media (hover: hover) {
-    .item-menu-bar:has(> .expand-collapse-button:hover),
-    .table-menu-bar:has(> .expand-collapse-button:hover),
+    .item-menu-bar:has(> .toggle-button-container:hover),
+    .table-menu-bar:has(> .toggle-button-container:hover),
     .item-menu-bar:has(> .delete-menu-item-button:hover),
     .table-menu-bar:has(> .delete-menu-item-button:hover),
     .table-menu-bar:has(> .new-entry-button:hover) {
@@ -151,11 +94,11 @@
         outline-width: 3px;
     }
 
-    .item-menu-bar:has(> .expand-collapse-button:hover) {
+    .item-menu-bar:has(> .toggle-button-container:hover) {
         background-color: rgb(151, 226, 128);
     }
 
-    .table-menu-bar:has(> .expand-collapse-button:hover) {
+    .table-menu-bar:has(> .toggle-button-container:hover) {
         background-color: rgb(157, 224, 210);
     }
 
@@ -165,8 +108,8 @@
     }
 }
 
-.item-menu-bar:has(> .expand-collapse-button:focus),
-.table-menu-bar:has(> .expand-collapse-button:focus),
+.item-menu-bar:has(> .toggle-button-container:focus),
+.table-menu-bar:has(> .toggle-button-container:focus),
 .item-menu-bar:has(> .delete-menu-item-button:focus),
 .table-menu-bar:has(> .delete-menu-item-button:focus),
 .table-menu-bar:has(> .new-entry-button:focus) {
@@ -175,11 +118,11 @@
     outline-width: 3px;
 }
 
-.item-menu-bar:has(> .expand-collapse-button:focus) {
+.item-menu-bar:has(> .toggle-button-container:focus) {
     background-color: rgb(132, 206, 110);
 }
 
-.table-menu-bar:has(> .expand-collapse-button:focus) {
+.table-menu-bar:has(> .toggle-button-container:focus) {
     background-color: rgb(139, 206, 191);
 }
 
