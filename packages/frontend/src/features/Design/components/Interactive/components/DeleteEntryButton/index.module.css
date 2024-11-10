@@ -1,0 +1,31 @@
+.delete-entry-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    pointer-events: all;
+
+    color: rgba(0, 0, 0, 0.4);
+    font-size: 4px;
+
+    border: none;
+    background-color: transparent;
+
+    height: 100%;
+    aspect-ratio: 1;
+    padding: 2px;
+}
+
+@media (hover: hover) {
+    .delete-entry-button:hover {
+        cursor: pointer;
+
+        color: rgba(0, 0, 0, 0.6);
+    }
+}
+
+.delete-entry-button:focus {
+    cursor: pointer;
+
+    color: rgba(0, 0, 0, 0.8);
+}

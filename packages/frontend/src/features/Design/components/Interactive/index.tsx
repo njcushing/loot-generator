@@ -1,12 +1,13 @@
 import { createContext, useContext, useState, useCallback, useEffect, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootItem, LootTable } from "@/utils/types";
-import * as manageMenuStates from "./utils/manageMenuStates";
-import styles from "./index.module.css";
 import { ToggleButton } from "./components/ToggleButton";
 import { Inputs } from "./inputs";
 import { CreateNewEntryButton } from "./components/CreateNewEntryButton";
 import { SaveAsPresetButton } from "./components/SaveAsPresetButton";
+import { DeleteEntryButton } from "./components/DeleteEntryButton";
+import * as manageMenuStates from "./utils/manageMenuStates";
+import styles from "./index.module.css";
 
 interface InteractiveContext {
     menuStates: manageMenuStates.MenuStates;
@@ -36,23 +37,6 @@ export function Interactive() {
         });
     }, [lootGeneratorState.lootTable]);
 
-    const createDeleteButton = useCallback(() => {
-        return (
-            <button
-                type="button"
-                className={`${styles["delete-menu-item-button"]} material-symbols-sharp`}
-                onClick={(e) => {
-                    e.currentTarget.blur();
-                }}
-                onMouseLeave={(e) => {
-                    e.currentTarget.blur();
-                }}
-            >
-                Delete
-            </button>
-        );
-    }, []);
-
     const createItemMenu = useCallback(
         (entry: LootItem) => {
             const { key, information, weight } = entry;
@@ -67,7 +51,9 @@ export function Interactive() {
                         <div className={styles["save-as-preset-button-container"]}>
                             <SaveAsPresetButton />
                         </div>
-                        {createDeleteButton()}
+                        <div className={styles["delete-entry-button-container"]}>
+                            <DeleteEntryButton />
+                        </div>
                     </div>
                     {menuState === "expanded" && (
                         <div className={styles["item-menu-properties"]}>
@@ -88,7 +74,7 @@ export function Interactive() {
                 </div>
             );
         },
-        [menuStates, createDeleteButton],
+        [menuStates],
     );
 
     const createTableMenu = useCallback(
@@ -107,7 +93,9 @@ export function Interactive() {
                         <div className={styles["save-as-preset-button-container"]}>
                             <SaveAsPresetButton />
                         </div>
-                        {createDeleteButton()}
+                        <div className={styles["delete-entry-button-container"]}>
+                            <DeleteEntryButton />
+                        </div>
                     </div>
                     {menuState === "expanded" && (
                         <>
@@ -137,7 +125,7 @@ export function Interactive() {
                 </div>
             );
         },
-        [menuStates, createDeleteButton, createItemMenu],
+        [menuStates, createItemMenu],
     );
 
     return (

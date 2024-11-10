@@ -48,45 +48,13 @@
     width: calc(100% - 16px);
 }
 
-.delete-menu-item-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    pointer-events: all;
-
-    color: rgba(0, 0, 0, 0.4);
-    font-size: 4px;
-
-    border: none;
-    background-color: transparent;
-
-    height: 100%;
-    aspect-ratio: 1;
-    padding: 2px;
-}
-
-@media (hover: hover) {
-    .delete-menu-item-button:hover {
-        cursor: pointer;
-
-        color: rgba(0, 0, 0, 0.6);
-    }
-}
-
-.delete-menu-item-button:focus {
-    cursor: pointer;
-
-    color: rgba(0, 0, 0, 0.8);
-}
-
 @media (hover: hover) {
     .item-menu-bar:has(> .toggle-button-container:hover),
     .table-menu-bar:has(> .toggle-button-container:hover),
     .item-menu-bar:has(> .save-as-preset-button-container:hover),
     .table-menu-bar:has(> .save-as-preset-button-container:hover),
-    .item-menu-bar:has(> .delete-menu-item-button:hover),
-    .table-menu-bar:has(> .delete-menu-item-button:hover),
+    .item-menu-bar:has(> .delete-entry-button-container:hover),
+    .table-menu-bar:has(> .delete-entry-button-container:hover),
     .table-menu-bar:has(> .create-new-entry-button-container:hover) {
         z-index: 1;
 
@@ -101,8 +69,8 @@
         background-color: rgb(157, 224, 210);
     }
 
-    .item-menu-bar:has(> .delete-menu-item-button:hover),
-    .table-menu-bar:has(> .delete-menu-item-button:hover) {
+    .item-menu-bar:has(> .delete-entry-button-container:hover),
+    .table-menu-bar:has(> .delete-entry-button-container:hover) {
         background-color: rgb(250, 187, 187);
     }
 }
@@ -111,8 +79,8 @@
 .table-menu-bar:has(> .toggle-button-container:focus),
 .item-menu-bar:has(> .save-as-preset-button-container:focus),
 .table-menu-bar:has(> .save-as-preset-button-container:focus),
-.item-menu-bar:has(> .delete-menu-item-button:focus),
-.table-menu-bar:has(> .delete-menu-item-button:focus),
+.item-menu-bar:has(> .delete-entry-button-container:focus),
+.table-menu-bar:has(> .delete-entry-button-container:focus),
 .table-menu-bar:has(> .create-new-entry-button-container:focus) {
     z-index: 1;
 
@@ -127,8 +95,8 @@
     background-color: rgb(139, 206, 191);
 }
 
-.item-menu-bar:has(> .delete-menu-item-button:focus),
-.table-menu-bar:has(> .delete-menu-item-button:focus) {
+.item-menu-bar:has(> .delete-entry-button-container:focus),
+.table-menu-bar:has(> .delete-entry-button-container:focus) {
     background-color: rgb(231, 148, 148);
 }
 
