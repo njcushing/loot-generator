@@ -25,7 +25,7 @@
 .item-menu-bar,
 .table-menu-bar {
     display: grid;
-    grid-template-columns: 1fr repeat(2, auto);
+    grid-template-columns: 1fr repeat(3, auto);
     align-content: end;
     align-items: center;
 
@@ -49,6 +49,7 @@
 }
 
 .delete-menu-item-button,
+.save-as-preset-button,
 .new-entry-button {
     display: flex;
     justify-content: center;
@@ -69,6 +70,7 @@
 
 @media (hover: hover) {
     .delete-menu-item-button:hover,
+    .save-as-preset-button:hover,
     .new-entry-button:hover {
         cursor: pointer;
 
@@ -77,6 +79,7 @@
 }
 
 .delete-menu-item-button:focus,
+.save-as-preset-button:focus,
 .new-entry-button:focus {
     cursor: pointer;
 
@@ -86,6 +89,8 @@
 @media (hover: hover) {
     .item-menu-bar:has(> .toggle-button-container:hover),
     .table-menu-bar:has(> .toggle-button-container:hover),
+    .item-menu-bar:has(> .save-as-preset-button:hover),
+    .table-menu-bar:has(> .save-as-preset-button:hover),
     .item-menu-bar:has(> .delete-menu-item-button:hover),
     .table-menu-bar:has(> .delete-menu-item-button:hover),
     .table-menu-bar:has(> .new-entry-button:hover) {
@@ -110,6 +115,8 @@
 
 .item-menu-bar:has(> .toggle-button-container:focus),
 .table-menu-bar:has(> .toggle-button-container:focus),
+.item-menu-bar:has(> .save-as-preset-button:focus),
+.table-menu-bar:has(> .save-as-preset-button:focus),
 .item-menu-bar:has(> .delete-menu-item-button:focus),
 .table-menu-bar:has(> .delete-menu-item-button:focus),
 .table-menu-bar:has(> .new-entry-button:focus) {

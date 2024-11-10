@@ -51,6 +51,23 @@ export function Interactive() {
         );
     }, []);
 
+    const createSaveAsPresetButton = useCallback(() => {
+        return (
+            <button
+                type="button"
+                className={`${styles["save-as-preset-button"]} material-symbols-sharp`}
+                onClick={(e) => {
+                    e.currentTarget.blur();
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.blur();
+                }}
+            >
+                Save
+            </button>
+        );
+    }, []);
+
     const createDeleteButton = useCallback(() => {
         return (
             <button
@@ -79,6 +96,7 @@ export function Interactive() {
                         <div className={styles["toggle-button-container"]}>
                             <ToggleButton entry={entry} />
                         </div>
+                        {createSaveAsPresetButton()}
                         {createDeleteButton()}
                     </div>
                     {menuState === "expanded" && (
@@ -100,7 +118,7 @@ export function Interactive() {
                 </div>
             );
         },
-        [menuStates, createDeleteButton],
+        [menuStates, createSaveAsPresetButton, createDeleteButton],
     );
 
     const createTableMenu = useCallback(
@@ -114,6 +132,7 @@ export function Interactive() {
                             <ToggleButton entry={entry} />
                         </div>
                         {createNewEntryButton()}
+                        {createSaveAsPresetButton()}
                         {createDeleteButton()}
                     </div>
                     {menuState === "expanded" && (
@@ -144,7 +163,13 @@ export function Interactive() {
                 </div>
             );
         },
-        [menuStates, createNewEntryButton, createDeleteButton, createItemMenu],
+        [
+            menuStates,
+            createNewEntryButton,
+            createSaveAsPresetButton,
+            createDeleteButton,
+            createItemMenu,
+        ],
     );
 
     return (
