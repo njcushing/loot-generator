@@ -64,7 +64,7 @@ export const createTableEntry = (key: string, entry: LootTable): boolean => {
         const subEntry = entry.loot[i];
         if (subEntry.type === "table") {
             if (subEntry.key === key) {
-                const newTable = createLootTable({ weight: 0 });
+                const newTable = createLootTable();
                 subEntry.loot.push(newTable);
                 created = true;
             }
@@ -80,7 +80,7 @@ export const createItemEntry = (key: string, entry: LootTable): boolean => {
         const subEntry = entry.loot[i];
         if (subEntry.type === "table") {
             if (subEntry.key === key) {
-                const newTable = createLootItem({ weight: 0 });
+                const newTable = createLootItem();
                 subEntry.loot.push(newTable);
                 created = true;
             }
