@@ -7,10 +7,16 @@ export const createLootItem = (props: Omit<LootItem, "type" | "key" | "custom">)
     key: uuid(),
     custom: {},
 });
-export const createLootTable = (props: Omit<LootTable, "type" | "key" | "custom">): LootTable => ({
+export const createLootTable = ({
+    loot = [],
+    ...props
+}: Omit<LootTable, "type" | "key" | "loot" | "custom"> & {
+    loot?: LootTable["loot"];
+}): LootTable => ({
     ...props,
     type: "table",
     key: uuid(),
+    loot,
     custom: {},
 });
 
