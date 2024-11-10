@@ -1,3 +1,7 @@
+.create-new-entry-button-wrapper {
+    position: relative;
+}
+
 .create-new-entry-button {
     display: flex;
     justify-content: center;
@@ -28,4 +32,62 @@
     cursor: pointer;
 
     color: rgba(0, 0, 0, 0.8);
+}
+
+.creation-menu {
+    z-index: 2;
+
+    position: absolute;
+    top: 0%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+
+    pointer-events: all;
+
+    border: 2px solid #000;
+    border-radius: 6px;
+    background-color: black;
+
+    padding: 4px;
+}
+
+.create-new-table-button,
+.create-new-item-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    pointer-events: all;
+
+    color: white;
+    font-size: 1rem;
+
+    border: none;
+    border-radius: 6px;
+    background-color: transparent;
+
+    width: 100%;
+    padding: 4px 12px;
+}
+
+@media (hover: hover) {
+    .create-new-table-button:hover,
+    .create-new-item-button:hover {
+        cursor: pointer;
+
+        background-color: rgba(255, 255, 255, 0.4);
+    }
+}
+
+.create-new-table-button:focus,
+.create-new-item-button:focus {
+    cursor: pointer;
+
+    background-color: rgba(255, 255, 255, 0.3);
 }
