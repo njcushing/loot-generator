@@ -79,7 +79,7 @@ export function Interactive() {
                             />
                             <Inputs.Numeric
                                 entryKey={key}
-                                labelText="Name"
+                                labelText="Weight"
                                 defaultValue={weight || 1}
                                 fieldPath={["weight"]}
                             />
@@ -120,7 +120,7 @@ export function Interactive() {
                                 />
                                 <Inputs.Numeric
                                     entryKey={key}
-                                    labelText="Name"
+                                    labelText="Weight"
                                     defaultValue={weight || 1}
                                     fieldPath={["weight"]}
                                 />
