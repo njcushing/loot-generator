@@ -1,7 +1,7 @@
 import { useContext, useState, useCallback } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootTable } from "@/utils/types";
-import { createTableEntry } from "../../utils/manageEntries";
+import { createItemEntry, createTableEntry } from "../../utils/manageEntries";
 import styles from "./index.module.css";
 
 export type TCreateNewEntryButton = {
@@ -17,6 +17,13 @@ export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
         const { key } = entry;
         const copy: LootTable = JSON.parse(JSON.stringify(lootGeneratorState.lootTable));
         createTableEntry(key, copy);
+        setLootGeneratorStateProperty("lootTable", copy);
+    }, [entry, lootGeneratorState.lootTable, setLootGeneratorStateProperty]);
+
+    const createNewItem = useCallback(() => {
+        const { key } = entry;
+        const copy: LootTable = JSON.parse(JSON.stringify(lootGeneratorState.lootTable));
+        createItemEntry(key, copy);
         setLootGeneratorStateProperty("lootTable", copy);
     }, [entry, lootGeneratorState.lootTable, setLootGeneratorStateProperty]);
 
@@ -55,6 +62,7 @@ export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
                         type="button"
                         className={styles["create-new-item-button"]}
                         onClick={(e) => {
+                            createNewItem();
                             setMenuOpen(!menuOpen);
                             e.currentTarget.blur();
                         }}
