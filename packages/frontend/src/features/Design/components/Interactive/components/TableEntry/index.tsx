@@ -25,7 +25,7 @@ export function TableEntry({ entry }: TTableEntry) {
                     <ToggleButton entry={entry} />
                 </div>
                 <div className={styles["create-new-entry-button-container"]}>
-                    <CreateNewEntryButton />
+                    <CreateNewEntryButton entry={entry} />
                 </div>
                 <div className={styles["save-as-preset-button-container"]}>
                     <SaveAsPresetButton />

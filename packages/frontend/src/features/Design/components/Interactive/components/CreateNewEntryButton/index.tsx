@@ -1,8 +1,24 @@
-import { useState } from "react";
+import { useContext, useState, useCallback } from "react";
+import { LootGeneratorContext } from "@/pages/LootGenerator";
+import { LootTable } from "@/utils/types";
+import { createTableEntry } from "../../utils/manageEntries";
 import styles from "./index.module.css";
 
-export function CreateNewEntryButton() {
+export type TCreateNewEntryButton = {
+    entry: LootTable;
+};
+
+export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
+    const { lootGeneratorState, setLootGeneratorStateProperty } = useContext(LootGeneratorContext);
+
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
+
+    const createNewTable = useCallback(() => {
+        const { key } = entry;
+        const copy: LootTable = JSON.parse(JSON.stringify(lootGeneratorState.lootTable));
+        createTableEntry(key, copy);
+        setLootGeneratorStateProperty("lootTable", copy);
+    }, [entry, lootGeneratorState.lootTable, setLootGeneratorStateProperty]);
 
     return (
         <div className={`${styles["create-new-entry-button-wrapper"]} material-symbols-sharp`}>
@@ -25,6 +41,8 @@ export function CreateNewEntryButton() {
                         type="button"
                         className={styles["create-new-table-button"]}
                         onClick={(e) => {
+                            createNewTable();
+                            setMenuOpen(!menuOpen);
                             e.currentTarget.blur();
                         }}
                         onMouseLeave={(e) => {
@@ -37,6 +55,7 @@ export function CreateNewEntryButton() {
                         type="button"
                         className={styles["create-new-item-button"]}
                         onClick={(e) => {
+                            setMenuOpen(!menuOpen);
                             e.currentTarget.blur();
                         }}
                         onMouseLeave={(e) => {
