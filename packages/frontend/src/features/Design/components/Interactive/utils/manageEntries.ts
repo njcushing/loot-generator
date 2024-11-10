@@ -5,11 +5,14 @@ export const findNestedEntry = (
     key: string,
     entry: LootItem | LootTable,
 ): LootItem | LootTable | null => {
-    if (entry.key === key) return entry;
+    if (entry.key === key) {
+        return entry;
+    }
     if (entry.type === "table") {
         for (let i = 0; i < entry.loot.length; i++) {
             const subEntry = entry.loot[i];
-            if (findNestedEntry(key, subEntry)) return subEntry;
+            const nestedEntry = findNestedEntry(key, subEntry);
+            if (nestedEntry) return nestedEntry;
         }
     }
     return null;
