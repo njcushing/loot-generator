@@ -1,3 +1,4 @@
+import { createLootTable } from "@/utils/generateLoot";
 import { LootItem, LootTable } from "@/utils/types";
 
 export const findNestedEntry = (
@@ -55,4 +56,20 @@ export const deleteEntry = (key: string, entry: LootTable): boolean => {
         if (!deleted && subEntry.type === "table") deleted = deleteEntry(key, subEntry);
     }
     return deleted;
+};
+
+export const createTableEntry = (key: string, entry: LootTable): boolean => {
+    let created = false;
+    for (let i = 0; i < entry.loot.length; i++) {
+        const subEntry = entry.loot[i];
+        if (subEntry.type === "table") {
+            if (subEntry.key === key) {
+                const newTable = createLootTable({ weight: 0 });
+                subEntry.loot.push(newTable);
+                created = true;
+            }
+            if (!created) created = createTableEntry(key, subEntry);
+        }
+    }
+    return created;
 };
