@@ -1,7 +1,7 @@
 import { useContext, useCallback } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootItem, LootTable } from "@/utils/types";
-import { findNestedEntry, mutateNestedField } from "../../utils/mutateNestedEntry";
+import { findNestedEntry, mutateNestedField } from "../../utils/manageEntries";
 import "./index.module.css";
 
 export type TNumeric = {
