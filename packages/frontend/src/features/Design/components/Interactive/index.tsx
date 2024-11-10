@@ -5,6 +5,7 @@ import * as manageMenuStates from "./utils/manageMenuStates";
 import styles from "./index.module.css";
 import { ToggleButton } from "./components/ToggleButton";
 import { Inputs } from "./inputs";
+import { CreateNewEntryButton } from "./components/CreateNewEntryButton";
 
 interface InteractiveContext {
     menuStates: manageMenuStates.MenuStates;
@@ -33,23 +34,6 @@ export function Interactive() {
             );
         });
     }, [lootGeneratorState.lootTable]);
-
-    const createNewEntryButton = useCallback(() => {
-        return (
-            <button
-                type="button"
-                className={`${styles["new-entry-button"]} material-symbols-sharp`}
-                onClick={(e) => {
-                    e.currentTarget.blur();
-                }}
-                onMouseLeave={(e) => {
-                    e.currentTarget.blur();
-                }}
-            >
-                Add_Circle
-            </button>
-        );
-    }, []);
 
     const createSaveAsPresetButton = useCallback(() => {
         return (
@@ -131,7 +115,9 @@ export function Interactive() {
                         <div className={styles["toggle-button-container"]}>
                             <ToggleButton entry={entry} />
                         </div>
-                        {createNewEntryButton()}
+                        <div className={styles["create-new-entry-button-container"]}>
+                            <CreateNewEntryButton />
+                        </div>
                         {createSaveAsPresetButton()}
                         {createDeleteButton()}
                     </div>
@@ -163,13 +149,7 @@ export function Interactive() {
                 </div>
             );
         },
-        [
-            menuStates,
-            createNewEntryButton,
-            createSaveAsPresetButton,
-            createDeleteButton,
-            createItemMenu,
-        ],
+        [menuStates, createSaveAsPresetButton, createDeleteButton, createItemMenu],
     );
 
     return (
