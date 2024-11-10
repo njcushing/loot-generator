@@ -31,7 +31,7 @@ export function TableEntry({ entry }: TTableEntry) {
                     <SaveAsPresetButton />
                 </div>
                 <div className={styles["delete-entry-button-container"]}>
-                    <DeleteEntryButton />
+                    <DeleteEntryButton entry={entry} />
                 </div>
             </div>
             {menuStates.get(key) === "expanded" && (
