@@ -1,0 +1,75 @@
+.table {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.table-entry-bar {
+    display: grid;
+    grid-template-columns: 1fr repeat(3, auto);
+    align-content: end;
+    align-items: center;
+
+    pointer-events: none;
+
+    outline: 1px solid black;
+}
+
+.table-entry-bar {
+    background-color: rgb(186, 240, 228);
+}
+
+.table-entries {
+    align-self: end;
+
+    width: calc(100% - 16px);
+}
+
+@media (hover: hover) {
+    .table-entry-bar:has(> .toggle-button-container:hover),
+    .table-entry-bar:has(> .save-as-preset-button-container:hover),
+    .table-entry-bar:has(> .delete-entry-button-container:hover),
+    .table-entry-bar:has(> .create-new-entry-button-container:hover) {
+        z-index: 1;
+
+        outline-width: 3px;
+    }
+
+    .table-entry-bar:has(> .toggle-button-container:hover) {
+        background-color: rgb(157, 224, 210);
+    }
+
+    .table-entry-bar:has(> .delete-entry-button-container:hover) {
+        background-color: rgb(250, 187, 187);
+    }
+}
+
+.table-entry-bar:has(> .toggle-button-container:focus),
+.table-entry-bar:has(> .save-as-preset-button-container:focus),
+.table-entry-bar:has(> .delete-entry-button-container:focus),
+.table-entry-bar:has(> .create-new-entry-button-container:focus) {
+    z-index: 1;
+
+    outline-width: 3px;
+}
+
+.table-entry-bar:has(> .toggle-button-container:focus) {
+    background-color: rgb(139, 206, 191);
+}
+
+.table-entry-bar:has(> .delete-entry-button-container:focus) {
+    background-color: rgb(231, 148, 148);
+}
+
+.table-entry-properties {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    pointer-events: all;
+
+    outline: 1px solid black;
+
+    width: 100%;
+    padding: 8px;
+}
