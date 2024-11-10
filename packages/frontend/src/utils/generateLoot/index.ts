@@ -1,29 +1,30 @@
 import { v4 as uuid } from "uuid";
 import { LootItem, LootTable, Loot } from "../types";
 
-export const createLootItem = ({
-    information = {},
-    ...props
-}: Omit<LootItem, "type" | "key" | "information" | "custom"> & {
-    information?: LootItem["information"];
-}): LootItem => ({
-    ...props,
+type RecursiveOptional<T> = {
+    [P in keyof T]?: T[P] extends object ? RecursiveOptional<T[P]> : T[P];
+};
+
+export const createLootItem = (props: RecursiveOptional<LootItem> = {}): LootItem => ({
     type: "item",
-    key: uuid(),
-    information,
-    custom: {},
+    key: props.key || uuid(),
+    information: {
+        name: props.information?.name || "",
+        sprite: props.information?.sprite,
+    },
+    weight: props.weight || 0,
+    rolls: props.rolls || {},
+    custom: props.custom || {},
 });
-export const createLootTable = ({
-    loot = [],
-    ...props
-}: Omit<LootTable, "type" | "key" | "loot" | "custom"> & {
-    loot?: LootTable["loot"];
-}): LootTable => ({
-    ...props,
+
+export const createLootTable = (props: RecursiveOptional<LootTable> = {}): LootTable => ({
     type: "table",
-    key: uuid(),
-    loot,
-    custom: {},
+    key: props.key || uuid(),
+    name: props.name || "",
+    loot: (props.loot as LootTable["loot"]) || [],
+    weight: props.weight || 0,
+    rolls: props.rolls || {},
+    custom: props.custom || {},
 });
 
 type SummedTable = LootTable & { totalWeight: number };
