@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useCallback, useEffect, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
-import { LootItem, LootTable } from "@/utils/types";
+import { LootTable } from "@/utils/types";
+import { ItemEntry } from "./components/ItemEntry";
 import { ToggleButton } from "./components/ToggleButton";
 import { Inputs } from "./inputs";
 import { CreateNewEntryButton } from "./components/CreateNewEntryButton";
@@ -36,46 +37,6 @@ export function Interactive() {
             );
         });
     }, [lootGeneratorState.lootTable]);
-
-    const createItemMenu = useCallback(
-        (entry: LootItem) => {
-            const { key, information, weight } = entry;
-            const { name } = information;
-            const menuState = menuStates.get(key);
-            return (
-                <div className={styles["item"]} key={key}>
-                    <div className={styles["item-menu-bar"]}>
-                        <div className={styles["toggle-button-container"]}>
-                            <ToggleButton entry={entry} />
-                        </div>
-                        <div className={styles["save-as-preset-button-container"]}>
-                            <SaveAsPresetButton />
-                        </div>
-                        <div className={styles["delete-entry-button-container"]}>
-                            <DeleteEntryButton />
-                        </div>
-                    </div>
-                    {menuState === "expanded" && (
-                        <div className={styles["item-menu-properties"]}>
-                            <Inputs.Text
-                                entryKey={key}
-                                labelText="Name"
-                                defaultValue={name || ""}
-                                fieldPath={["information", "name"]}
-                            />
-                            <Inputs.Numeric
-                                entryKey={key}
-                                labelText="Weight"
-                                defaultValue={weight || 1}
-                                fieldPath={["weight"]}
-                            />
-                        </div>
-                    )}
-                </div>
-            );
-        },
-        [menuStates],
-    );
 
     const createTableMenu = useCallback(
         (entry: LootTable) => {
@@ -113,19 +74,21 @@ export function Interactive() {
                                     fieldPath={["weight"]}
                                 />
                             </div>
-                            <div className={styles["table-entries"]}>
+                            <ul className={styles["table-entries"]}>
                                 {entry.loot.map((subEntry) => {
-                                    if (subEntry.type === "item") return createItemMenu(subEntry);
+                                    if (subEntry.type === "item") {
+                                        return <ItemEntry entry={subEntry} key={subEntry.key} />;
+                                    }
                                     if (subEntry.type === "table") return createTableMenu(subEntry);
                                     return null;
                                 })}
-                            </div>
+                            </ul>
                         </>
                     )}
                 </div>
             );
         },
-        [menuStates, createItemMenu],
+        [menuStates],
     );
 
     return (

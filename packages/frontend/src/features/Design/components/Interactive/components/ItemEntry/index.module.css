@@ -1,0 +1,67 @@
+.item {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.item-entry-bar {
+    display: grid;
+    grid-template-columns: 1fr repeat(3, auto);
+    align-content: end;
+    align-items: center;
+
+    pointer-events: none;
+
+    outline: 1px solid black;
+}
+
+.item-entry-bar {
+    background-color: rgb(170, 238, 149);
+}
+
+@media (hover: hover) {
+    .item-entry-bar:has(> .toggle-button-container:hover),
+    .item-entry-bar:has(> .save-as-preset-button-container:hover),
+    .item-entry-bar:has(> .delete-entry-button-container:hover) {
+        z-index: 1;
+
+        outline-width: 3px;
+    }
+
+    .item-entry-bar:has(> .toggle-button-container:hover) {
+        background-color: rgb(151, 226, 128);
+    }
+
+    .item-entry-bar:has(> .delete-entry-button-container:hover) {
+        background-color: rgb(250, 187, 187);
+    }
+}
+
+.item-entry-bar:has(> .toggle-button-container:focus),
+.item-entry-bar:has(> .save-as-preset-button-container:focus),
+.item-entry-bar:has(> .delete-entry-button-container:focus) {
+    z-index: 1;
+
+    outline-width: 3px;
+}
+
+.item-entry-bar:has(> .toggle-button-container:focus) {
+    background-color: rgb(132, 206, 110);
+}
+
+.item-entry-bar:has(> .delete-entry-button-container:focus) {
+    background-color: rgb(231, 148, 148);
+}
+
+.item-entry-properties {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    pointer-events: all;
+
+    outline: 1px solid black;
+
+    width: 100%;
+    padding: 8px;
+}
