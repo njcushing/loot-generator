@@ -48,8 +48,7 @@
     width: calc(100% - 16px);
 }
 
-.delete-menu-item-button,
-.save-as-preset-button {
+.delete-menu-item-button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -68,16 +67,14 @@
 }
 
 @media (hover: hover) {
-    .delete-menu-item-button:hover,
-    .save-as-preset-button:hover {
+    .delete-menu-item-button:hover {
         cursor: pointer;
 
         color: rgba(0, 0, 0, 0.6);
     }
 }
 
-.delete-menu-item-button:focus,
-.save-as-preset-button:focus {
+.delete-menu-item-button:focus {
     cursor: pointer;
 
     color: rgba(0, 0, 0, 0.8);
@@ -86,8 +83,8 @@
 @media (hover: hover) {
     .item-menu-bar:has(> .toggle-button-container:hover),
     .table-menu-bar:has(> .toggle-button-container:hover),
-    .item-menu-bar:has(> .save-as-preset-button:hover),
-    .table-menu-bar:has(> .save-as-preset-button:hover),
+    .item-menu-bar:has(> .save-as-preset-button-container:hover),
+    .table-menu-bar:has(> .save-as-preset-button-container:hover),
     .item-menu-bar:has(> .delete-menu-item-button:hover),
     .table-menu-bar:has(> .delete-menu-item-button:hover),
     .table-menu-bar:has(> .create-new-entry-button-container:hover) {
@@ -112,8 +109,8 @@
 
 .item-menu-bar:has(> .toggle-button-container:focus),
 .table-menu-bar:has(> .toggle-button-container:focus),
-.item-menu-bar:has(> .save-as-preset-button:focus),
-.table-menu-bar:has(> .save-as-preset-button:focus),
+.item-menu-bar:has(> .save-as-preset-button-container:focus),
+.table-menu-bar:has(> .save-as-preset-button-container:focus),
 .item-menu-bar:has(> .delete-menu-item-button:focus),
 .table-menu-bar:has(> .delete-menu-item-button:focus),
 .table-menu-bar:has(> .create-new-entry-button-container:focus) {

@@ -6,6 +6,7 @@ import styles from "./index.module.css";
 import { ToggleButton } from "./components/ToggleButton";
 import { Inputs } from "./inputs";
 import { CreateNewEntryButton } from "./components/CreateNewEntryButton";
+import { SaveAsPresetButton } from "./components/SaveAsPresetButton";
 
 interface InteractiveContext {
     menuStates: manageMenuStates.MenuStates;
@@ -35,23 +36,6 @@ export function Interactive() {
         });
     }, [lootGeneratorState.lootTable]);
 
-    const createSaveAsPresetButton = useCallback(() => {
-        return (
-            <button
-                type="button"
-                className={`${styles["save-as-preset-button"]} material-symbols-sharp`}
-                onClick={(e) => {
-                    e.currentTarget.blur();
-                }}
-                onMouseLeave={(e) => {
-                    e.currentTarget.blur();
-                }}
-            >
-                Save
-            </button>
-        );
-    }, []);
-
     const createDeleteButton = useCallback(() => {
         return (
             <button
@@ -80,7 +64,9 @@ export function Interactive() {
                         <div className={styles["toggle-button-container"]}>
                             <ToggleButton entry={entry} />
                         </div>
-                        {createSaveAsPresetButton()}
+                        <div className={styles["save-as-preset-button-container"]}>
+                            <SaveAsPresetButton />
+                        </div>
                         {createDeleteButton()}
                     </div>
                     {menuState === "expanded" && (
@@ -102,7 +88,7 @@ export function Interactive() {
                 </div>
             );
         },
-        [menuStates, createSaveAsPresetButton, createDeleteButton],
+        [menuStates, createDeleteButton],
     );
 
     const createTableMenu = useCallback(
@@ -118,7 +104,9 @@ export function Interactive() {
                         <div className={styles["create-new-entry-button-container"]}>
                             <CreateNewEntryButton />
                         </div>
-                        {createSaveAsPresetButton()}
+                        <div className={styles["save-as-preset-button-container"]}>
+                            <SaveAsPresetButton />
+                        </div>
                         {createDeleteButton()}
                     </div>
                     {menuState === "expanded" && (
@@ -149,7 +137,7 @@ export function Interactive() {
                 </div>
             );
         },
-        [menuStates, createSaveAsPresetButton, createDeleteButton, createItemMenu],
+        [menuStates, createDeleteButton, createItemMenu],
     );
 
     return (
