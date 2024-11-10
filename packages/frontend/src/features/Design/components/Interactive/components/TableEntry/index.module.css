@@ -27,15 +27,17 @@
 
 @media (hover: hover) {
     .table-entry-bar:has(> .toggle-button-container:hover),
+    .table-entry-bar:has(> .create-new-entry-button-container:hover),
     .table-entry-bar:has(> .save-as-preset-button-container:hover),
-    .table-entry-bar:has(> .delete-entry-button-container:hover),
-    .table-entry-bar:has(> .create-new-entry-button-container:hover) {
+    .table-entry-bar:has(> .delete-entry-button-container:hover) {
         z-index: 1;
 
         outline-width: 3px;
     }
 
-    .table-entry-bar:has(> .toggle-button-container:hover) {
+    .table-entry-bar:has(> .toggle-button-container:hover),
+    .table-entry-bar:has(> .create-new-entry-button-container:hover),
+    .table-entry-bar:has(> .save-as-preset-button-container:hover) {
         background-color: rgb(157, 224, 210);
     }
 
@@ -45,15 +47,15 @@
 }
 
 .table-entry-bar:has(> .toggle-button-container:focus),
+.table-entry-bar:has(> .create-new-entry-button-container:focus),
 .table-entry-bar:has(> .save-as-preset-button-container:focus),
-.table-entry-bar:has(> .delete-entry-button-container:focus),
-.table-entry-bar:has(> .create-new-entry-button-container:focus) {
+.table-entry-bar:has(> .delete-entry-button-container:focus) {
     z-index: 1;
 
     outline-width: 3px;
 }
 
-.table-entry-bar:has(> .toggle-button-container:focus) {
+.table-entry-bar:has(> .toggle-button-container > button:focus) {
     background-color: rgb(139, 206, 191);
 }
 

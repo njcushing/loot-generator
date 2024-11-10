@@ -28,7 +28,8 @@
         outline-width: 3px;
     }
 
-    .item-entry-bar:has(> .toggle-button-container:hover) {
+    .item-entry-bar:has(> .toggle-button-container:hover),
+    .item-entry-bar:has(> .save-as-preset-button-container:hover) {
         background-color: rgb(151, 226, 128);
     }
 
@@ -45,7 +46,7 @@
     outline-width: 3px;
 }
 
-.item-entry-bar:has(> .toggle-button-container:focus) {
+.item-entry-bar:has(> .toggle-button-container > button:focus) {
     background-color: rgb(132, 206, 110);
 }
 
