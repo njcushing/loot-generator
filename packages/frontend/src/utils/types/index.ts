@@ -21,6 +21,7 @@ export type LootTable = {
     loot: (LootItem | LootTable)[];
 } & GenerationCriteria &
     CustomFields;
+export type Preset = Omit<LootItem, "key"> | Omit<LootTable, "key">;
 
 export type Item = ItemInformation & { quantity: number; value?: number };
 export type Loot = Map<string, Item>;
