@@ -2,7 +2,7 @@ import { createContext, useState, useEffect, useRef, useMemo, useCallback } from
 import useResizeObserverElement from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
 import { Generate } from "@/features/Generate";
-import { LootItem, LootTable, Loot, SortOptions } from "@/utils/types";
+import { LootTable, Preset, Loot, SortOptions } from "@/utils/types";
 import { Design } from "@/features/Design";
 import { exampleLootTable } from "@/features/Design/utils/exampleLootTable";
 import { version } from "../../../package.json";
@@ -11,7 +11,7 @@ import styles from "./index.module.css";
 export type LootGeneratorState = {
     loot: Loot;
     lootTable: LootTable;
-    presets: Map<string, LootItem | LootTable>;
+    presets: Map<string, Preset>;
     quantitySelected: number;
     quantityOptionSelected: number;
     customQuantity: number;
