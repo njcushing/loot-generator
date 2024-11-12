@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid";
-import { LootItem, LootTable, Preset, Loot } from "../types";
+import { LootItem, LootTable, Loot } from "../types";
 
 type RecursiveOptional<T> = {
     [P in keyof T]?: T[P] extends object ? RecursiveOptional<T[P]> : T[P];
@@ -26,13 +26,6 @@ export const createLootTable = (props: RecursiveOptional<LootTable> = {}): LootT
     rolls: props.rolls || {},
     custom: props.custom || {},
 });
-
-export const createPreset = (entry: LootItem | LootTable): { key: string; preset: Preset } => {
-    const { key } = entry;
-    const preset = JSON.parse(JSON.stringify(entry));
-    delete preset.key;
-    return { key, preset };
-};
 
 type SummedTable = LootTable & { totalWeight: number };
 
