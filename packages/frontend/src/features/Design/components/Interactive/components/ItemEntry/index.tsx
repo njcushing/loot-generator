@@ -12,7 +12,7 @@ export type TItemEntry = {
 };
 
 export function ItemEntry({ entry }: TItemEntry) {
-    const { menuStates } = useContext(InteractiveContext);
+    const { menuType, menuStates } = useContext(InteractiveContext);
 
     const { key, information, weight } = entry;
     const { name } = information;
@@ -23,9 +23,11 @@ export function ItemEntry({ entry }: TItemEntry) {
                 <div className={styles["toggle-button-container"]}>
                     <ToggleButton entry={entry} />
                 </div>
-                <div className={styles["save-as-preset-button-container"]}>
-                    <SaveAsPresetButton entry={entry} />
-                </div>
+                {menuType === "active" && (
+                    <div className={styles["save-as-preset-button-container"]}>
+                        <SaveAsPresetButton entry={entry} />
+                    </div>
+                )}
                 <div className={styles["delete-entry-button-container"]}>
                     <DeleteEntryButton entry={entry} />
                 </div>

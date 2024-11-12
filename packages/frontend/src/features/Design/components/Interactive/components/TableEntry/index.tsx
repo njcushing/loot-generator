@@ -14,7 +14,7 @@ export type TTableEntry = {
 };
 
 export function TableEntry({ entry }: TTableEntry) {
-    const { menuStates } = useContext(InteractiveContext);
+    const { menuType, menuStates } = useContext(InteractiveContext);
 
     const { key, name, weight } = entry;
 
@@ -27,9 +27,11 @@ export function TableEntry({ entry }: TTableEntry) {
                 <div className={styles["create-new-entry-button-container"]}>
                     <CreateNewEntryButton entry={entry} />
                 </div>
-                <div className={styles["save-as-preset-button-container"]}>
-                    <SaveAsPresetButton entry={entry} />
-                </div>
+                {menuType === "active" && (
+                    <div className={styles["save-as-preset-button-container"]}>
+                        <SaveAsPresetButton entry={entry} />
+                    </div>
+                )}
                 <div className={styles["delete-entry-button-container"]}>
                     <DeleteEntryButton entry={entry} />
                 </div>
