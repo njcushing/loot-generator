@@ -1,7 +1,6 @@
 import { useContext, useCallback } from "react";
-import { LootGeneratorContext, LootGeneratorState } from "@/pages/LootGenerator";
+import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootItem, LootTable } from "@/utils/types";
-import { createPreset } from "@/utils/generateLoot";
 import styles from "./index.module.css";
 
 export type TSaveAsPresetButton = {
@@ -12,11 +11,8 @@ export function SaveAsPresetButton({ entry }: TSaveAsPresetButton) {
     const { lootGeneratorState, setLootGeneratorStateProperty } = useContext(LootGeneratorContext);
 
     const saveEntryAsPreset = useCallback(() => {
-        const copy: LootGeneratorState["presets"] = new Map(
-            JSON.parse(JSON.stringify(Array.from(lootGeneratorState.presets))),
-        );
-        const { key, preset } = createPreset(entry);
-        if (preset) copy.set(key, preset);
+        const copy = JSON.parse(JSON.stringify(Array.from(lootGeneratorState.presets)));
+        copy.push(entry);
         setLootGeneratorStateProperty("presets", copy);
     }, [entry, lootGeneratorState.presets, setLootGeneratorStateProperty]);
 
