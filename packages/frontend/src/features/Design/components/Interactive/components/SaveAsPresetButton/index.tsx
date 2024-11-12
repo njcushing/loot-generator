@@ -12,7 +12,8 @@ export function SaveAsPresetButton({ entry }: TSaveAsPresetButton) {
 
     const saveEntryAsPreset = useCallback(() => {
         const copy = JSON.parse(JSON.stringify(Array.from(lootGeneratorState.presets)));
-        copy.push(entry);
+        const presetsKeys = new Set(lootGeneratorState.presets.map((preset) => preset.key));
+        if (!presetsKeys.has(entry.key)) copy.push(entry);
         setLootGeneratorStateProperty("presets", copy);
     }, [entry, lootGeneratorState.presets, setLootGeneratorStateProperty]);
 
