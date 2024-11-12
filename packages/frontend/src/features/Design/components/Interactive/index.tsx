@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
-import { TableEntry } from "./components/TableEntry";
+import { TabSelector } from "@/components/structural/components/TabSelector";
+import { Active } from "./components/Active";
 import * as manageMenuStates from "./utils/manageMenuStates";
-import styles from "./index.module.css";
 
 interface InteractiveContext {
     menuStates: manageMenuStates.MenuStates;
@@ -33,14 +33,26 @@ export function Interactive() {
     }, [lootGeneratorState.lootTable]);
 
     return (
-        <InteractiveContext.Provider
-            value={useMemo(() => ({ menuStates, setMenuStates }), [menuStates, setMenuStates])}
-        >
-            <ul className={styles["interactive"]}>
-                {lootGeneratorState.lootTable && (
-                    <TableEntry entry={lootGeneratorState.lootTable} />
-                )}
-            </ul>
-        </InteractiveContext.Provider>
+        <TabSelector
+            tabs={{
+                active: {
+                    name: "Active",
+                    content: (
+                        <InteractiveContext.Provider
+                            value={useMemo(
+                                () => ({
+                                    menuStates,
+                                    setMenuStates,
+                                }),
+                                [menuStates, setMenuStates],
+                            )}
+                        >
+                            <Active />
+                        </InteractiveContext.Provider>
+                    ),
+                    position: "left",
+                },
+            }}
+        />
     );
 }
