@@ -20,12 +20,12 @@ export function Interactive() {
     const { lootGeneratorState } = useContext(LootGeneratorContext);
 
     const [menuStates, setMenuStates] = useState<Map<string, "collapsed" | "expanded">>(() => {
-        return manageMenuStates.update(lootGeneratorState.lootTable, new Map(), new Map());
+        return manageMenuStates.update([lootGeneratorState.lootTable], new Map(), new Map());
     });
     useEffect(() => {
         setMenuStates((currentMenuStates) => {
             return manageMenuStates.update(
-                lootGeneratorState.lootTable,
+                [lootGeneratorState.lootTable],
                 currentMenuStates,
                 new Map(),
             );
