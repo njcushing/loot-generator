@@ -17,10 +17,7 @@ export const update = (
         );
 
         if (entry.type === "table") {
-            [...entry.loot.keys()].forEach((key) => {
-                const subEntry = entry.loot[key];
-                mutableNewStates = update([subEntry], previousStates, mutableNewStates);
-            });
+            mutableNewStates = update(entry.loot, previousStates, mutableNewStates);
         }
     });
 
