@@ -12,6 +12,7 @@ export type LootGeneratorState = {
     loot: Loot;
     lootTable: LootTable;
     presets: (LootItem | LootTable)[];
+    presetsMap: Map<string, LootItem | LootTable>;
     quantitySelected: number;
     quantityOptionSelected: number;
     customQuantity: number;
@@ -22,6 +23,7 @@ const defaultLootGeneratorState: LootGeneratorState = {
     loot: new Map(),
     lootTable: exampleLootTable,
     presets: [],
+    presetsMap: new Map(),
     quantitySelected: 1,
     quantityOptionSelected: 0,
     customQuantity: 50,
