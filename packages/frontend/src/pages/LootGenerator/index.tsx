@@ -71,6 +71,13 @@ export function LootGenerator() {
         [],
     );
 
+    useEffect(() => {
+        const newPresetsMap = new Map(
+            lootGeneratorState.presets.map((preset) => [preset.key, preset]),
+        );
+        setLootGeneratorStateProperty("presetsMap", newPresetsMap);
+    }, [lootGeneratorState.presets, setLootGeneratorStateProperty]);
+
     return (
         <LootGeneratorContext.Provider
             value={useMemo(
