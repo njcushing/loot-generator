@@ -72,6 +72,19 @@ export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
                     >
                         Create New Item
                     </button>
+                    <button
+                        type="button"
+                        className={styles["add-preset-button"]}
+                        onClick={(e) => {
+                            setMenuOpen(!menuOpen);
+                            e.currentTarget.blur();
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.blur();
+                        }}
+                    >
+                        Add Preset
+                    </button>
                 </div>
             )}
         </div>
