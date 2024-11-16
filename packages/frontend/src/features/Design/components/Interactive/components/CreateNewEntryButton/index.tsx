@@ -2,7 +2,6 @@ import { useContext, useState, useCallback } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootItem, LootTable } from "@/utils/types";
 import { InteractiveContext } from "../..";
-import { createItemEntry, createTableEntry } from "../../utils/manageEntries";
 import styles from "./index.module.css";
 
 export type TCreateNewEntryButton = {
@@ -10,7 +9,8 @@ export type TCreateNewEntryButton = {
 };
 
 export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
-    const { lootGeneratorState, setLootGeneratorStateProperty } = useContext(LootGeneratorContext);
+    const { lootGeneratorState, setLootGeneratorStateProperty, createItemEntry, createTableEntry } =
+        useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
 
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -35,6 +35,8 @@ export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
             entry,
             lootGeneratorState.lootTable,
             lootGeneratorState.presets,
+            createItemEntry,
+            createTableEntry,
             setLootGeneratorStateProperty,
             menuType,
         ],

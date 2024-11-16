@@ -2,7 +2,6 @@ import { useContext, useCallback } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootItem, LootTable } from "@/utils/types";
 import { InteractiveContext } from "../..";
-import { findNestedEntry, mutateNestedField } from "../../utils/manageEntries";
 import "./index.module.css";
 
 export type TText = {
@@ -13,7 +12,12 @@ export type TText = {
 };
 
 export function Text({ entryKey, labelText, defaultValue, fieldPath }: TText) {
-    const { lootGeneratorState, setLootGeneratorStateProperty } = useContext(LootGeneratorContext);
+    const {
+        lootGeneratorState,
+        setLootGeneratorStateProperty,
+        findNestedEntry,
+        mutateNestedField,
+    } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
 
     const editActiveEntry = useCallback(
@@ -24,7 +28,14 @@ export function Text({ entryKey, labelText, defaultValue, fieldPath }: TText) {
             mutateNestedField([fieldPath], value, entry);
             setLootGeneratorStateProperty("lootTable", copy);
         },
-        [entryKey, fieldPath, lootGeneratorState.lootTable, setLootGeneratorStateProperty],
+        [
+            entryKey,
+            fieldPath,
+            lootGeneratorState.lootTable,
+            findNestedEntry,
+            mutateNestedField,
+            setLootGeneratorStateProperty,
+        ],
     );
 
     const editPresetEntry = useCallback(
@@ -37,7 +48,14 @@ export function Text({ entryKey, labelText, defaultValue, fieldPath }: TText) {
             mutateNestedField([fieldPath], value, entry);
             setLootGeneratorStateProperty("presets", copy);
         },
-        [entryKey, fieldPath, lootGeneratorState.presets, setLootGeneratorStateProperty],
+        [
+            entryKey,
+            fieldPath,
+            lootGeneratorState.presets,
+            findNestedEntry,
+            mutateNestedField,
+            setLootGeneratorStateProperty,
+        ],
     );
 
     return (

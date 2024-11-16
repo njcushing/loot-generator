@@ -2,6 +2,7 @@ import { createContext, useState, useEffect, useRef, useMemo, useCallback } from
 import useResizeObserverElement from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
 import { Generate } from "@/features/Generate";
+import { createLootItem, createLootTable } from "@/utils/generateLoot";
 import { LootItem, LootTable, Loot, SortOptions } from "@/utils/types";
 import { Design } from "@/features/Design";
 import { exampleLootTable } from "@/features/Design/utils/exampleLootTable";
@@ -36,11 +37,34 @@ interface LootGeneratorContext {
         property: K,
         value: LootGeneratorState[K],
     ) => void;
+
+    findNestedEntry: (key: string, entry: (LootItem | LootTable)[]) => LootItem | LootTable | null;
+    mutateNestedField: (
+        fieldPaths: string[][],
+        value: unknown,
+        entry: LootItem | LootTable,
+    ) => void;
+    mutateNestedEntryAndNestedField: (
+        key: string,
+        fieldPaths: string[][],
+        value: unknown,
+        entry: (LootItem | LootTable)[],
+    ) => void;
+    deleteEntry: (key: string, entry: (LootItem | LootTable)[]) => boolean;
+    createTableEntry: (key: string, entry: (LootItem | LootTable)[]) => boolean;
+    createItemEntry: (key: string, entry: (LootItem | LootTable)[]) => boolean;
 }
 
 const defaultLootGeneratorContext: LootGeneratorContext = {
     lootGeneratorState: defaultLootGeneratorState,
     setLootGeneratorStateProperty: () => {},
+
+    findNestedEntry: () => null,
+    mutateNestedField: () => {},
+    mutateNestedEntryAndNestedField: () => {},
+    deleteEntry: () => false,
+    createTableEntry: () => false,
+    createItemEntry: () => false,
 };
 
 export const LootGeneratorContext = createContext<LootGeneratorContext>(
@@ -71,6 +95,101 @@ export function LootGenerator() {
         [],
     );
 
+    const findNestedEntry = useCallback(
+        (key: string, entry: (LootItem | LootTable)[]): LootItem | LootTable | null => {
+            for (let i = 0; i < entry.length; i++) {
+                const subEntry = entry[i];
+                if (subEntry.key === key) {
+                    return subEntry;
+                }
+                if (subEntry.type === "table") {
+                    const nestedEntry = findNestedEntry(key, subEntry.loot);
+                    if (nestedEntry) return nestedEntry;
+                }
+            }
+            return null;
+        },
+        [],
+    );
+
+    const mutateNestedField = useCallback(
+        (fieldPaths: string[][], value: unknown, entry: LootItem | LootTable) => {
+            for (let i = 0; i < fieldPaths.length; i++) {
+                let nestedEntry = entry;
+                const fieldPath = fieldPaths[i];
+                for (let j = 0; j < fieldPath.length; j++) {
+                    const fieldName = fieldPath[j];
+                    const field = nestedEntry[fieldName];
+                    if (j === fieldPath.length - 1) {
+                        nestedEntry[fieldName] = value;
+                        return;
+                    }
+                    if (typeof field === "object" && field !== null) {
+                        nestedEntry = field as LootItem | LootTable;
+                    } else break;
+                }
+            }
+        },
+        [],
+    );
+
+    const mutateNestedEntryAndNestedField = useCallback(
+        (key: string, fieldPaths: string[][], value: unknown, entry: (LootItem | LootTable)[]) => {
+            const nestedEntry = findNestedEntry(key, entry);
+            if (!nestedEntry) return;
+            mutateNestedField(fieldPaths, value, nestedEntry);
+        },
+        [findNestedEntry, mutateNestedField],
+    );
+
+    const deleteEntry = useCallback((key: string, entry: (LootItem | LootTable)[]): boolean => {
+        let deleted = false;
+        for (let i = 0; i < entry.length; i++) {
+            const subEntry = entry[i];
+            if (subEntry.key === key) {
+                entry.splice(i, 1);
+                deleted = true;
+            }
+            if (!deleted && subEntry.type === "table") deleted = deleteEntry(key, subEntry.loot);
+        }
+        return deleted;
+    }, []);
+
+    const createTableEntry = useCallback(
+        (key: string, entry: (LootItem | LootTable)[]): boolean => {
+            let created = false;
+            for (let i = 0; i < entry.length; i++) {
+                const subEntry = entry[i];
+                if (subEntry.type === "table") {
+                    if (subEntry.key === key) {
+                        const newTable = createLootTable();
+                        subEntry.loot.push(newTable);
+                        created = true;
+                    }
+                    if (!created) created = createTableEntry(key, subEntry.loot);
+                }
+            }
+            return created;
+        },
+        [],
+    );
+
+    const createItemEntry = useCallback((key: string, entry: (LootItem | LootTable)[]): boolean => {
+        let created = false;
+        for (let i = 0; i < entry.length; i++) {
+            const subEntry = entry[i];
+            if (subEntry.type === "table") {
+                if (subEntry.key === key) {
+                    const newTable = createLootItem();
+                    subEntry.loot.push(newTable);
+                    created = true;
+                }
+                if (!created) created = createItemEntry(key, subEntry.loot);
+            }
+        }
+        return created;
+    }, []);
+
     useEffect(() => {
         const newPresetsMap = new Map(
             lootGeneratorState.presets.map((preset) => [preset.key, preset]),
@@ -81,8 +200,28 @@ export function LootGenerator() {
     return (
         <LootGeneratorContext.Provider
             value={useMemo(
-                () => ({ lootGeneratorState, setLootGeneratorStateProperty }),
-                [lootGeneratorState, setLootGeneratorStateProperty],
+                () => ({
+                    lootGeneratorState,
+                    setLootGeneratorStateProperty,
+
+                    findNestedEntry,
+                    mutateNestedField,
+                    mutateNestedEntryAndNestedField,
+                    deleteEntry,
+                    createTableEntry,
+                    createItemEntry,
+                }),
+                [
+                    lootGeneratorState,
+                    setLootGeneratorStateProperty,
+
+                    findNestedEntry,
+                    mutateNestedField,
+                    mutateNestedEntryAndNestedField,
+                    deleteEntry,
+                    createTableEntry,
+                    createItemEntry,
+                ],
             )}
         >
             <div className={`${styles["page"]} ${styles[`${layout}`]}`} ref={containerRef}>

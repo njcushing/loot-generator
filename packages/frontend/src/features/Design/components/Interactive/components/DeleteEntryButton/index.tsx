@@ -2,7 +2,6 @@ import { useContext, useCallback } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootItem, LootTable } from "@/utils/types";
 import { InteractiveContext } from "../..";
-import { deleteEntry } from "../../utils/manageEntries";
 import styles from "./index.module.css";
 
 export type TDeleteEntryButton = {
@@ -10,7 +9,8 @@ export type TDeleteEntryButton = {
 };
 
 export function DeleteEntryButton({ entry }: TDeleteEntryButton) {
-    const { lootGeneratorState, setLootGeneratorStateProperty } = useContext(LootGeneratorContext);
+    const { lootGeneratorState, setLootGeneratorStateProperty, deleteEntry } =
+        useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
 
     const deleteActiveEntry = useCallback(() => {
@@ -18,7 +18,7 @@ export function DeleteEntryButton({ entry }: TDeleteEntryButton) {
         const copy: LootTable = JSON.parse(JSON.stringify(lootGeneratorState.lootTable));
         deleteEntry(key, copy.loot);
         setLootGeneratorStateProperty("lootTable", copy);
-    }, [entry, lootGeneratorState.lootTable, setLootGeneratorStateProperty]);
+    }, [entry, lootGeneratorState.lootTable, setLootGeneratorStateProperty, deleteEntry]);
 
     const deletePresetEntry = useCallback(() => {
         const { key } = entry;
@@ -27,7 +27,7 @@ export function DeleteEntryButton({ entry }: TDeleteEntryButton) {
         );
         deleteEntry(key, copy);
         setLootGeneratorStateProperty("presets", copy);
-    }, [entry, lootGeneratorState.presets, setLootGeneratorStateProperty]);
+    }, [entry, lootGeneratorState.presets, setLootGeneratorStateProperty, deleteEntry]);
 
     return (
         <button
