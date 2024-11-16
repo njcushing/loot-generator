@@ -21,7 +21,7 @@ export function Numeric({ entryKey, labelText, defaultValue, min, max, fieldPath
             const copy: LootTable = JSON.parse(JSON.stringify(lootGeneratorState.lootTable));
             const entry = findNestedEntry(entryKey, copy);
             if (!entry) return;
-            mutateNestedField(fieldPath, value, entry);
+            mutateNestedField([fieldPath], value, entry);
             setLootGeneratorStateProperty("lootTable", copy);
         },
         [entryKey, fieldPath, lootGeneratorState.lootTable, setLootGeneratorStateProperty],

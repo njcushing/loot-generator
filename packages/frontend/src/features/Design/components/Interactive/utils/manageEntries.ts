@@ -19,33 +19,36 @@ export const findNestedEntry = (
 };
 
 export const mutateNestedField = (
-    fieldPath: string[],
+    fieldPaths: string[][],
     value: unknown,
     entry: LootItem | LootTable,
 ) => {
-    let nestedEntry = entry;
-    for (let i = 0; i < fieldPath.length; i++) {
-        const fieldName = fieldPath[i];
-        const field = nestedEntry[fieldName];
-        if (i === fieldPath.length - 1) {
-            nestedEntry[fieldName] = value;
-            return;
+    for (let i = 0; i < fieldPaths.length; i++) {
+        let nestedEntry = entry;
+        const fieldPath = fieldPaths[i];
+        for (let j = 0; j < fieldPath.length; j++) {
+            const fieldName = fieldPath[j];
+            const field = nestedEntry[fieldName];
+            if (j === fieldPath.length - 1) {
+                nestedEntry[fieldName] = value;
+                return;
+            }
+            if (typeof field === "object" && field !== null) {
+                nestedEntry = field as LootItem | LootTable;
+            } else break;
         }
-        if (typeof field === "object" && field !== null) {
-            nestedEntry = field as LootItem | LootTable;
-        } else return;
     }
 };
 
 export const mutateNestedEntryAndNestedField = (
     key: string,
-    fieldPath: string[],
+    fieldPaths: string[][],
     value: unknown,
     entry: LootItem | LootTable,
 ) => {
     const nestedEntry = findNestedEntry(key, entry);
     if (!nestedEntry) return;
-    mutateNestedField(fieldPath, value, nestedEntry);
+    mutateNestedField(fieldPaths, value, nestedEntry);
 };
 
 export const deleteEntry = (key: string, entry: (LootItem | LootTable)[]): boolean => {
