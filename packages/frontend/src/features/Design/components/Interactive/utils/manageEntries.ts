@@ -48,15 +48,15 @@ export const mutateNestedEntryAndNestedField = (
     mutateNestedField(fieldPath, value, nestedEntry);
 };
 
-export const deleteEntry = (key: string, entry: LootTable): boolean => {
+export const deleteEntry = (key: string, entry: (LootItem | LootTable)[]): boolean => {
     let deleted = false;
-    for (let i = 0; i < entry.loot.length; i++) {
-        const subEntry = entry.loot[i];
+    for (let i = 0; i < entry.length; i++) {
+        const subEntry = entry[i];
         if (subEntry.key === key) {
-            entry.loot.splice(i, 1);
+            entry.splice(i, 1);
             deleted = true;
         }
-        if (!deleted && subEntry.type === "table") deleted = deleteEntry(key, subEntry);
+        if (!deleted && subEntry.type === "table") deleted = deleteEntry(key, subEntry.loot);
     }
     return deleted;
 };
