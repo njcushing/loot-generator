@@ -1,6 +1,7 @@
 import { useContext, useCallback } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootItem, LootTable } from "@/utils/types";
+import { InteractiveContext } from "../..";
 import { findNestedEntry, mutateNestedField } from "../../utils/manageEntries";
 import "./index.module.css";
 
@@ -15,8 +16,9 @@ export type TNumeric = {
 
 export function Numeric({ entryKey, labelText, defaultValue, min, max, fieldPath }: TNumeric) {
     const { lootGeneratorState, setLootGeneratorStateProperty } = useContext(LootGeneratorContext);
+    const { menuType } = useContext(InteractiveContext);
 
-    const editEntry = useCallback(
+    const editActiveEntry = useCallback(
         (value: unknown) => {
             const copy: LootTable = JSON.parse(JSON.stringify(lootGeneratorState.lootTable));
             const entry = findNestedEntry(entryKey, copy.loot);
@@ -25,6 +27,19 @@ export function Numeric({ entryKey, labelText, defaultValue, min, max, fieldPath
             setLootGeneratorStateProperty("lootTable", copy);
         },
         [entryKey, fieldPath, lootGeneratorState.lootTable, setLootGeneratorStateProperty],
+    );
+
+    const editPresetEntry = useCallback(
+        (value: unknown) => {
+            const copy: (LootItem | LootTable)[] = JSON.parse(
+                JSON.stringify(lootGeneratorState.presets),
+            );
+            const entry = findNestedEntry(entryKey, copy);
+            if (!entry) return;
+            mutateNestedField([fieldPath], value, entry);
+            setLootGeneratorStateProperty("presets", copy);
+        },
+        [entryKey, fieldPath, lootGeneratorState.presets, setLootGeneratorStateProperty],
     );
 
     return (
@@ -38,7 +53,8 @@ export function Numeric({ entryKey, labelText, defaultValue, min, max, fieldPath
                     let value = Number(e.target.value);
                     if (min) value = Math.max(min, value);
                     if (max) value = Math.min(max, value);
-                    editEntry(value);
+                    if (menuType === "active") editActiveEntry(value);
+                    if (menuType === "presets") editPresetEntry(value);
                 }}
             ></input>
         </label>
