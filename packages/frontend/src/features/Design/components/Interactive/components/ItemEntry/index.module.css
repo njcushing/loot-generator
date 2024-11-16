@@ -19,6 +19,10 @@
     background-color: rgb(170, 238, 149);
 }
 
+.item-entry-bar.is-preset {
+    background-color: rgb(241, 197, 114);
+}
+
 @media (hover: hover) {
     .item-entry-bar:has(> .toggle-button-container:hover),
     .item-entry-bar:has(> .save-as-preset-button-container:hover),
@@ -31,6 +35,11 @@
     .item-entry-bar:has(> .toggle-button-container:hover),
     .item-entry-bar:has(> .save-as-preset-button-container:hover) {
         background-color: rgb(151, 226, 128);
+    }
+
+    .item-entry-bar.is-preset:has(> .toggle-button-container:hover),
+    .item-entry-bar.is-preset:has(> .save-as-preset-button-container:hover) {
+        background-color: rgb(236, 185, 89);
     }
 
     .item-entry-bar:has(> .delete-entry-button-container:hover) {
@@ -48,6 +57,10 @@
 
 .item-entry-bar:has(> .toggle-button-container > button:focus) {
     background-color: rgb(132, 206, 110);
+}
+
+.item-entry-bar.is-preset:has(> .toggle-button-container > button:focus) {
+    background-color: rgb(226, 170, 66);
 }
 
 .item-entry-bar:has(> .delete-entry-button-container:focus) {
