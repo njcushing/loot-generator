@@ -1,6 +1,6 @@
 import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
-import { LootTable } from "@/utils/types";
+import { LootItem, LootTable } from "@/utils/types";
 import { InteractiveContext } from "../..";
 import { ToggleButton } from "../ToggleButton";
 import { CreateNewEntryButton } from "../CreateNewEntryButton";
@@ -61,9 +61,33 @@ export function TableEntry({ entry }: TTableEntry) {
                     <ul className={styles["table-entries"]}>
                         {entry.loot.map((subEntry) => {
                             if (subEntry.type === "item") {
+                                if (lootGeneratorState.presetsMap.has(subEntry.key)) {
+                                    return (
+                                        <ItemEntry
+                                            entry={
+                                                lootGeneratorState.presetsMap.get(
+                                                    subEntry.key,
+                                                ) as LootItem
+                                            }
+                                            key={subEntry.key}
+                                        />
+                                    );
+                                }
                                 return <ItemEntry entry={subEntry} key={subEntry.key} />;
                             }
                             if (subEntry.type === "table") {
+                                if (lootGeneratorState.presetsMap.has(subEntry.key)) {
+                                    return (
+                                        <TableEntry
+                                            entry={
+                                                lootGeneratorState.presetsMap.get(
+                                                    subEntry.key,
+                                                ) as LootTable
+                                            }
+                                            key={subEntry.key}
+                                        />
+                                    );
+                                }
                                 return <TableEntry entry={subEntry} key={subEntry.key} />;
                             }
                             return null;
