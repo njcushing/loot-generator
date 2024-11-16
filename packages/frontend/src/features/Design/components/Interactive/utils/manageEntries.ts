@@ -70,7 +70,6 @@ export const createTableEntry = (key: string, entry: (LootItem | LootTable)[]): 
         const subEntry = entry[i];
         if (subEntry.type === "table") {
             if (subEntry.key === key) {
-                console.log("here");
                 const newTable = createLootTable();
                 subEntry.loot.push(newTable);
                 created = true;
