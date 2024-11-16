@@ -64,33 +64,34 @@ export const deleteEntry = (key: string, entry: (LootItem | LootTable)[]): boole
     return deleted;
 };
 
-export const createTableEntry = (key: string, entry: LootTable): boolean => {
+export const createTableEntry = (key: string, entry: (LootItem | LootTable)[]): boolean => {
     let created = false;
-    for (let i = 0; i < entry.loot.length; i++) {
-        const subEntry = entry.loot[i];
+    for (let i = 0; i < entry.length; i++) {
+        const subEntry = entry[i];
         if (subEntry.type === "table") {
             if (subEntry.key === key) {
+                console.log("here");
                 const newTable = createLootTable();
                 subEntry.loot.push(newTable);
                 created = true;
             }
-            if (!created) created = createTableEntry(key, subEntry);
+            if (!created) created = createTableEntry(key, subEntry.loot);
         }
     }
     return created;
 };
 
-export const createItemEntry = (key: string, entry: LootTable): boolean => {
+export const createItemEntry = (key: string, entry: (LootItem | LootTable)[]): boolean => {
     let created = false;
-    for (let i = 0; i < entry.loot.length; i++) {
-        const subEntry = entry.loot[i];
+    for (let i = 0; i < entry.length; i++) {
+        const subEntry = entry[i];
         if (subEntry.type === "table") {
             if (subEntry.key === key) {
                 const newTable = createLootItem();
                 subEntry.loot.push(newTable);
                 created = true;
             }
-            if (!created) created = createItemEntry(key, subEntry);
+            if (!created) created = createItemEntry(key, subEntry.loot);
         }
     }
     return created;
