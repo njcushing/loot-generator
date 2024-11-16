@@ -9,37 +9,17 @@ export type TCreateNewEntryButton = {
 };
 
 export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
-    const { lootGeneratorState, setLootGeneratorStateProperty, createItemEntry, createTableEntry } =
-        useContext(LootGeneratorContext);
+    const { createSubEntry } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
 
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
-    const createNewLootEntry = useCallback(
+    const createNewEntry = useCallback(
         (type: LootItem["type"] | LootTable["type"]) => {
             const { key } = entry;
-            if (menuType === "active") {
-                const copy: LootTable = JSON.parse(JSON.stringify(lootGeneratorState.lootTable));
-                if (type === "table") createTableEntry(key, copy.loot);
-                if (type === "item") createItemEntry(key, copy.loot);
-                setLootGeneratorStateProperty("lootTable", copy);
-            }
-            if (menuType === "presets") {
-                const copy = JSON.parse(JSON.stringify(lootGeneratorState.presets));
-                if (type === "table") createTableEntry(key, copy);
-                if (type === "item") createItemEntry(key, copy);
-                setLootGeneratorStateProperty("presets", copy);
-            }
+            createSubEntry(key, type, menuType);
         },
-        [
-            entry,
-            lootGeneratorState.lootTable,
-            lootGeneratorState.presets,
-            createItemEntry,
-            createTableEntry,
-            setLootGeneratorStateProperty,
-            menuType,
-        ],
+        [entry, createSubEntry, menuType],
     );
 
     return (
@@ -63,7 +43,7 @@ export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
                         type="button"
                         className={styles["create-new-table-button"]}
                         onClick={(e) => {
-                            createNewLootEntry("table");
+                            createNewEntry("table");
                             setMenuOpen(!menuOpen);
                             e.currentTarget.blur();
                         }}
@@ -77,7 +57,7 @@ export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
                         type="button"
                         className={styles["create-new-item-button"]}
                         onClick={(e) => {
-                            createNewLootEntry("item");
+                            createNewEntry("item");
                             setMenuOpen(!menuOpen);
                             e.currentTarget.blur();
                         }}

@@ -51,8 +51,11 @@ interface LootGeneratorContext {
         entry: (LootItem | LootTable)[],
     ) => void;
     deleteEntry: (key: string, entry: (LootItem | LootTable)[]) => boolean;
-    createTableEntry: (key: string, entry: (LootItem | LootTable)[]) => boolean;
-    createItemEntry: (key: string, entry: (LootItem | LootTable)[]) => boolean;
+    createSubEntry: (
+        key: string,
+        type: LootItem["type"] | LootTable["type"],
+        place: "active" | "preset",
+    ) => boolean;
 }
 
 const defaultLootGeneratorContext: LootGeneratorContext = {
@@ -63,8 +66,7 @@ const defaultLootGeneratorContext: LootGeneratorContext = {
     mutateNestedField: () => {},
     mutateNestedEntryAndNestedField: () => {},
     deleteEntry: () => false,
-    createTableEntry: () => false,
-    createItemEntry: () => false,
+    createSubEntry: () => false,
 };
 
 export const LootGeneratorContext = createContext<LootGeneratorContext>(
@@ -155,40 +157,41 @@ export function LootGenerator() {
         return deleted;
     }, []);
 
-    const createTableEntry = useCallback(
-        (key: string, entry: (LootItem | LootTable)[]): boolean => {
-            let created = false;
-            for (let i = 0; i < entry.length; i++) {
-                const subEntry = entry[i];
-                if (subEntry.type === "table") {
-                    if (subEntry.key === key) {
-                        const newTable = createLootTable();
-                        subEntry.loot.push(newTable);
-                        created = true;
-                    }
-                    if (!created) created = createTableEntry(key, subEntry.loot);
-                }
-            }
-            return created;
-        },
-        [],
-    );
+    const createSubEntry = useCallback(
+        (
+            key: string,
+            type: LootItem["type"] | LootTable["type"],
+            place: "active" | "preset",
+        ): boolean => {
+            let copy;
+            if (place === "active") copy = lootGeneratorState.lootTable;
+            if (place === "preset") copy = lootGeneratorState.presets;
+            copy = JSON.parse(JSON.stringify(copy));
 
-    const createItemEntry = useCallback((key: string, entry: (LootItem | LootTable)[]): boolean => {
-        let created = false;
-        for (let i = 0; i < entry.length; i++) {
-            const subEntry = entry[i];
-            if (subEntry.type === "table") {
-                if (subEntry.key === key) {
-                    const newTable = createLootItem();
-                    subEntry.loot.push(newTable);
-                    created = true;
-                }
-                if (!created) created = createItemEntry(key, subEntry.loot);
-            }
-        }
-        return created;
-    }, []);
+            let start;
+            if (place === "active") start = copy.loot;
+            if (place === "preset") start = copy;
+
+            const entry = findNestedEntry(key, start);
+            if (!entry || entry.type !== "table") return false;
+            let newSubEntry = null;
+            if (type === "table") newSubEntry = createLootTable();
+            if (type === "item") newSubEntry = createLootItem();
+            if (!newSubEntry) return false;
+            entry.loot.push(newSubEntry);
+
+            if (place === "active") setLootGeneratorStateProperty("lootTable", copy);
+            if (place === "preset") setLootGeneratorStateProperty("presets", copy);
+
+            return true;
+        },
+        [
+            lootGeneratorState.lootTable,
+            lootGeneratorState.presets,
+            setLootGeneratorStateProperty,
+            findNestedEntry,
+        ],
+    );
 
     useEffect(() => {
         const newPresetsMap = new Map(
@@ -208,8 +211,7 @@ export function LootGenerator() {
                     mutateNestedField,
                     mutateNestedEntryAndNestedField,
                     deleteEntry,
-                    createTableEntry,
-                    createItemEntry,
+                    createSubEntry,
                 }),
                 [
                     lootGeneratorState,
@@ -219,8 +221,7 @@ export function LootGenerator() {
                     mutateNestedField,
                     mutateNestedEntryAndNestedField,
                     deleteEntry,
-                    createTableEntry,
-                    createItemEntry,
+                    createSubEntry,
                 ],
             )}
         >

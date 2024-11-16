@@ -5,10 +5,8 @@ import { Active } from "./components/Active";
 import { Presets } from "./components/Presets";
 import * as manageMenuStates from "./utils/manageMenuStates";
 
-export type MenuType = "active" | "presets";
-
 interface InteractiveContext {
-    menuType: MenuType;
+    menuType: "active" | "preset";
     menuStates: manageMenuStates.MenuStates;
     setMenuStates: React.Dispatch<React.SetStateAction<manageMenuStates.MenuStates>>;
 }
@@ -81,7 +79,7 @@ export function Interactive() {
                         <InteractiveContext.Provider
                             value={useMemo(
                                 () => ({
-                                    menuType: "presets",
+                                    menuType: "preset",
                                     menuStates: presetMenuStates,
                                     setMenuStates: setPresetMenuStates,
                                 }),

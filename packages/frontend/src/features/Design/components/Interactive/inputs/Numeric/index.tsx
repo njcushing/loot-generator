@@ -72,7 +72,7 @@ export function Numeric({ entryKey, labelText, defaultValue, min, max, fieldPath
                     if (min) value = Math.max(min, value);
                     if (max) value = Math.min(max, value);
                     if (menuType === "active") editActiveEntry(value);
-                    if (menuType === "presets") editPresetEntry(value);
+                    if (menuType === "preset") editPresetEntry(value);
                 }}
             ></input>
         </label>

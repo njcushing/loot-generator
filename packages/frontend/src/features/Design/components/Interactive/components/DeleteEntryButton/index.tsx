@@ -35,7 +35,7 @@ export function DeleteEntryButton({ entry }: TDeleteEntryButton) {
             className={`${styles["delete-entry-button"]} material-symbols-sharp`}
             onClick={(e) => {
                 if (menuType === "active") deleteActiveEntry();
-                if (menuType === "presets") deletePresetEntry();
+                if (menuType === "preset") deletePresetEntry();
                 e.currentTarget.blur();
             }}
             onMouseLeave={(e) => {

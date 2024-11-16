@@ -68,7 +68,7 @@ export function Text({ entryKey, labelText, defaultValue, fieldPath }: TText) {
                 onChange={(e) => {
                     const { value } = e.target;
                     if (menuType === "active") editActiveEntry(value);
-                    if (menuType === "presets") editPresetEntry(value);
+                    if (menuType === "preset") editPresetEntry(value);
                 }}
             ></input>
         </label>
