@@ -1,4 +1,5 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
+import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootItem } from "@/utils/types";
 import { InteractiveContext } from "../..";
 import { ToggleButton } from "../ToggleButton";
@@ -12,18 +13,23 @@ export type TItemEntry = {
 };
 
 export function ItemEntry({ entry }: TItemEntry) {
+    const { lootGeneratorState } = useContext(LootGeneratorContext);
     const { menuType, menuStates } = useContext(InteractiveContext);
 
     const { key, information, weight } = entry;
     const { name } = information;
 
+    const isPreset = useMemo(() => {
+        return menuType === "active" && lootGeneratorState.presetsMap.has(entry.key);
+    }, [entry.key, lootGeneratorState.presetsMap, menuType]);
+
     return (
         <li className={styles["item"]} key={key}>
-            <div className={styles["item-entry-bar"]}>
+            <div className={`${styles["item-entry-bar"]} ${styles[isPreset ? "is-preset" : ""]}`}>
                 <div className={styles["toggle-button-container"]}>
                     <ToggleButton entry={entry} />
                 </div>
-                {menuType === "active" && (
+                {menuType === "active" && !isPreset && (
                     <div className={styles["save-as-preset-button-container"]}>
                         <SaveAsPresetButton entry={entry} />
                     </div>
