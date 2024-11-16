@@ -17,7 +17,7 @@ export function Text({ entryKey, labelText, defaultValue, fieldPath }: TText) {
     const editEntry = useCallback(
         (value: unknown) => {
             const copy: LootTable = JSON.parse(JSON.stringify(lootGeneratorState.lootTable));
-            const entry = findNestedEntry(entryKey, copy);
+            const entry = findNestedEntry(entryKey, copy.loot);
             if (!entry) return;
             mutateNestedField([fieldPath], value, entry);
             setLootGeneratorStateProperty("lootTable", copy);

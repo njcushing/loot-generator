@@ -3,15 +3,15 @@ import { LootItem, LootTable } from "@/utils/types";
 
 export const findNestedEntry = (
     key: string,
-    entry: LootItem | LootTable,
+    entry: (LootItem | LootTable)[],
 ): LootItem | LootTable | null => {
-    if (entry.key === key) {
-        return entry;
-    }
-    if (entry.type === "table") {
-        for (let i = 0; i < entry.loot.length; i++) {
-            const subEntry = entry.loot[i];
-            const nestedEntry = findNestedEntry(key, subEntry);
+    for (let i = 0; i < entry.length; i++) {
+        const subEntry = entry[i];
+        if (subEntry.key === key) {
+            return subEntry;
+        }
+        if (subEntry.type === "table") {
+            const nestedEntry = findNestedEntry(key, subEntry.loot);
             if (nestedEntry) return nestedEntry;
         }
     }
@@ -44,7 +44,7 @@ export const mutateNestedEntryAndNestedField = (
     key: string,
     fieldPaths: string[][],
     value: unknown,
-    entry: LootItem | LootTable,
+    entry: (LootItem | LootTable)[],
 ) => {
     const nestedEntry = findNestedEntry(key, entry);
     if (!nestedEntry) return;

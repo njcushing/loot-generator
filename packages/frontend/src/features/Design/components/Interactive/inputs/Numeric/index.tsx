@@ -19,7 +19,7 @@ export function Numeric({ entryKey, labelText, defaultValue, min, max, fieldPath
     const editEntry = useCallback(
         (value: unknown) => {
             const copy: LootTable = JSON.parse(JSON.stringify(lootGeneratorState.lootTable));
-            const entry = findNestedEntry(entryKey, copy);
+            const entry = findNestedEntry(entryKey, copy.loot);
             if (!entry) return;
             mutateNestedField([fieldPath], value, entry);
             setLootGeneratorStateProperty("lootTable", copy);
