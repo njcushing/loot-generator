@@ -96,6 +96,42 @@ export function LootGenerator() {
         [],
     );
 
+    const getCopyAndSearchOrigin = useCallback(
+        (
+            place: "active" | "preset",
+        ): {
+            copy: LootGeneratorState["lootTable"] | LootGeneratorState["presets"];
+            searchOrigin: (LootItem | LootTable)[];
+        } => {
+            let copy;
+            if (place === "active") copy = lootGeneratorState.lootTable;
+            if (place === "preset") copy = lootGeneratorState.presets;
+            copy = JSON.parse(JSON.stringify(copy));
+
+            let searchOrigin;
+            if (place === "active") searchOrigin = copy.loot;
+            if (place === "preset") searchOrigin = copy;
+
+            return { copy, searchOrigin };
+        },
+        [lootGeneratorState.lootTable, lootGeneratorState.presets],
+    );
+
+    const saveCopy = useCallback(
+        (
+            place: "active" | "preset",
+            copy: LootGeneratorState["lootTable"] | LootGeneratorState["presets"],
+        ) => {
+            if (place === "active") {
+                setLootGeneratorStateProperty("lootTable", copy as LootGeneratorState["lootTable"]);
+            }
+            if (place === "preset") {
+                setLootGeneratorStateProperty("presets", copy as LootGeneratorState["presets"]);
+            }
+        },
+        [setLootGeneratorStateProperty],
+    );
+
     const findEntryFromEntry = useCallback(
         (key: string, entry: (LootItem | LootTable)[]): LootItem | LootTable | null => {
             for (let i = 0; i < entry.length; i++) {
@@ -132,16 +168,9 @@ export function LootGenerator() {
             value: unknown,
             place: "active" | "preset",
         ): boolean => {
-            let copy;
-            if (place === "active") copy = lootGeneratorState.lootTable;
-            if (place === "preset") copy = lootGeneratorState.presets;
-            copy = JSON.parse(JSON.stringify(copy));
+            const { copy, searchOrigin } = getCopyAndSearchOrigin(place);
 
-            let start;
-            if (place === "active") start = copy.loot;
-            if (place === "preset") start = copy;
-
-            const entry = findEntryFromEntry(key, start);
+            const entry = findEntryFromEntry(key, searchOrigin);
             if (!entry) return false;
 
             for (let i = 0; i < fieldPaths.length; i++) {
@@ -160,29 +189,16 @@ export function LootGenerator() {
                 }
             }
 
-            if (place === "active") setLootGeneratorStateProperty("lootTable", copy);
-            if (place === "preset") setLootGeneratorStateProperty("presets", copy);
+            saveCopy(place, copy);
 
             return true;
         },
-        [
-            lootGeneratorState.lootTable,
-            lootGeneratorState.presets,
-            setLootGeneratorStateProperty,
-            findEntryFromEntry,
-        ],
+        [getCopyAndSearchOrigin, saveCopy, findEntryFromEntry],
     );
 
     const deleteEntry = useCallback(
         (key: string, place: "active" | "preset"): boolean => {
-            let copy;
-            if (place === "active") copy = lootGeneratorState.lootTable;
-            if (place === "preset") copy = lootGeneratorState.presets;
-            copy = JSON.parse(JSON.stringify(copy));
-
-            let start;
-            if (place === "active") start = copy.loot;
-            if (place === "preset") start = copy;
+            const { copy, searchOrigin } = getCopyAndSearchOrigin(place);
 
             const search = (entry: (LootItem | LootTable)[]): boolean => {
                 let deleted = false;
@@ -196,14 +212,13 @@ export function LootGenerator() {
                 }
                 return deleted;
             };
-            const deleted = search(start);
+            const deleted = search(searchOrigin);
 
-            if (place === "active") setLootGeneratorStateProperty("lootTable", copy);
-            if (place === "preset") setLootGeneratorStateProperty("presets", copy);
+            saveCopy(place, copy);
 
             return deleted;
         },
-        [lootGeneratorState.lootTable, lootGeneratorState.presets, setLootGeneratorStateProperty],
+        [getCopyAndSearchOrigin, saveCopy],
     );
 
     const createSubEntry = useCallback(
@@ -212,16 +227,9 @@ export function LootGenerator() {
             type: LootItem["type"] | LootTable["type"],
             place: "active" | "preset",
         ): boolean => {
-            let copy;
-            if (place === "active") copy = lootGeneratorState.lootTable;
-            if (place === "preset") copy = lootGeneratorState.presets;
-            copy = JSON.parse(JSON.stringify(copy));
+            const { copy, searchOrigin } = getCopyAndSearchOrigin(place);
 
-            let start;
-            if (place === "active") start = copy.loot;
-            if (place === "preset") start = copy;
-
-            const entry = findEntryFromEntry(key, start);
+            const entry = findEntryFromEntry(key, searchOrigin);
             if (!entry || entry.type !== "table") return false;
 
             let newSubEntry = null;
@@ -230,17 +238,11 @@ export function LootGenerator() {
             if (!newSubEntry) return false;
             entry.loot.push(newSubEntry);
 
-            if (place === "active") setLootGeneratorStateProperty("lootTable", copy);
-            if (place === "preset") setLootGeneratorStateProperty("presets", copy);
+            saveCopy(place, copy);
 
             return true;
         },
-        [
-            lootGeneratorState.lootTable,
-            lootGeneratorState.presets,
-            setLootGeneratorStateProperty,
-            findEntryFromEntry,
-        ],
+        [getCopyAndSearchOrigin, saveCopy, findEntryFromEntry],
     );
 
     useEffect(() => {
