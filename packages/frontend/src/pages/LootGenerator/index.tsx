@@ -45,7 +45,7 @@ interface LootGeneratorContext {
         value: unknown,
         place: "active" | "preset",
     ) => boolean;
-    deleteEntry: (key: string, entry: (LootItem | LootTable)[]) => boolean;
+    deleteEntry: (key: string, place: "active" | "preset") => boolean;
     createSubEntry: (
         key: string,
         type: LootItem["type"] | LootTable["type"],
@@ -156,18 +156,38 @@ export function LootGenerator() {
         ],
     );
 
-    const deleteEntry = useCallback((key: string, entry: (LootItem | LootTable)[]): boolean => {
-        let deleted = false;
-        for (let i = 0; i < entry.length; i++) {
-            const subEntry = entry[i];
-            if (subEntry.key === key) {
-                entry.splice(i, 1);
-                deleted = true;
-            }
-            if (!deleted && subEntry.type === "table") deleted = deleteEntry(key, subEntry.loot);
-        }
-        return deleted;
-    }, []);
+    const deleteEntry = useCallback(
+        (key: string, place: "active" | "preset"): boolean => {
+            let copy;
+            if (place === "active") copy = lootGeneratorState.lootTable;
+            if (place === "preset") copy = lootGeneratorState.presets;
+            copy = JSON.parse(JSON.stringify(copy));
+
+            let start;
+            if (place === "active") start = copy.loot;
+            if (place === "preset") start = copy;
+
+            const search = (entry: (LootItem | LootTable)[]): boolean => {
+                let deleted = false;
+                for (let i = 0; i < entry.length; i++) {
+                    const subEntry = entry[i];
+                    if (subEntry.key === key) {
+                        entry.splice(i, 1);
+                        deleted = true;
+                    }
+                    if (!deleted && subEntry.type === "table") deleted = search(subEntry.loot);
+                }
+                return deleted;
+            };
+            const deleted = search(start);
+
+            if (place === "active") setLootGeneratorStateProperty("lootTable", copy);
+            if (place === "preset") setLootGeneratorStateProperty("presets", copy);
+
+            return deleted;
+        },
+        [lootGeneratorState.lootTable, lootGeneratorState.presets, setLootGeneratorStateProperty],
+    );
 
     const createSubEntry = useCallback(
         (

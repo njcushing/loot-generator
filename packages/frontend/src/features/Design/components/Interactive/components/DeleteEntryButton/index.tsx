@@ -9,33 +9,20 @@ export type TDeleteEntryButton = {
 };
 
 export function DeleteEntryButton({ entry }: TDeleteEntryButton) {
-    const { lootGeneratorState, setLootGeneratorStateProperty, deleteEntry } =
-        useContext(LootGeneratorContext);
+    const { deleteEntry } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
 
-    const deleteActiveEntry = useCallback(() => {
-        const { key } = entry;
-        const copy: LootTable = JSON.parse(JSON.stringify(lootGeneratorState.lootTable));
-        deleteEntry(key, copy.loot);
-        setLootGeneratorStateProperty("lootTable", copy);
-    }, [entry, lootGeneratorState.lootTable, setLootGeneratorStateProperty, deleteEntry]);
-
-    const deletePresetEntry = useCallback(() => {
-        const { key } = entry;
-        const copy: (LootItem | LootTable)[] = JSON.parse(
-            JSON.stringify(lootGeneratorState.presets),
-        );
-        deleteEntry(key, copy);
-        setLootGeneratorStateProperty("presets", copy);
-    }, [entry, lootGeneratorState.presets, setLootGeneratorStateProperty, deleteEntry]);
+    const deleteActiveEntry = useCallback(
+        () => deleteEntry(entry.key, menuType),
+        [entry, deleteEntry, menuType],
+    );
 
     return (
         <button
             type="button"
             className={`${styles["delete-entry-button"]} material-symbols-sharp`}
             onClick={(e) => {
-                if (menuType === "active") deleteActiveEntry();
-                if (menuType === "preset") deletePresetEntry();
+                deleteActiveEntry();
                 e.currentTarget.blur();
             }}
             onMouseLeave={(e) => {
