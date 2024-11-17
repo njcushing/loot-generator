@@ -52,7 +52,7 @@
     }
 
     .table-entry-bar:has(> .delete-entry-button-container:hover) {
-        background-color: rgb(250, 187, 187);
+        background-color: rgb(255, 120, 120);
     }
 }
 
@@ -73,8 +73,8 @@
     background-color: rgb(226, 170, 66);
 }
 
-.table-entry-bar:has(> .delete-entry-button-container:focus) {
-    background-color: rgb(231, 148, 148);
+.table-entry-bar:has(> .delete-entry-button-container > button:focus) {
+    background-color: rgb(255, 83, 83);
 }
 
 .table-entry-properties {
