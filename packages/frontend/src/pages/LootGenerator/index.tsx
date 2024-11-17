@@ -38,7 +38,11 @@ interface LootGeneratorContext {
         value: LootGeneratorState[K],
     ) => void;
 
-    findEntry: (key: string, entry: (LootItem | LootTable)[]) => LootItem | LootTable | null;
+    findEntryFromEntry: (
+        key: string,
+        entry: (LootItem | LootTable)[],
+    ) => LootItem | LootTable | null;
+    findEntryFromPlace: (key: string, place: "active" | "preset") => LootItem | LootTable | null;
     mutateEntryField: (
         key: string,
         fieldPaths: string[][],
@@ -57,7 +61,8 @@ const defaultLootGeneratorContext: LootGeneratorContext = {
     lootGeneratorState: defaultLootGeneratorState,
     setLootGeneratorStateProperty: () => {},
 
-    findEntry: () => null,
+    findEntryFromEntry: () => null,
+    findEntryFromPlace: () => null,
     mutateEntryField: () => false,
     deleteEntry: () => false,
     createSubEntry: () => false,
@@ -91,7 +96,7 @@ export function LootGenerator() {
         [],
     );
 
-    const findEntry = useCallback(
+    const findEntryFromEntry = useCallback(
         (key: string, entry: (LootItem | LootTable)[]): LootItem | LootTable | null => {
             for (let i = 0; i < entry.length; i++) {
                 const subEntry = entry[i];
@@ -99,13 +104,25 @@ export function LootGenerator() {
                     return subEntry;
                 }
                 if (subEntry.type === "table") {
-                    const nestedEntry = findEntry(key, subEntry.loot);
+                    const nestedEntry = findEntryFromEntry(key, subEntry.loot);
                     if (nestedEntry) return nestedEntry;
                 }
             }
             return null;
         },
         [],
+    );
+
+    const findEntryFromPlace = useCallback(
+        (key: string, place: "active" | "preset"): LootItem | LootTable | null => {
+            let start;
+            if (place === "active") start = lootGeneratorState.lootTable.loot;
+            if (place === "preset") start = lootGeneratorState.presets;
+            if (!start) return null;
+
+            return findEntryFromEntry(key, start);
+        },
+        [lootGeneratorState.lootTable, lootGeneratorState.presets, findEntryFromEntry],
     );
 
     const mutateEntryField = useCallback(
@@ -124,7 +141,7 @@ export function LootGenerator() {
             if (place === "active") start = copy.loot;
             if (place === "preset") start = copy;
 
-            const entry = findEntry(key, start);
+            const entry = findEntryFromEntry(key, start);
             if (!entry) return false;
 
             for (let i = 0; i < fieldPaths.length; i++) {
@@ -152,7 +169,7 @@ export function LootGenerator() {
             lootGeneratorState.lootTable,
             lootGeneratorState.presets,
             setLootGeneratorStateProperty,
-            findEntry,
+            findEntryFromEntry,
         ],
     );
 
@@ -204,7 +221,7 @@ export function LootGenerator() {
             if (place === "active") start = copy.loot;
             if (place === "preset") start = copy;
 
-            const entry = findEntry(key, start);
+            const entry = findEntryFromEntry(key, start);
             if (!entry || entry.type !== "table") return false;
 
             let newSubEntry = null;
@@ -222,7 +239,7 @@ export function LootGenerator() {
             lootGeneratorState.lootTable,
             lootGeneratorState.presets,
             setLootGeneratorStateProperty,
-            findEntry,
+            findEntryFromEntry,
         ],
     );
 
@@ -240,7 +257,8 @@ export function LootGenerator() {
                     lootGeneratorState,
                     setLootGeneratorStateProperty,
 
-                    findEntry,
+                    findEntryFromEntry,
+                    findEntryFromPlace,
                     mutateEntryField,
                     deleteEntry,
                     createSubEntry,
@@ -249,7 +267,8 @@ export function LootGenerator() {
                     lootGeneratorState,
                     setLootGeneratorStateProperty,
 
-                    findEntry,
+                    findEntryFromEntry,
+                    findEntryFromPlace,
                     mutateEntryField,
                     deleteEntry,
                     createSubEntry,
