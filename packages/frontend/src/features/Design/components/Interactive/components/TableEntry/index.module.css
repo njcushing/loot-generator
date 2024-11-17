@@ -46,7 +46,7 @@
     }
 
     .table-entry-bar.is-preset:has(> .toggle-button-container:hover),
-    .table-entry-bar.is-preset:has(> .save-as-preset-button-container:hover),
+    .table-entry-bar.is-preset:has(> .create-new-entry-button-container:hover),
     .table-entry-bar.is-preset:has(> .save-as-preset-button-container:hover) {
         background-color: rgb(236, 185, 89);
     }
