@@ -177,10 +177,10 @@ export function LootGenerator() {
                 let nestedEntry = entry;
                 const fieldPath = fieldPaths[i];
                 for (let j = 0; j < fieldPath.length; j++) {
-                    const fieldName = fieldPath[j];
+                    const fieldName = fieldPath[j] as keyof typeof nestedEntry;
                     const field = nestedEntry[fieldName];
                     if (j === fieldPath.length - 1) {
-                        nestedEntry[fieldName] = value;
+                        (nestedEntry[fieldName] as unknown) = value;
                         break;
                     }
                     if (typeof field === "object" && field !== null) {
