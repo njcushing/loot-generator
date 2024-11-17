@@ -14,50 +14,12 @@ export type TNumeric = {
 };
 
 export function Numeric({ entryKey, labelText, defaultValue, min, max, fieldPath }: TNumeric) {
-    const {
-        lootGeneratorState,
-        setLootGeneratorStateProperty,
-        findNestedEntry,
-        mutateNestedField,
-    } = useContext(LootGeneratorContext);
+    const { mutateEntryField } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
 
-    const editActiveEntry = useCallback(
-        (value: unknown) => {
-            const copy: LootTable = JSON.parse(JSON.stringify(lootGeneratorState.lootTable));
-            const entry = findNestedEntry(entryKey, copy.loot);
-            if (!entry) return;
-            mutateNestedField([fieldPath], value, entry);
-            setLootGeneratorStateProperty("lootTable", copy);
-        },
-        [
-            entryKey,
-            fieldPath,
-            lootGeneratorState.lootTable,
-            findNestedEntry,
-            mutateNestedField,
-            setLootGeneratorStateProperty,
-        ],
-    );
-
-    const editPresetEntry = useCallback(
-        (value: unknown) => {
-            const copy: (LootItem | LootTable)[] = JSON.parse(
-                JSON.stringify(lootGeneratorState.presets),
-            );
-            const entry = findNestedEntry(entryKey, copy);
-            if (!entry) return;
-            mutateNestedField([fieldPath], value, entry);
-            setLootGeneratorStateProperty("presets", copy);
-        },
-        [
-            entryKey,
-            fieldPath,
-            lootGeneratorState.presets,
-            findNestedEntry,
-            mutateNestedField,
-            setLootGeneratorStateProperty,
-        ],
+    const editEntryField = useCallback(
+        (value: unknown) => mutateEntryField(entryKey, [fieldPath], value, menuType),
+        [entryKey, fieldPath, mutateEntryField, menuType],
     );
 
     return (
@@ -71,8 +33,7 @@ export function Numeric({ entryKey, labelText, defaultValue, min, max, fieldPath
                     let value = Number(e.target.value);
                     if (min) value = Math.max(min, value);
                     if (max) value = Math.min(max, value);
-                    if (menuType === "active") editActiveEntry(value);
-                    if (menuType === "preset") editPresetEntry(value);
+                    editEntryField(value);
                 }}
             ></input>
         </label>

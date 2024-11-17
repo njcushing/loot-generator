@@ -12,50 +12,12 @@ export type TText = {
 };
 
 export function Text({ entryKey, labelText, defaultValue, fieldPath }: TText) {
-    const {
-        lootGeneratorState,
-        setLootGeneratorStateProperty,
-        findNestedEntry,
-        mutateNestedField,
-    } = useContext(LootGeneratorContext);
+    const { mutateEntryField } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
 
-    const editActiveEntry = useCallback(
-        (value: unknown) => {
-            const copy: LootTable = JSON.parse(JSON.stringify(lootGeneratorState.lootTable));
-            const entry = findNestedEntry(entryKey, copy.loot);
-            if (!entry) return;
-            mutateNestedField([fieldPath], value, entry);
-            setLootGeneratorStateProperty("lootTable", copy);
-        },
-        [
-            entryKey,
-            fieldPath,
-            lootGeneratorState.lootTable,
-            findNestedEntry,
-            mutateNestedField,
-            setLootGeneratorStateProperty,
-        ],
-    );
-
-    const editPresetEntry = useCallback(
-        (value: unknown) => {
-            const copy: (LootItem | LootTable)[] = JSON.parse(
-                JSON.stringify(lootGeneratorState.presets),
-            );
-            const entry = findNestedEntry(entryKey, copy);
-            if (!entry) return;
-            mutateNestedField([fieldPath], value, entry);
-            setLootGeneratorStateProperty("presets", copy);
-        },
-        [
-            entryKey,
-            fieldPath,
-            lootGeneratorState.presets,
-            findNestedEntry,
-            mutateNestedField,
-            setLootGeneratorStateProperty,
-        ],
+    const editEntryField = useCallback(
+        (value: unknown) => mutateEntryField(entryKey, [fieldPath], value, menuType),
+        [entryKey, fieldPath, mutateEntryField, menuType],
     );
 
     return (
@@ -67,8 +29,7 @@ export function Text({ entryKey, labelText, defaultValue, fieldPath }: TText) {
                 defaultValue={defaultValue}
                 onChange={(e) => {
                     const { value } = e.target;
-                    if (menuType === "active") editActiveEntry(value);
-                    if (menuType === "preset") editPresetEntry(value);
+                    editEntryField(value);
                 }}
             ></input>
         </label>
