@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid";
-import { LootItem, LootTable, Loot } from "../types";
+import { LootItem, LootTable, Preset, Loot, LootTableProps } from "../types";
 
 type RecursiveOptional<T> = {
     [P in keyof T]?: T[P] extends object ? RecursiveOptional<T[P]> : T[P];
@@ -8,50 +8,62 @@ type RecursiveOptional<T> = {
 export const createLootItem = (props: RecursiveOptional<LootItem> = {}): LootItem => ({
     type: "item",
     key: props.key || uuid(),
-    information: {
-        name: props.information?.name || "",
-        sprite: props.information?.sprite,
+    props: {
+        name: props.props?.name || "",
+        sprite: props.props?.sprite,
+        custom: props.props?.custom || {},
     },
-    weight: props.weight || 0,
-    rolls: props.rolls || {},
-    custom: props.custom || {},
+    criteria: {
+        weight: props.criteria?.weight || 0,
+        rolls: props.criteria?.rolls || {},
+    },
 });
 
 export const createLootTable = (props: RecursiveOptional<LootTable> = {}): LootTable => ({
     type: "table",
     key: props.key || uuid(),
-    name: props.name || "",
-    loot: (props.loot as LootTable["loot"]) || [],
-    weight: props.weight || 0,
-    rolls: props.rolls || {},
-    custom: props.custom || {},
+    props: {
+        name: props.props?.name || "",
+        loot: (props.props?.loot as LootTableProps["loot"]) || [],
+        custom: props.props?.custom || {},
+    },
+    criteria: {
+        weight: props.criteria?.weight || 0,
+        rolls: props.criteria?.rolls || {},
+    },
 });
 
 type SummedTable = LootTable & { totalWeight: number };
 
 const sumWeights = <K extends LootTable>(lootTable: K): K & { totalWeight: number } => {
     const mutableLootTable = { ...lootTable, totalWeight: 0 };
-    mutableLootTable.loot.forEach((entry, i) => {
-        mutableLootTable.totalWeight += entry.weight;
+    mutableLootTable.props.loot.forEach((entry, i) => {
+        mutableLootTable.totalWeight += entry.criteria.weight;
         if (entry.type === "table") {
-            mutableLootTable.loot[i] = sumWeights(mutableLootTable.loot[i] as LootTable);
+            mutableLootTable.props.loot[i] = sumWeights(
+                mutableLootTable.props.loot[i] as LootTable,
+            );
         }
     });
     return mutableLootTable;
 };
 
-const rollTable = (currentLoot: Loot, summedTable: SummedTable): [Loot, SummedTable] => {
+const rollTable = (
+    currentLoot: Loot,
+    presetsMap: Map<string, Preset>,
+    summedTable: SummedTable,
+): [Loot, SummedTable] => {
     let mutableLoot = new Map(currentLoot);
     const mutableSummedTable = { ...summedTable };
 
     // Roll a random entry in the table based on weighting of each entry
-    const totalEntries = mutableSummedTable.loot.length;
+    const totalEntries = mutableSummedTable.props.loot.length;
     let weight = Math.random() * mutableSummedTable.totalWeight;
     let rolledEntry = null;
     let i = 0;
     while (weight >= 0 && i < totalEntries) {
-        weight -= mutableSummedTable.loot[i].weight;
-        if (weight < 0) rolledEntry = mutableSummedTable.loot[i];
+        weight -= mutableSummedTable.props.loot[i].criteria.weight;
+        if (weight < 0) rolledEntry = mutableSummedTable.props.loot[i];
         i += 1;
     }
 
@@ -62,6 +74,7 @@ const rollTable = (currentLoot: Loot, summedTable: SummedTable): [Loot, SummedTa
     if (rolledEntry.type === "table") {
         [mutableLoot, rolledEntry as SummedTable] = rollTable(
             mutableLoot,
+            presetsMap,
             rolledEntry as SummedTable,
         );
     }
@@ -71,7 +84,7 @@ const rollTable = (currentLoot: Loot, summedTable: SummedTable): [Loot, SummedTa
         // Create new entry
         if (!mutableLoot.has(rolledEntry.key)) {
             mutableLoot.set(rolledEntry.key, {
-                ...rolledEntry.information,
+                ...rolledEntry.props,
                 quantity: 0,
             });
         }
@@ -84,14 +97,16 @@ const rollTable = (currentLoot: Loot, summedTable: SummedTable): [Loot, SummedTa
 
 export const generateLoot = (
     lootTable: LootTable,
+    presets: Preset[],
     rolls: number = 1,
     appendToExisting: Loot = new Map(),
 ): Loot => {
     let loot = new Map(appendToExisting);
 
     let summedTable = sumWeights(lootTable);
+    const presetsMap = new Map(presets.map((preset) => [preset.key, preset]));
 
-    for (let i = 0; i < rolls; i++) [loot, summedTable] = rollTable(loot, summedTable);
+    for (let i = 0; i < rolls; i++) [loot, summedTable] = rollTable(loot, presetsMap, summedTable);
 
     return loot;
 };

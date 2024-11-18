@@ -23,8 +23,8 @@ export function ToggleButton({ entry }: TToggleButton) {
         });
     }, [entry.key, setMenuStates]);
 
-    const { type } = entry;
-    const { name } = type === "table" ? entry : entry.information;
+    const { type, props } = entry;
+    const { name } = props;
 
     return (
         <button

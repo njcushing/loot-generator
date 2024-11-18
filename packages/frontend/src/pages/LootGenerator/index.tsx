@@ -3,7 +3,7 @@ import useResizeObserverElement from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
 import { Generate } from "@/features/Generate";
 import { createLootItem, createLootTable } from "@/utils/generateLoot";
-import { LootItem, LootTable, Loot, SortOptions } from "@/utils/types";
+import { LootItem, LootTable, Loot, SortOptions, LootTableProps } from "@/utils/types";
 import { Design } from "@/features/Design";
 import { exampleLootTable } from "@/features/Design/utils/exampleLootTable";
 import { version } from "../../../package.json";
@@ -41,8 +41,11 @@ interface LootGeneratorContext {
     findEntryFromEntry: (
         key: string,
         entry: (LootItem | LootTable)[],
-    ) => LootItem | LootTable | null;
-    findEntryFromPlace: (key: string, place: "active" | "preset") => LootItem | LootTable | null;
+    ) => LootTableProps["loot"][number] | LootGeneratorState["presets"][number] | null;
+    findEntryFromPlace: (
+        key: string,
+        place: "active" | "preset",
+    ) => LootTableProps["loot"][number] | LootGeneratorState["presets"][number] | null;
     mutateEntryField: (
         key: string,
         fieldPaths: string[][],
@@ -109,7 +112,7 @@ export function LootGenerator() {
             copy = JSON.parse(JSON.stringify(copy));
 
             let searchOrigin;
-            if (place === "active") searchOrigin = copy.loot;
+            if (place === "active") searchOrigin = copy.props.loot;
             if (place === "preset") searchOrigin = copy;
 
             return { copy, searchOrigin };
@@ -133,26 +136,35 @@ export function LootGenerator() {
     );
 
     const findEntryFromEntry = useCallback(
-        (key: string, entry: (LootItem | LootTable)[]): LootItem | LootTable | null => {
+        (
+            key: string,
+            entry: LootTableProps["loot"] | LootGeneratorState["presets"],
+        ): LootTableProps["loot"][number] | LootGeneratorState["presets"][number] | null => {
             for (let i = 0; i < entry.length; i++) {
                 const subEntry = entry[i];
+                if (subEntry.type === "preset") {
+                    return lootGeneratorState.presetsMap.get(subEntry.key) || null;
+                }
                 if (subEntry.key === key) {
                     return subEntry;
                 }
                 if (subEntry.type === "table") {
-                    const nestedEntry = findEntryFromEntry(key, subEntry.loot);
+                    const nestedEntry = findEntryFromEntry(key, subEntry.props.loot);
                     if (nestedEntry) return nestedEntry;
                 }
             }
             return null;
         },
-        [],
+        [lootGeneratorState.presetsMap],
     );
 
     const findEntryFromPlace = useCallback(
-        (key: string, place: "active" | "preset"): LootItem | LootTable | null => {
+        (
+            key: string,
+            place: "active" | "preset",
+        ): LootTableProps["loot"][number] | LootGeneratorState["presets"][number] | null => {
             let start;
-            if (place === "active") start = lootGeneratorState.lootTable.loot;
+            if (place === "active") start = lootGeneratorState.lootTable.props.loot;
             if (place === "preset") start = lootGeneratorState.presets;
             if (!start) return null;
 
@@ -172,6 +184,7 @@ export function LootGenerator() {
 
             const entry = findEntryFromEntry(key, searchOrigin);
             if (!entry) return false;
+            if (entry.type === "preset") return false;
 
             for (let i = 0; i < fieldPaths.length; i++) {
                 let nestedEntry = entry;
@@ -184,7 +197,7 @@ export function LootGenerator() {
                         break;
                     }
                     if (typeof field === "object" && field !== null) {
-                        nestedEntry = field as LootItem | LootTable;
+                        (nestedEntry as unknown) = field;
                     } else break;
                 }
             }
@@ -200,7 +213,7 @@ export function LootGenerator() {
         (key: string, place: "active" | "preset"): boolean => {
             const { copy, searchOrigin } = getCopyAndSearchOrigin(place);
 
-            const search = (entry: (LootItem | LootTable)[]): boolean => {
+            const search = (entry: LootTableProps["loot"]): boolean => {
                 let deleted = false;
                 for (let i = 0; i < entry.length; i++) {
                     const subEntry = entry[i];
@@ -208,7 +221,9 @@ export function LootGenerator() {
                         entry.splice(i, 1);
                         deleted = true;
                     }
-                    if (!deleted && subEntry.type === "table") deleted = search(subEntry.loot);
+                    if (!deleted && subEntry.type === "table") {
+                        deleted = search(subEntry.props.loot);
+                    }
                 }
                 return deleted;
             };
@@ -236,7 +251,7 @@ export function LootGenerator() {
             if (type === "table") newSubEntry = createLootTable();
             if (type === "item") newSubEntry = createLootItem();
             if (!newSubEntry) return false;
-            entry.loot.push(newSubEntry);
+            entry.props.loot.push(newSubEntry);
 
             saveCopy(place, copy);
 

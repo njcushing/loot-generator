@@ -48,6 +48,7 @@ export function Generate() {
                                             "loot",
                                             generateLoot(
                                                 lootGeneratorState.lootTable,
+                                                lootGeneratorState.presets,
                                                 lootGeneratorState.quantitySelected,
                                                 lootGeneratorState.loot,
                                             ),

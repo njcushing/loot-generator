@@ -18,7 +18,9 @@ export function TableEntry({ entry }: TTableEntry) {
     const { lootGeneratorState } = useContext(LootGeneratorContext);
     const { menuType, menuStates } = useContext(InteractiveContext);
 
-    const { key, name, weight } = entry;
+    const { key, props, criteria } = entry;
+    const { name } = props;
+    const { weight } = criteria;
 
     const isPreset = useMemo(() => {
         return menuType === "active" && lootGeneratorState.presetsMap.has(entry.key);
@@ -49,17 +51,17 @@ export function TableEntry({ entry }: TTableEntry) {
                             entryKey={key}
                             labelText="Name"
                             defaultValue={name || ""}
-                            fieldPath={["name"]}
+                            fieldPath={["props", "name"]}
                         />
                         <Inputs.Numeric
                             entryKey={key}
                             labelText="Weight"
                             defaultValue={weight || 1}
-                            fieldPath={["weight"]}
+                            fieldPath={["criteria", "weight"]}
                         />
                     </div>
                     <ul className={styles["table-entries"]}>
-                        {entry.loot.map((subEntry) => {
+                        {entry.props.loot.map((subEntry) => {
                             if (subEntry.type === "item") {
                                 if (lootGeneratorState.presetsMap.has(subEntry.key)) {
                                     return (

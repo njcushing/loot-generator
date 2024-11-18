@@ -1,9 +1,9 @@
-import { LootTable, LootItem } from "@/utils/types";
+import { LootTableProps } from "@/utils/types";
 
 export type MenuStates = Map<string, "collapsed" | "expanded">;
 
 export const update = (
-    entries: (LootTable | LootItem)[],
+    entries: LootTableProps["loot"],
     previousStates: MenuStates,
     newStates: MenuStates,
 ): MenuStates => {
@@ -17,7 +17,7 @@ export const update = (
         );
 
         if (entry.type === "table") {
-            mutableNewStates = update(entry.loot, previousStates, mutableNewStates);
+            mutableNewStates = update(entry.props.loot, previousStates, mutableNewStates);
         }
     });
 

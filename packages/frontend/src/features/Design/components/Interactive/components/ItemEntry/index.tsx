@@ -16,8 +16,9 @@ export function ItemEntry({ entry }: TItemEntry) {
     const { lootGeneratorState } = useContext(LootGeneratorContext);
     const { menuType, menuStates } = useContext(InteractiveContext);
 
-    const { key, information, weight } = entry;
-    const { name } = information;
+    const { key, props, criteria } = entry;
+    const { name } = props;
+    const { weight } = criteria;
 
     const isPreset = useMemo(() => {
         return menuType === "active" && lootGeneratorState.presetsMap.has(entry.key);
@@ -44,13 +45,13 @@ export function ItemEntry({ entry }: TItemEntry) {
                         entryKey={key}
                         labelText="Name"
                         defaultValue={name || ""}
-                        fieldPath={["information", "name"]}
+                        fieldPath={["props", "name"]}
                     />
                     <Inputs.Numeric
                         entryKey={key}
                         labelText="Weight"
                         defaultValue={weight || 1}
-                        fieldPath={["weight"]}
+                        fieldPath={["criteria", "weight"]}
                     />
                 </div>
             )}
