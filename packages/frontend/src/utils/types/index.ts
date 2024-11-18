@@ -19,7 +19,7 @@ export type LootTable = {
     type: "table";
     key: string;
     name?: string;
-    loot: (LootItem | LootTable)[];
+    loot: (LootItem | LootTable | LootPreset)[];
 } & GenerationCriteria &
     CustomFields;
 
