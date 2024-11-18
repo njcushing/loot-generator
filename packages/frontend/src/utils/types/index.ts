@@ -8,6 +8,7 @@ export type GenerationCriteria = {
 
 export type CustomFields = { custom: { [key: string]: unknown } };
 export type ItemInformation = { name?: string; sprite?: URL };
+export type LootPreset = { type: "preset"; key: string };
 export type LootItem = {
     type: "item";
     key: string;
