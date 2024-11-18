@@ -22,6 +22,7 @@ export type LootTable = {
     loot: (LootItem | LootTable | LootPreset)[];
 } & GenerationCriteria &
     CustomFields;
+export type Preset = LootTable | LootItem;
 
 export type Item = ItemInformation & { quantity: number; value?: number };
 export type Loot = Map<string, Item>;
