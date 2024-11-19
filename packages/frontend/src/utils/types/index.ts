@@ -29,6 +29,7 @@ export type LootTable = {
 export type LootPreset = {
     type: "preset";
     key: string;
+    id: string;
 } & GenerationCriteria;
 
 export type Preset = LootTable | LootItem;

@@ -1,6 +1,6 @@
 import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
-import { LootItem, LootTable } from "@/utils/types";
+import { LootTable } from "@/utils/types";
 import { InteractiveContext } from "../..";
 import { ToggleButton } from "../ToggleButton";
 import { CreateNewEntryButton } from "../CreateNewEntryButton";
@@ -62,34 +62,20 @@ export function TableEntry({ entry }: TTableEntry) {
                     </div>
                     <ul className={styles["table-entries"]}>
                         {entry.props.loot.map((subEntry) => {
-                            if (subEntry.type === "item") {
-                                if (lootGeneratorState.presetsMap.has(subEntry.key)) {
-                                    return (
-                                        <ItemEntry
-                                            entry={
-                                                lootGeneratorState.presetsMap.get(
-                                                    subEntry.key,
-                                                ) as LootItem
-                                            }
-                                            key={subEntry.key}
-                                        />
-                                    );
+                            if (subEntry.type === "preset") {
+                                const preset = lootGeneratorState.presetsMap.get(subEntry.id);
+                                if (!preset) return null;
+                                if (preset.type === "item") {
+                                    return <ItemEntry entry={preset} key={subEntry.key} />;
                                 }
+                                if (preset.type === "table") {
+                                    return <TableEntry entry={preset} key={subEntry.key} />;
+                                }
+                            }
+                            if (subEntry.type === "item") {
                                 return <ItemEntry entry={subEntry} key={subEntry.key} />;
                             }
                             if (subEntry.type === "table") {
-                                if (lootGeneratorState.presetsMap.has(subEntry.key)) {
-                                    return (
-                                        <TableEntry
-                                            entry={
-                                                lootGeneratorState.presetsMap.get(
-                                                    subEntry.key,
-                                                ) as LootTable
-                                            }
-                                            key={subEntry.key}
-                                        />
-                                    );
-                                }
                                 return <TableEntry entry={subEntry} key={subEntry.key} />;
                             }
                             return null;

@@ -160,10 +160,10 @@ export function LootGenerator() {
                 for (let i = 0; i < currentEntry.length; i++) {
                     const subEntry = currentEntry[i];
                     if (subEntry.type === "preset") {
-                        const preset = lootGeneratorState.presetsMap.get(subEntry.key);
+                        const preset = lootGeneratorState.presetsMap.get(subEntry.id);
                         if (!preset) return null;
                         return {
-                            entry: lootGeneratorState.presetsMap.get(subEntry.key)!,
+                            entry: lootGeneratorState.presetsMap.get(subEntry.id)!,
                             path: currentPath,
                             copy,
                         };
