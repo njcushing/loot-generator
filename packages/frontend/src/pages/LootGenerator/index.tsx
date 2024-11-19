@@ -98,23 +98,18 @@ export function LootGenerator() {
         [],
     );
 
-    const getCopyAndSearchOrigin = useCallback(
+    const getCopy = useCallback(
         (
             place: "active" | "preset",
         ): {
             copy: LootGeneratorState["lootTable"] | LootGeneratorState["presets"];
-            searchOrigin: (LootItem | LootTable)[];
         } => {
             let copy;
             if (place === "active") copy = lootGeneratorState.lootTable;
             if (place === "preset") copy = lootGeneratorState.presets;
             copy = JSON.parse(JSON.stringify(copy));
 
-            let searchOrigin;
-            if (place === "active") searchOrigin = copy.props.loot;
-            if (place === "preset") searchOrigin = copy;
-
-            return { copy, searchOrigin };
+            return { copy };
         },
         [lootGeneratorState.lootTable, lootGeneratorState.presets],
     );
@@ -143,7 +138,7 @@ export function LootGenerator() {
             path: LootTable[];
             copy: LootGeneratorState["lootTable"] | LootGeneratorState["presets"];
         } | null => {
-            const { copy } = getCopyAndSearchOrigin(place);
+            const { copy } = getCopy(place);
             if (!copy) return null;
 
             let origin;
@@ -191,7 +186,7 @@ export function LootGenerator() {
 
             return search(origin, path);
         },
-        [lootGeneratorState.presetsMap, getCopyAndSearchOrigin],
+        [lootGeneratorState.presetsMap, getCopy],
     );
 
     const mutateEntryField = useCallback(
