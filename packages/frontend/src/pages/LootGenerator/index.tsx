@@ -231,29 +231,25 @@ export function LootGenerator() {
 
     const deleteEntry = useCallback(
         (key: string, place: "active" | "preset"): boolean => {
-            const { copy, searchOrigin } = getCopyAndSearchOrigin(place);
+            const result = getEntry(key, place);
+            if (!result) return false;
+            const { path, copy } = result;
+            const entryParentLoot = path[path.length - 1].props.loot;
 
-            const search = (entry: LootTableProps["loot"]): boolean => {
-                let deleted = false;
-                for (let i = 0; i < entry.length; i++) {
-                    const subEntry = entry[i];
-                    if (subEntry.key === key) {
-                        entry.splice(i, 1);
-                        deleted = true;
-                    }
-                    if (!deleted && subEntry.type === "table") {
-                        deleted = search(subEntry.props.loot);
-                    }
+            let deleted = false;
+            for (let i = 0; i < entryParentLoot.length; i++) {
+                const entry = entryParentLoot[i];
+                if (entry.key === key) {
+                    entryParentLoot.splice(i, 1);
+                    deleted = true;
                 }
-                return deleted;
-            };
-            const deleted = search(searchOrigin);
+            }
 
             saveCopy(place, copy);
 
             return deleted;
         },
-        [getCopyAndSearchOrigin, saveCopy],
+        [saveCopy, getEntry],
     );
 
     const createSubEntry = useCallback(
