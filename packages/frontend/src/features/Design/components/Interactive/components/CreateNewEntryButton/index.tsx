@@ -1,6 +1,6 @@
-import { useContext, useState, useCallback } from "react";
+import { useContext, useState } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
-import { LootItem, LootTable } from "@/utils/types";
+import { LootTable } from "@/utils/types";
 import { InteractiveContext } from "../..";
 import styles from "./index.module.css";
 
@@ -13,14 +13,6 @@ export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
     const { menuType } = useContext(InteractiveContext);
 
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
-
-    const createNewEntry = useCallback(
-        (type: LootItem["type"] | LootTable["type"]) => {
-            const { key } = entry;
-            createSubEntry(key, type, menuType);
-        },
-        [entry, createSubEntry, menuType],
-    );
 
     return (
         <div className={`${styles["create-new-entry-button-wrapper"]} material-symbols-sharp`}>
@@ -43,7 +35,7 @@ export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
                         type="button"
                         className={styles["create-new-table-button"]}
                         onClick={(e) => {
-                            createNewEntry("table");
+                            createSubEntry(entry.key, "table", menuType);
                             setMenuOpen(!menuOpen);
                             e.currentTarget.blur();
                         }}
@@ -57,7 +49,7 @@ export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
                         type="button"
                         className={styles["create-new-item-button"]}
                         onClick={(e) => {
-                            createNewEntry("item");
+                            createSubEntry(entry.key, "item", menuType);
                             setMenuOpen(!menuOpen);
                             e.currentTarget.blur();
                         }}
