@@ -1,6 +1,7 @@
-import { useContext, useCallback } from "react";
+import { useContext } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootItem, LootTable } from "@/utils/types";
+import { InteractiveContext } from "../..";
 import styles from "./index.module.css";
 
 export type TSaveAsPresetButton = {
@@ -8,21 +9,15 @@ export type TSaveAsPresetButton = {
 };
 
 export function SaveAsPresetButton({ entry }: TSaveAsPresetButton) {
-    const { lootGeneratorState, setLootGeneratorStateProperty } = useContext(LootGeneratorContext);
-
-    const saveEntryAsPreset = useCallback(() => {
-        const copy = JSON.parse(JSON.stringify(Array.from(lootGeneratorState.presets)));
-        const presetsKeys = new Set(lootGeneratorState.presets.map((preset) => preset.key));
-        if (!presetsKeys.has(entry.key)) copy.push(entry);
-        setLootGeneratorStateProperty("presets", copy);
-    }, [entry, lootGeneratorState.presets, setLootGeneratorStateProperty]);
+    const { saveEntryAsPreset } = useContext(LootGeneratorContext);
+    const { menuType } = useContext(InteractiveContext);
 
     return (
         <button
             type="button"
             className={`${styles["save-as-preset-button"]} material-symbols-sharp`}
             onClick={(e) => {
-                saveEntryAsPreset();
+                saveEntryAsPreset(entry.key, menuType);
                 e.currentTarget.blur();
             }}
             onMouseLeave={(e) => {

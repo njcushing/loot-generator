@@ -3,9 +3,10 @@ import useResizeObserverElement from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
 import { Generate } from "@/features/Generate";
 import { createLootItem, createLootTable } from "@/utils/generateLoot";
-import { LootItem, LootTable, Loot, SortOptions, LootTableProps } from "@/utils/types";
+import { LootItem, LootTable, Loot, SortOptions, LootTableProps, LootPreset } from "@/utils/types";
 import { Design } from "@/features/Design";
 import { exampleLootTable } from "@/features/Design/utils/exampleLootTable";
+import { v4 as uuid } from "uuid";
 import { version } from "../../../package.json";
 import styles from "./index.module.css";
 
@@ -58,6 +59,7 @@ interface LootGeneratorContext {
         type: LootItem["type"] | LootTable["type"],
         place: "active" | "preset",
     ) => boolean;
+    saveEntryAsPreset: (key: string, place: "active" | "preset") => boolean;
 }
 
 const defaultLootGeneratorContext: LootGeneratorContext = {
@@ -68,6 +70,7 @@ const defaultLootGeneratorContext: LootGeneratorContext = {
     mutateEntryField: () => false,
     deleteEntry: () => false,
     createSubEntry: () => false,
+    saveEntryAsPreset: () => false,
 };
 
 export const LootGeneratorContext = createContext<LootGeneratorContext>(
@@ -271,6 +274,55 @@ export function LootGenerator() {
         [saveCopy, getEntry],
     );
 
+    const saveEntryAsPreset = useCallback(
+        (key: string, place: "active" | "preset"): boolean => {
+            const result = getEntry(key, place);
+            if (!result) return false;
+            const { entry, copy } = result;
+            if (entry.type === "preset") {
+                return false;
+            }
+            if (lootGeneratorState.presetsMap.has(entry.key)) {
+                return false;
+            }
+
+            if (place === "preset") {
+                const id = entry.key;
+
+                (copy as LootGeneratorState["presets"]).push(JSON.parse(JSON.stringify(entry)));
+
+                Object.keys(entry).forEach((field) => delete entry[field as keyof typeof entry]);
+                (entry as unknown as LootPreset).type = "preset";
+                (entry as unknown as LootPreset).key = uuid();
+                (entry as unknown as LootPreset).id = id;
+
+                saveCopy("preset", copy);
+            }
+
+            if (place === "active") {
+                const id = entry.key;
+                const entryCopy = JSON.parse(JSON.stringify(entry));
+
+                Object.keys(entry).forEach((field) => delete entry[field as keyof typeof entry]);
+                (entry as unknown as LootPreset).type = "preset";
+                (entry as unknown as LootPreset).key = uuid();
+                (entry as unknown as LootPreset).id = id;
+
+                saveCopy("active", copy);
+
+                const { copy: presetsCopy } = getCopy("preset");
+                (presetsCopy as LootGeneratorState["presets"]).push(
+                    JSON.parse(JSON.stringify(entryCopy)),
+                );
+
+                saveCopy("preset", presetsCopy);
+            }
+
+            return true;
+        },
+        [lootGeneratorState.presetsMap, getCopy, saveCopy, getEntry],
+    );
+
     useEffect(() => {
         const newPresetsMap = new Map(
             lootGeneratorState.presets.map((preset) => [preset.key, preset]),
@@ -289,6 +341,7 @@ export function LootGenerator() {
                     mutateEntryField,
                     deleteEntry,
                     createSubEntry,
+                    saveEntryAsPreset,
                 }),
                 [
                     lootGeneratorState,
@@ -298,6 +351,7 @@ export function LootGenerator() {
                     mutateEntryField,
                     deleteEntry,
                     createSubEntry,
+                    saveEntryAsPreset,
                 ],
             )}
         >
