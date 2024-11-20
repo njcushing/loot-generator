@@ -33,6 +33,29 @@ export const createLootTable = (props: RecursiveOptional<LootTable> = {}): LootT
     },
 });
 
+const substitutePresets = (lootTable: LootTable, presets: Preset[]) => {
+    const presetsMap = new Map(presets.map((preset) => [preset.key, preset]));
+
+    const search = (table: LootTable) => {
+        const mutableTable = table;
+        const entryCount = table.props.loot.length;
+        for (let i = entryCount - 1; i >= 0; i--) {
+            const entry = table.props.loot[i];
+            if (entry.type === "preset") {
+                const preset = presetsMap.get(entry.id);
+                if (!preset) {
+                    mutableTable.props.loot.splice(i, 1);
+                } else {
+                    mutableTable.props.loot[i] = structuredClone(preset);
+                }
+            }
+            if (entry.type === "table") search(entry as LootTable);
+        }
+    };
+
+    search(lootTable);
+};
+
 type SummedTable = LootTable & { totalWeight: number };
 
 const sumWeights = <K extends LootTable>(lootTable: K): K & { totalWeight: number } => {
@@ -48,13 +71,9 @@ const sumWeights = <K extends LootTable>(lootTable: K): K & { totalWeight: numbe
     return mutableLootTable;
 };
 
-const rollTable = (
-    currentLoot: Loot,
-    presetsMap: Map<string, Preset>,
-    summedTable: SummedTable,
-): [Loot, SummedTable] => {
+const rollTable = (currentLoot: Loot, workingTable: SummedTable): [Loot, SummedTable] => {
     let mutableLoot = new Map(currentLoot);
-    const mutableSummedTable = { ...summedTable };
+    const mutableSummedTable = { ...workingTable };
 
     // Roll a random entry in the table based on weighting of each entry
     const totalEntries = mutableSummedTable.props.loot.length;
@@ -74,7 +93,6 @@ const rollTable = (
     if (rolledEntry.type === "table") {
         [mutableLoot, rolledEntry as SummedTable] = rollTable(
             mutableLoot,
-            presetsMap,
             rolledEntry as SummedTable,
         );
     }
@@ -103,10 +121,13 @@ export const generateLoot = (
 ): Loot => {
     let loot = new Map(appendToExisting);
 
-    let summedTable = sumWeights(lootTable);
-    const presetsMap = new Map(presets.map((preset) => [preset.key, preset]));
+    let workingTable = structuredClone(lootTable);
+    substitutePresets(workingTable, presets);
+    workingTable = sumWeights(workingTable);
 
-    for (let i = 0; i < rolls; i++) [loot, summedTable] = rollTable(loot, presetsMap, summedTable);
+    for (let i = 0; i < rolls; i++) {
+        [loot, workingTable] = rollTable(loot, workingTable as SummedTable);
+    }
 
     return loot;
 };
