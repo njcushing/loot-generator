@@ -159,16 +159,16 @@ export function LootGenerator() {
             } | null => {
                 for (let i = 0; i < currentEntry.length; i++) {
                     const subEntry = currentEntry[i];
-                    if (subEntry.type === "preset") {
-                        const preset = lootGeneratorState.presetsMap.get(subEntry.id);
-                        if (!preset) return null;
-                        return {
-                            entry: lootGeneratorState.presetsMap.get(subEntry.id)!,
-                            path: currentPath,
-                            copy,
-                        };
-                    }
                     if (subEntry.key === key) {
+                        if (subEntry.type === "preset") {
+                            const preset = lootGeneratorState.presetsMap.get(subEntry.id);
+                            if (!preset) return null;
+                            return {
+                                entry: lootGeneratorState.presetsMap.get(subEntry.id)!,
+                                path: currentPath,
+                                copy,
+                            };
+                        }
                         return {
                             entry: subEntry,
                             path: currentPath,
@@ -256,7 +256,6 @@ export function LootGenerator() {
             const result = getEntry(key, place);
             if (!result) return false;
             const { entry, copy } = result;
-            if (entry.type === "preset") return false;
             if (!entry || entry.type !== "table") return false;
 
             let newSubEntry = null;
