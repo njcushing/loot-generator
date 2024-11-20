@@ -1,4 +1,4 @@
-import { useContext, useCallback } from "react";
+import { useContext } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootItem, LootTable } from "@/utils/types";
 import { InteractiveContext } from "../..";
@@ -12,17 +12,12 @@ export function DeleteEntryButton({ entry }: TDeleteEntryButton) {
     const { deleteEntry } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
 
-    const deleteActiveEntry = useCallback(
-        () => deleteEntry(entry.key, menuType),
-        [entry, deleteEntry, menuType],
-    );
-
     return (
         <button
             type="button"
             className={`${styles["delete-entry-button"]} material-symbols-sharp`}
             onClick={(e) => {
-                deleteActiveEntry();
+                deleteEntry(entry.key, menuType);
                 e.currentTarget.blur();
             }}
             onMouseLeave={(e) => {
