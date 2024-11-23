@@ -110,7 +110,7 @@ export function LootGenerator() {
             let copy;
             if (place === "active") copy = lootGeneratorState.lootTable;
             if (place === "preset") copy = lootGeneratorState.presets;
-            copy = JSON.parse(JSON.stringify(copy));
+            copy = structuredClone(copy)!;
 
             return { copy };
         },
@@ -289,7 +289,7 @@ export function LootGenerator() {
             if (place === "preset") {
                 const id = entry.key;
 
-                (copy as LootGeneratorState["presets"]).push(JSON.parse(JSON.stringify(entry)));
+                (copy as LootGeneratorState["presets"]).push(structuredClone(entry));
 
                 Object.keys(entry).forEach((field) => delete entry[field as keyof typeof entry]);
                 (entry as unknown as LootPreset).type = "preset";
@@ -301,7 +301,7 @@ export function LootGenerator() {
 
             if (place === "active") {
                 const id = entry.key;
-                const entryCopy = JSON.parse(JSON.stringify(entry));
+                const entryCopy = structuredClone(entry);
 
                 Object.keys(entry).forEach((field) => delete entry[field as keyof typeof entry]);
                 (entry as unknown as LootPreset).type = "preset";
@@ -311,9 +311,7 @@ export function LootGenerator() {
                 saveCopy("active", copy);
 
                 const { copy: presetsCopy } = getCopy("preset");
-                (presetsCopy as LootGeneratorState["presets"]).push(
-                    JSON.parse(JSON.stringify(entryCopy)),
-                );
+                (presetsCopy as LootGeneratorState["presets"]).push(structuredClone(entryCopy));
 
                 saveCopy("preset", presetsCopy);
             }
