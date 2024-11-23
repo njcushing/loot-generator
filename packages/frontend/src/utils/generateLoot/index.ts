@@ -67,7 +67,7 @@ const substitutePresets = (lootTable: LootTable, presets: Preset[]) => {
                 if (!preset) {
                     mutableTable.props.loot.splice(i, 1);
                 } else {
-                    mutableTable.props.loot[i] = structuredClone(preset);
+                    mutableTable.props.loot[i].props = structuredClone(preset).props;
                 }
             }
             if (entry.type === "table") search(entry as LootTable);
