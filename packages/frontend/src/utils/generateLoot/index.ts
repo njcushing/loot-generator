@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid";
-import { LootItem, LootTable, Preset, Loot, LootTableProps } from "../types";
+import { LootItem, LootTable, LootPreset, Preset, Loot, LootTableProps } from "../types";
 
 type RecursiveOptional<T> = {
     [P in keyof T]?: T[P] extends object ? RecursiveOptional<T[P]> : T[P];
@@ -27,6 +27,16 @@ export const createLootTable = (props: RecursiveOptional<LootTable> = {}): LootT
         loot: (props.props?.loot as LootTableProps["loot"]) || [],
         custom: props.props?.custom || {},
     },
+    criteria: {
+        weight: props.criteria?.weight || 0,
+        rolls: props.criteria?.rolls || {},
+    },
+});
+
+export const createLootPreset = (props: RecursiveOptional<LootPreset> = {}): LootPreset => ({
+    type: "preset",
+    key: props.key || uuid(),
+    id: props.id || uuid(),
     criteria: {
         weight: props.criteria?.weight || 0,
         rolls: props.criteria?.rolls || {},
