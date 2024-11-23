@@ -2,11 +2,10 @@ import { createContext, useState, useEffect, useRef, useMemo, useCallback } from
 import useResizeObserverElement from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
 import { Generate } from "@/features/Generate";
-import { createLootItem, createLootTable } from "@/utils/generateLoot";
-import { LootItem, LootTable, Loot, SortOptions, LootTableProps, LootPreset } from "@/utils/types";
+import { convertEntryToLootPreset, createLootItem, createLootTable } from "@/utils/generateLoot";
+import { LootItem, LootTable, Loot, SortOptions, LootTableProps } from "@/utils/types";
 import { Design } from "@/features/Design";
 import { exampleLootTable } from "@/features/Design/utils/exampleLootTable";
-import { v4 as uuid } from "uuid";
 import { version } from "../../../package.json";
 import styles from "./index.module.css";
 
@@ -287,32 +286,18 @@ export function LootGenerator() {
             }
 
             if (place === "preset") {
-                const id = entry.key;
-
                 (copy as LootGeneratorState["presets"]).push(structuredClone(entry));
-
-                Object.keys(entry).forEach((field) => delete entry[field as keyof typeof entry]);
-                (entry as unknown as LootPreset).type = "preset";
-                (entry as unknown as LootPreset).key = uuid();
-                (entry as unknown as LootPreset).id = id;
-
+                convertEntryToLootPreset(entry);
                 saveCopy("preset", copy);
             }
 
             if (place === "active") {
-                const id = entry.key;
                 const entryCopy = structuredClone(entry);
-
-                Object.keys(entry).forEach((field) => delete entry[field as keyof typeof entry]);
-                (entry as unknown as LootPreset).type = "preset";
-                (entry as unknown as LootPreset).key = uuid();
-                (entry as unknown as LootPreset).id = id;
-
+                convertEntryToLootPreset(entry);
                 saveCopy("active", copy);
 
                 const { copy: presetsCopy } = getCopy("preset");
                 (presetsCopy as LootGeneratorState["presets"]).push(structuredClone(entryCopy));
-
                 saveCopy("preset", presetsCopy);
             }
 
