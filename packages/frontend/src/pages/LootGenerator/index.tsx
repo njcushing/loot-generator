@@ -31,10 +31,6 @@ const defaultLootGeneratorState: LootGeneratorState = {
     sortOptions: new Map([["quantity", "descending"]]),
 };
 
-// TODO:
-// - Write 'createLootPreset' function and ensure GenerationCriteria fields are added
-// - Ensure only 'props' field is substituted into 'type === "presets"' entries in generation
-
 interface LootGeneratorContext {
     lootGeneratorState: LootGeneratorState;
     setLootGeneratorStateProperty: <K extends keyof LootGeneratorState>(
@@ -282,12 +278,9 @@ export function LootGenerator() {
             const result = getEntry(key, place);
             if (!result) return false;
             const { entry, copy } = result;
-            if (entry.type === "preset") {
-                return false;
-            }
-            if (lootGeneratorState.presetsMap.has(entry.key)) {
-                return false;
-            }
+
+            if (entry.type === "preset") return false;
+            if (lootGeneratorState.presetsMap.has(entry.key)) return false;
 
             if (place === "preset") {
                 (copy as LootGeneratorState["presets"]).push(structuredClone(entry));
