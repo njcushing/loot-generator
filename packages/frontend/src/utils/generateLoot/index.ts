@@ -67,6 +67,7 @@ const substitutePresets = (lootTable: LootTable, presets: Preset[]) => {
                         ...mutableTable.props.loot[i],
                         props: preset.props,
                     } as unknown as LootTable);
+                    search(mutableTable.props.loot[i] as LootTable);
                 } else mutableTable.props.loot.splice(i, 1);
             }
             if (entry.type === "table") search(entry as LootTable);
