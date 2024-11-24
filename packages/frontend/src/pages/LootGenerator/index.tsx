@@ -2,7 +2,7 @@ import { createContext, useState, useEffect, useRef, useMemo, useCallback } from
 import useResizeObserverElement from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
 import { Generate } from "@/features/Generate";
-import { convertEntryToLootPreset, createLootItem, createLootTable } from "@/utils/generateLoot";
+import { createLootItem, createLootTable, createLootPresetFromEntry } from "@/utils/generateLoot";
 import { LootItem, LootTable, Loot, SortOptions, LootTableProps } from "@/utils/types";
 import { Design } from "@/features/Design";
 import { exampleLootTable } from "@/features/Design/utils/exampleLootTable";
@@ -138,6 +138,7 @@ export function LootGenerator() {
         ): {
             entry: LootTableProps["loot"][number] | LootGeneratorState["presets"][number];
             path: LootTable[];
+            index: number;
             copy: LootGeneratorState["lootTable"] | LootGeneratorState["presets"];
         } | null => {
             const { copy } = getCopy(place);
@@ -157,6 +158,7 @@ export function LootGenerator() {
             ): {
                 entry: LootTableProps["loot"][number] | LootGeneratorState["presets"][number];
                 path: LootTable[];
+                index: number;
                 copy: LootGeneratorState["lootTable"] | LootGeneratorState["presets"];
             } | null => {
                 for (let i = 0; i < currentEntry.length; i++) {
@@ -168,12 +170,14 @@ export function LootGenerator() {
                             return {
                                 entry: lootGeneratorState.presetsMap.get(subEntry.id)!,
                                 path: currentPath,
+                                index: i,
                                 copy,
                             };
                         }
                         return {
                             entry: subEntry,
                             path: currentPath,
+                            index: i,
                             copy,
                         };
                     }
@@ -277,20 +281,22 @@ export function LootGenerator() {
         (key: string, place: "active" | "preset"): boolean => {
             const result = getEntry(key, place);
             if (!result) return false;
-            const { entry, copy } = result;
+            const { entry, path, index, copy } = result;
 
             if (entry.type === "preset") return false;
             if (lootGeneratorState.presetsMap.has(entry.key)) return false;
+            if (path.length === 0) return false; // Don't allow user to save base lootTable as preset
 
             if (place === "preset") {
                 (copy as LootGeneratorState["presets"]).push(structuredClone(entry));
-                convertEntryToLootPreset(entry);
+                path[path.length - 1].props.loot[index] = createLootPresetFromEntry(entry);
                 saveCopy("preset", copy);
             }
 
             if (place === "active") {
                 const entryCopy = structuredClone(entry);
-                convertEntryToLootPreset(entry);
+
+                path[path.length - 1].props.loot[index] = createLootPresetFromEntry(entry);
                 saveCopy("active", copy);
 
                 const { copy: presetsCopy } = getCopy("preset");

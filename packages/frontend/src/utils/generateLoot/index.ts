@@ -45,17 +45,6 @@ export const createLootPresetFromEntry = (
     },
 });
 
-export const convertEntryToLootPreset = (entry: LootItem | LootTable) => {
-    const newLootPreset = createLootPresetFromEntry(entry);
-
-    // Need to mutate the original object so the entry in the loot table is mutated
-    const mutableEntry: LootPreset = entry as unknown as LootPreset;
-    Object.keys(entry).forEach((key) => delete mutableEntry[key as keyof typeof mutableEntry]);
-    Object.keys(newLootPreset).forEach((key) => {
-        mutableEntry[key] = newLootPreset[key as keyof LootPreset];
-    });
-};
-
 const substitutePresets = (lootTable: LootTable, presets: Preset[]) => {
     const presetsMap = new Map(presets.map((preset) => [preset.key, preset]));
 
