@@ -23,19 +23,21 @@ export function TableEntry({ entry }: TTableEntry) {
     const { weight } = criteria;
 
     const isPreset = useMemo(() => {
-        return menuType === "active" && lootGeneratorState.presetsMap.has(entry.key);
-    }, [entry.key, lootGeneratorState.presetsMap, menuType]);
+        return lootGeneratorState.presetsMap.has(entry.key);
+    }, [entry.key, lootGeneratorState.presetsMap]);
 
     return (
         <li className={styles["table"]} key={key}>
-            <div className={`${styles["table-entry-bar"]} ${styles[isPreset ? "is-preset" : ""]}`}>
+            <div
+                className={`${styles["table-entry-bar"]} ${styles[menuType === "active" && isPreset ? "is-preset" : ""]}`}
+            >
                 <div className={styles["toggle-button-container"]}>
                     <ToggleButton entry={entry} />
                 </div>
                 <div className={styles["create-new-entry-button-container"]}>
                     <CreateNewEntryButton entry={entry} />
                 </div>
-                {menuType === "active" && !isPreset && (
+                {!isPreset && (
                     <div className={styles["save-as-preset-button-container"]}>
                         <SaveAsPresetButton entry={entry} />
                     </div>

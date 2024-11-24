@@ -21,16 +21,18 @@ export function ItemEntry({ entry }: TItemEntry) {
     const { weight } = criteria;
 
     const isPreset = useMemo(() => {
-        return menuType === "active" && lootGeneratorState.presetsMap.has(entry.key);
-    }, [entry.key, lootGeneratorState.presetsMap, menuType]);
+        return lootGeneratorState.presetsMap.has(entry.key);
+    }, [entry.key, lootGeneratorState.presetsMap]);
 
     return (
         <li className={styles["item"]} key={key}>
-            <div className={`${styles["item-entry-bar"]} ${styles[isPreset ? "is-preset" : ""]}`}>
+            <div
+                className={`${styles["item-entry-bar"]} ${styles[menuType === "active" && isPreset ? "is-preset" : ""]}`}
+            >
                 <div className={styles["toggle-button-container"]}>
                     <ToggleButton entry={entry} />
                 </div>
-                {menuType === "active" && !isPreset && (
+                {!isPreset && (
                     <div className={styles["save-as-preset-button-container"]}>
                         <SaveAsPresetButton entry={entry} />
                     </div>
