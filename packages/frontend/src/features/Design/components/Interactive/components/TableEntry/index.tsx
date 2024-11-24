@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { useContext } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootTable } from "@/utils/types";
 import { InteractiveContext } from "../..";
@@ -12,9 +12,15 @@ import styles from "./index.module.css";
 
 export type TTableEntry = {
     entry: LootTable;
+    isPresetEntry?: boolean;
+    isDescendantOfPresetEntry?: boolean;
 };
 
-export function TableEntry({ entry }: TTableEntry) {
+export function TableEntry({
+    entry,
+    isPresetEntry = false,
+    isDescendantOfPresetEntry = false,
+}: TTableEntry) {
     const { lootGeneratorState } = useContext(LootGeneratorContext);
     const { menuType, menuStates } = useContext(InteractiveContext);
 
@@ -22,14 +28,13 @@ export function TableEntry({ entry }: TTableEntry) {
     const { name } = props;
     const { weight } = criteria;
 
-    const isPreset = useMemo(() => {
-        return lootGeneratorState.presetsMap.has(entry.key);
-    }, [entry.key, lootGeneratorState.presetsMap]);
+    const disablePropsFields = isPresetEntry || isDescendantOfPresetEntry;
+    const disableOtherFields = isDescendantOfPresetEntry;
 
     return (
         <li className={styles["table"]} key={key}>
             <div
-                className={`${styles["table-entry-bar"]} ${styles[menuType === "active" && isPreset ? "is-preset" : ""]}`}
+                className={`${styles["table-entry-bar"]} ${styles[menuType === "active" && isPresetEntry ? "is-preset" : ""]}`}
             >
                 <div className={styles["toggle-button-container"]}>
                     <ToggleButton entry={entry} />
@@ -37,7 +42,7 @@ export function TableEntry({ entry }: TTableEntry) {
                 <div className={styles["create-new-entry-button-container"]}>
                     <CreateNewEntryButton entry={entry} />
                 </div>
-                {!isPreset && (
+                {!isPresetEntry && (
                     <div className={styles["save-as-preset-button-container"]}>
                         <SaveAsPresetButton entry={entry} />
                     </div>
@@ -54,12 +59,14 @@ export function TableEntry({ entry }: TTableEntry) {
                             labelText="Name"
                             defaultValue={name || ""}
                             fieldPath={["props", "name"]}
+                            disabled={disablePropsFields}
                         />
                         <Inputs.Numeric
                             entryKey={key}
                             labelText="Weight"
                             defaultValue={weight || 1}
                             fieldPath={["criteria", "weight"]}
+                            disabled={disableOtherFields}
                         />
                     </div>
                     <ul className={styles["table-entries"]}>
@@ -68,17 +75,51 @@ export function TableEntry({ entry }: TTableEntry) {
                                 const preset = lootGeneratorState.presetsMap.get(subEntry.id);
                                 if (!preset) return null;
                                 if (preset.type === "item") {
-                                    return <ItemEntry entry={preset} key={subEntry.key} />;
+                                    return (
+                                        <ItemEntry
+                                            entry={preset}
+                                            isPresetEntry
+                                            isDescendantOfPresetEntry={
+                                                isPresetEntry || isDescendantOfPresetEntry
+                                            }
+                                            key={subEntry.key}
+                                        />
+                                    );
                                 }
                                 if (preset.type === "table") {
-                                    return <TableEntry entry={preset} key={subEntry.key} />;
+                                    return (
+                                        <TableEntry
+                                            entry={preset}
+                                            isPresetEntry
+                                            isDescendantOfPresetEntry={
+                                                isPresetEntry || isDescendantOfPresetEntry
+                                            }
+                                            key={subEntry.key}
+                                        />
+                                    );
                                 }
                             }
                             if (subEntry.type === "item") {
-                                return <ItemEntry entry={subEntry} key={subEntry.key} />;
+                                return (
+                                    <ItemEntry
+                                        entry={subEntry}
+                                        isDescendantOfPresetEntry={
+                                            isPresetEntry || isDescendantOfPresetEntry
+                                        }
+                                        key={subEntry.key}
+                                    />
+                                );
                             }
                             if (subEntry.type === "table") {
-                                return <TableEntry entry={subEntry} key={subEntry.key} />;
+                                return (
+                                    <TableEntry
+                                        entry={subEntry}
+                                        isDescendantOfPresetEntry={
+                                            isPresetEntry || isDescendantOfPresetEntry
+                                        }
+                                        key={subEntry.key}
+                                    />
+                                );
                             }
                             return null;
                         })}

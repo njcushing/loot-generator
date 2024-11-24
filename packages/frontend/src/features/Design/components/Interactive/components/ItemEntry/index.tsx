@@ -1,5 +1,4 @@
-import { useContext, useMemo } from "react";
-import { LootGeneratorContext } from "@/pages/LootGenerator";
+import { useContext } from "react";
 import { LootItem } from "@/utils/types";
 import { InteractiveContext } from "../..";
 import { ToggleButton } from "../ToggleButton";
@@ -10,29 +9,33 @@ import styles from "./index.module.css";
 
 export type TItemEntry = {
     entry: LootItem;
+    isPresetEntry?: boolean;
+    isDescendantOfPresetEntry?: boolean;
 };
 
-export function ItemEntry({ entry }: TItemEntry) {
-    const { lootGeneratorState } = useContext(LootGeneratorContext);
+export function ItemEntry({
+    entry,
+    isPresetEntry = false,
+    isDescendantOfPresetEntry = false,
+}: TItemEntry) {
     const { menuType, menuStates } = useContext(InteractiveContext);
 
     const { key, props, criteria } = entry;
     const { name } = props;
     const { weight } = criteria;
 
-    const isPreset = useMemo(() => {
-        return lootGeneratorState.presetsMap.has(entry.key);
-    }, [entry.key, lootGeneratorState.presetsMap]);
+    const disablePropsFields = isPresetEntry || isDescendantOfPresetEntry;
+    const disableOtherFields = isDescendantOfPresetEntry;
 
     return (
         <li className={styles["item"]} key={key}>
             <div
-                className={`${styles["item-entry-bar"]} ${styles[menuType === "active" && isPreset ? "is-preset" : ""]}`}
+                className={`${styles["item-entry-bar"]} ${styles[menuType === "active" && isPresetEntry ? "is-preset" : ""]}`}
             >
                 <div className={styles["toggle-button-container"]}>
                     <ToggleButton entry={entry} />
                 </div>
-                {!isPreset && (
+                {!isPresetEntry && (
                     <div className={styles["save-as-preset-button-container"]}>
                         <SaveAsPresetButton entry={entry} />
                     </div>
@@ -48,12 +51,14 @@ export function ItemEntry({ entry }: TItemEntry) {
                         labelText="Name"
                         defaultValue={name || ""}
                         fieldPath={["props", "name"]}
+                        disabled={disablePropsFields}
                     />
                     <Inputs.Numeric
                         entryKey={key}
                         labelText="Weight"
                         defaultValue={weight || 1}
                         fieldPath={["criteria", "weight"]}
+                        disabled={disableOtherFields}
                     />
                 </div>
             )}
