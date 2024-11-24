@@ -15,6 +15,27 @@ export const exampleLootTable: LootTable = createLootTable({
                         createLootItem({ props: { name: "Pineapple" }, criteria: { weight: 10 } }),
                         createLootItem({ props: { name: "Kiwi" }, criteria: { weight: 10 } }),
                         createLootItem({ props: { name: "Watermelon" }, criteria: { weight: 10 } }),
+                        createLootTable({
+                            props: {
+                                loot: [
+                                    createLootItem({
+                                        props: { name: "Lemon" },
+                                        criteria: { weight: 10 },
+                                    }),
+                                    createLootItem({
+                                        props: { name: "Lime" },
+                                        criteria: { weight: 10 },
+                                    }),
+                                    createLootItem({
+                                        props: { name: "Passionfruit" },
+                                        criteria: { weight: 10 },
+                                    }),
+                                ],
+                            },
+                            criteria: {
+                                weight: 100,
+                            },
+                        }),
                     ],
                 },
                 criteria: {
