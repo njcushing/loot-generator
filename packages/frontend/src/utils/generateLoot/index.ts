@@ -52,7 +52,7 @@ export const convertEntryToLootPreset = (entry: LootItem | LootTable) => {
     const mutableEntry: LootPreset = entry as unknown as LootPreset;
     Object.keys(entry).forEach((key) => delete mutableEntry[key as keyof typeof mutableEntry]);
     Object.keys(newLootPreset).forEach((key) => {
-        mutableEntry[key as keyof LootPreset] = newLootPreset[key as keyof LootPreset];
+        mutableEntry[key] = newLootPreset[key as keyof LootPreset];
     });
 };
 
@@ -68,9 +68,11 @@ const substitutePresets = (lootTable: LootTable, presets: Preset[]) => {
                 const preset = presetsMap.get(entry.id);
                 if (!preset) {
                     mutableTable.props.loot.splice(i, 1);
-                } else {
-                    mutableTable.props.loot[i].props = structuredClone(preset).props;
-                }
+                } else if (preset.type === "item") {
+                    mutableTable.props.loot[i] = createLootItem({ props: preset.props });
+                } else if (preset.type === "table") {
+                    mutableTable.props.loot[i] = createLootTable({ props: preset.props });
+                } else mutableTable.props.loot.splice(i, 1);
             }
             if (entry.type === "table") search(entry as LootTable);
         }
