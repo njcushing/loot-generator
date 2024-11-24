@@ -18,7 +18,7 @@ export function ItemEntry({
     isPresetEntry = false,
     isDescendantOfPresetEntry = false,
 }: TItemEntry) {
-    const { menuType, menuStates } = useContext(InteractiveContext);
+    const { menuStates } = useContext(InteractiveContext);
 
     const { key, props, criteria } = entry;
     const { name } = props;
@@ -30,7 +30,7 @@ export function ItemEntry({
     return (
         <li className={styles["item"]} key={key}>
             <div
-                className={`${styles["item-entry-bar"]} ${styles[menuType === "active" && isPresetEntry ? "is-preset" : ""]}`}
+                className={`${styles["item-entry-bar"]} ${styles[isPresetEntry ? "is-preset" : ""]}`}
             >
                 <div className={styles["toggle-button-container"]}>
                     <ToggleButton entry={entry} />

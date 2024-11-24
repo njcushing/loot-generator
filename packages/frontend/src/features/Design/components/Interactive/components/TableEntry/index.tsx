@@ -22,7 +22,7 @@ export function TableEntry({
     isDescendantOfPresetEntry = false,
 }: TTableEntry) {
     const { lootGeneratorState } = useContext(LootGeneratorContext);
-    const { menuType, menuStates } = useContext(InteractiveContext);
+    const { menuStates } = useContext(InteractiveContext);
 
     const { key, props, criteria } = entry;
     const { name } = props;
@@ -34,7 +34,7 @@ export function TableEntry({
     return (
         <li className={styles["table"]} key={key}>
             <div
-                className={`${styles["table-entry-bar"]} ${styles[menuType === "active" && isPresetEntry ? "is-preset" : ""]}`}
+                className={`${styles["table-entry-bar"]} ${styles[isPresetEntry ? "is-preset" : ""]}`}
             >
                 <div className={styles["toggle-button-container"]}>
                     <ToggleButton entry={entry} />
