@@ -60,12 +60,12 @@ const substitutePresets = (lootTable: LootTable, presets: Preset[]) => {
                 } else if (preset.type === "item") {
                     mutableTable.props.loot[i] = createLootItem({
                         ...mutableTable.props.loot[i],
-                        props: preset.props,
+                        props: structuredClone(preset.props),
                     } as unknown as LootItem);
                 } else if (preset.type === "table") {
                     mutableTable.props.loot[i] = createLootTable({
                         ...mutableTable.props.loot[i],
-                        props: preset.props,
+                        props: structuredClone(preset.props),
                     } as unknown as LootTable);
                     search(mutableTable.props.loot[i] as LootTable);
                 } else mutableTable.props.loot.splice(i, 1);
@@ -142,7 +142,7 @@ export const generateLoot = (
 ): Loot => {
     let loot = new Map(appendToExisting);
 
-    let workingTable = structuredClone(lootTable);
+    let workingTable = JSON.parse(JSON.stringify(lootTable));
     substitutePresets(workingTable, presets);
     workingTable = sumWeights(workingTable);
 
