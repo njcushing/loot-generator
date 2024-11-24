@@ -33,10 +33,12 @@ export const createLootTable = (props: RecursiveOptional<LootTable> = {}): LootT
     },
 });
 
-export const createLootPreset = (props: RecursiveOptional<LootPreset> = {}): LootPreset => ({
+export const createLootPresetFromEntry = (
+    props: RecursiveOptional<LootItem | LootTable> = {},
+): LootPreset => ({
     type: "preset",
-    key: props.key || uuid(),
-    id: props.id || uuid(),
+    key: uuid(),
+    id: props.key || uuid(),
     criteria: {
         weight: props.criteria?.weight || 0,
         rolls: props.criteria?.rolls || {},
@@ -44,7 +46,7 @@ export const createLootPreset = (props: RecursiveOptional<LootPreset> = {}): Loo
 });
 
 export const convertEntryToLootPreset = (entry: LootItem | LootTable) => {
-    const newLootPreset = createLootPreset({ id: entry.key });
+    const newLootPreset = createLootPresetFromEntry(entry);
 
     // Need to mutate the original object so the entry in the loot table is mutated
     const mutableEntry: LootPreset = entry as unknown as LootPreset;
