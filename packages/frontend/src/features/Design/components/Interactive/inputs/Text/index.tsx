@@ -9,9 +9,10 @@ export type TText = {
     labelText: string;
     defaultValue: string;
     fieldPath: string[];
+    disabled?: boolean;
 };
 
-export function Text({ entryKey, labelText, defaultValue, fieldPath }: TText) {
+export function Text({ entryKey, labelText, defaultValue, fieldPath, disabled = false }: TText) {
     const { mutateEntryField } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
 
@@ -31,6 +32,7 @@ export function Text({ entryKey, labelText, defaultValue, fieldPath }: TText) {
                     const { value } = e.target;
                     editEntryField(value);
                 }}
+                disabled={disabled}
             ></input>
         </label>
     );

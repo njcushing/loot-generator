@@ -11,9 +11,18 @@ export type TNumeric = {
     min?: number;
     max?: number;
     fieldPath: string[];
+    disabled?: boolean;
 };
 
-export function Numeric({ entryKey, labelText, defaultValue, min, max, fieldPath }: TNumeric) {
+export function Numeric({
+    entryKey,
+    labelText,
+    defaultValue,
+    min,
+    max,
+    fieldPath,
+    disabled = false,
+}: TNumeric) {
     const { mutateEntryField } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
 
@@ -35,6 +44,7 @@ export function Numeric({ entryKey, labelText, defaultValue, min, max, fieldPath
                     if (max) value = Math.min(max, value);
                     editEntryField(value);
                 }}
+                disabled={disabled}
             ></input>
         </label>
     );
