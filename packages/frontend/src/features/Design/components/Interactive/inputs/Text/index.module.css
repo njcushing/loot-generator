@@ -18,3 +18,7 @@ input {
     width: 100%;
     padding: 4px;
 }
+
+input:disabled {
+    background-color: rgba(0, 0, 0, 0.12);
+}
