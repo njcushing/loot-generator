@@ -4,3 +4,6 @@ dist/
 # Environment variable files
 .env
 dist
+
+# Personal files
+.desc
