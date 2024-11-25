@@ -12,12 +12,14 @@ import styles from "./index.module.css";
 
 export type TTableEntry = {
     entry: LootTable;
+    isPreset?: boolean;
     isPresetEntry?: boolean;
     isDescendantOfPresetEntry?: boolean;
 };
 
 export function TableEntry({
     entry,
+    isPreset = false,
     isPresetEntry = false,
     isDescendantOfPresetEntry = false,
 }: TTableEntry) {
@@ -44,7 +46,7 @@ export function TableEntry({
                         <CreateNewEntryButton entry={entry} />
                     </div>
                 )}
-                {!isPresetEntry && (
+                {!isPreset && !isPresetEntry && (
                     <div className={styles["save-as-preset-button-container"]}>
                         <SaveAsPresetButton entry={entry} />
                     </div>

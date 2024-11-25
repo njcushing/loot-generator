@@ -9,12 +9,14 @@ import styles from "./index.module.css";
 
 export type TItemEntry = {
     entry: LootItem;
+    isPreset?: boolean;
     isPresetEntry?: boolean;
     isDescendantOfPresetEntry?: boolean;
 };
 
 export function ItemEntry({
     entry,
+    isPreset = false,
     isPresetEntry = false,
     isDescendantOfPresetEntry = false,
 }: TItemEntry) {
@@ -35,7 +37,7 @@ export function ItemEntry({
                 <div className={styles["toggle-button-container"]}>
                     <ToggleButton entry={entry} />
                 </div>
-                {!isPresetEntry && (
+                {!isPreset && !isPresetEntry && (
                     <div className={styles["save-as-preset-button-container"]}>
                         <SaveAsPresetButton entry={entry} />
                     </div>
