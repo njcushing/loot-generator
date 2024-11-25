@@ -39,9 +39,11 @@ export function TableEntry({
                 <div className={styles["toggle-button-container"]}>
                     <ToggleButton entry={entry} />
                 </div>
-                <div className={styles["create-new-entry-button-container"]}>
-                    <CreateNewEntryButton entry={entry} />
-                </div>
+                {!isPresetEntry && !isDescendantOfPresetEntry && (
+                    <div className={styles["create-new-entry-button-container"]}>
+                        <CreateNewEntryButton entry={entry} />
+                    </div>
+                )}
                 {!isPresetEntry && (
                     <div className={styles["save-as-preset-button-container"]}>
                         <SaveAsPresetButton entry={entry} />
