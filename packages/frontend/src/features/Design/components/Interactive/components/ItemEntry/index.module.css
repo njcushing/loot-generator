@@ -6,6 +6,7 @@
 
 .item-entry-bar {
     display: grid;
+    grid-template-rows: minmax(0, 1fr);
     grid-template-columns: 1fr repeat(3, auto);
     align-content: end;
     align-items: center;
@@ -13,6 +14,8 @@
     pointer-events: none;
 
     outline: 1px solid black;
+
+    min-height: 1.9rem;
 }
 
 .item-entry-bar {
