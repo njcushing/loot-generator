@@ -47,9 +47,11 @@ export function TableEntry({
                         <SaveAsPresetButton entry={entry} />
                     </div>
                 )}
-                <div className={styles["delete-entry-button-container"]}>
-                    <DeleteEntryButton entry={entry} />
-                </div>
+                {!isDescendantOfPresetEntry && (
+                    <div className={styles["delete-entry-button-container"]}>
+                        <DeleteEntryButton entry={entry} />
+                    </div>
+                )}
             </div>
             {menuStates.get(key) === "expanded" && (
                 <>
