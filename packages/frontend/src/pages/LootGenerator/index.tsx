@@ -235,6 +235,7 @@ export function LootGenerator() {
             const result = getEntry(key, place);
             if (!result) return false;
             const { path, copy } = result;
+            if (path.length === 0) return false;
             const entryParentLoot = path[path.length - 1].props.loot;
 
             let deleted = false;
