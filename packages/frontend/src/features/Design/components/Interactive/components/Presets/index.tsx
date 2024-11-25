@@ -9,11 +9,15 @@ export function Presets() {
 
     return (
         <ul className={styles["presets"]}>
-            {lootGeneratorState.presets.map((preset) => {
-                if (preset.type === "table") return <TableEntry entry={preset} key={preset.key} />;
-                if (preset.type === "item") return <ItemEntry entry={preset} key={preset.key} />;
-                return null;
-            })}
+            {lootGeneratorState.presets
+                .sort((a, b) => b.type.localeCompare(a.type))
+                .map((preset) => {
+                    if (preset.type === "table")
+                        return <TableEntry entry={preset} key={preset.key} />;
+                    if (preset.type === "item")
+                        return <ItemEntry entry={preset} key={preset.key} />;
+                    return null;
+                })}
         </ul>
     );
 }
