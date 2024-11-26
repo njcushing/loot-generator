@@ -3,7 +3,7 @@ import { LootItem } from "@/utils/types";
 import { InteractiveContext } from "../..";
 import { ToggleButton } from "../ToggleButton";
 import { SaveAsPresetButton } from "../SaveAsPresetButton";
-import { DeleteEntryButton } from "../DeleteEntryButton";
+import { DeleteButton } from "../DeleteButton";
 import { Inputs } from "../../inputs";
 import styles from "./index.module.css";
 
@@ -43,8 +43,8 @@ export function ItemEntry({
                     </div>
                 )}
                 {!isDescendantOfPresetEntry && (
-                    <div className={styles["delete-entry-button-container"]}>
-                        <DeleteEntryButton entry={entry} />
+                    <div className={styles["delete-button-container"]}>
+                        <DeleteButton entry={entry} isPreset={isPreset} />
                     </div>
                 )}
             </div>

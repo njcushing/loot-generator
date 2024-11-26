@@ -4,20 +4,25 @@ import { LootItem, LootTable } from "@/utils/types";
 import { InteractiveContext } from "../..";
 import styles from "./index.module.css";
 
-export type TDeleteEntryButton = {
+export type TDeleteButton = {
     entry: LootItem | LootTable;
+    isPreset?: boolean;
 };
 
-export function DeleteEntryButton({ entry }: TDeleteEntryButton) {
-    const { deleteEntry } = useContext(LootGeneratorContext);
+export function DeleteButton({ entry, isPreset }: TDeleteButton) {
+    const { deleteEntry, deletePreset } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
 
     return (
         <button
             type="button"
-            className={`${styles["delete-entry-button"]} material-symbols-sharp`}
+            className={`${styles["delete-button"]} material-symbols-sharp`}
             onClick={(e) => {
-                deleteEntry(entry.key, menuType);
+                if (isPreset) {
+                    deletePreset(entry.key);
+                } else {
+                    deleteEntry(entry.key, menuType);
+                }
                 e.currentTarget.blur();
             }}
             onMouseLeave={(e) => {

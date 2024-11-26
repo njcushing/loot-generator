@@ -29,7 +29,7 @@
 @media (hover: hover) {
     .item-entry-bar:has(> .toggle-button-container:hover),
     .item-entry-bar:has(> .save-as-preset-button-container:hover),
-    .item-entry-bar:has(> .delete-entry-button-container:hover) {
+    .item-entry-bar:has(> .delete-button-container:hover) {
         z-index: 1;
 
         outline-width: 3px;
@@ -45,14 +45,14 @@
         background-color: rgb(236, 185, 89);
     }
 
-    .item-entry-bar:has(> .delete-entry-button-container:hover) {
+    .item-entry-bar:has(> .delete-button-container:hover) {
         background-color: rgb(255, 120, 120);
     }
 }
 
 .item-entry-bar:has(> .toggle-button-container:focus),
 .item-entry-bar:has(> .save-as-preset-button-container:focus),
-.item-entry-bar:has(> .delete-entry-button-container:focus) {
+.item-entry-bar:has(> .delete-button-container:focus) {
     z-index: 1;
 
     outline-width: 3px;
@@ -66,7 +66,7 @@
     background-color: rgb(226, 170, 66);
 }
 
-.item-entry-bar:has(> .delete-entry-button-container > button:focus) {
+.item-entry-bar:has(> .delete-button-container > button:focus) {
     background-color: rgb(255, 83, 83);
 }
 
