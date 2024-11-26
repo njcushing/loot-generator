@@ -64,14 +64,14 @@ export function TableEntry({
                         <Inputs.Text
                             entryKey={key}
                             labelText="Name"
-                            defaultValue={name || ""}
+                            value={name || ""}
                             fieldPath={["props", "name"]}
                             disabled={disablePropsFields}
                         />
                         <Inputs.Numeric
                             entryKey={key}
                             labelText="Weight"
-                            defaultValue={weight || 1}
+                            value={weight || 1}
                             fieldPath={["criteria", "weight"]}
                             disabled={disableOtherFields}
                         />

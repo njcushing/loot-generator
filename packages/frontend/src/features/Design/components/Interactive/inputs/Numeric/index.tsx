@@ -7,7 +7,7 @@ import "./index.module.css";
 export type TNumeric = {
     entryKey: (LootItem | LootTable)["key"];
     labelText: string;
-    defaultValue: number;
+    value: number;
     min?: number;
     max?: number;
     fieldPath: string[];
@@ -17,7 +17,7 @@ export type TNumeric = {
 export function Numeric({
     entryKey,
     labelText,
-    defaultValue,
+    value,
     min,
     max,
     fieldPath,
@@ -27,7 +27,7 @@ export function Numeric({
     const { menuType } = useContext(InteractiveContext);
 
     const editEntryField = useCallback(
-        (value: unknown) => mutateEntryField(entryKey, [fieldPath], value, menuType),
+        (newValue: unknown) => mutateEntryField(entryKey, [fieldPath], newValue, menuType),
         [entryKey, fieldPath, mutateEntryField, menuType],
     );
 
@@ -37,12 +37,12 @@ export function Numeric({
             <input
                 type="number"
                 id={`${entryKey}-${fieldPath.join()}`}
-                defaultValue={defaultValue}
+                value={value}
                 onChange={(e) => {
-                    let value = Number(e.target.value);
-                    if (min) value = Math.max(min, value);
-                    if (max) value = Math.min(max, value);
-                    editEntryField(value);
+                    let newValue = Number(e.target.value);
+                    if (min) newValue = Math.max(min, newValue);
+                    if (max) newValue = Math.min(max, newValue);
+                    editEntryField(newValue);
                 }}
                 disabled={disabled}
             ></input>

@@ -7,17 +7,17 @@ import "./index.module.css";
 export type TText = {
     entryKey: (LootItem | LootTable)["key"];
     labelText: string;
-    defaultValue: string;
+    value: string;
     fieldPath: string[];
     disabled?: boolean;
 };
 
-export function Text({ entryKey, labelText, defaultValue, fieldPath, disabled = false }: TText) {
+export function Text({ entryKey, labelText, value, fieldPath, disabled = false }: TText) {
     const { mutateEntryField } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
 
     const editEntryField = useCallback(
-        (value: unknown) => mutateEntryField(entryKey, [fieldPath], value, menuType),
+        (newValue: unknown) => mutateEntryField(entryKey, [fieldPath], newValue, menuType),
         [entryKey, fieldPath, mutateEntryField, menuType],
     );
 
@@ -27,10 +27,10 @@ export function Text({ entryKey, labelText, defaultValue, fieldPath, disabled = 
             <input
                 type="text"
                 id={`${entryKey}-${fieldPath.join()}`}
-                defaultValue={defaultValue}
+                value={value}
                 onChange={(e) => {
-                    const { value } = e.target;
-                    editEntryField(value);
+                    const newValue = e.target.value;
+                    editEntryField(newValue);
                 }}
                 disabled={disabled}
             ></input>
