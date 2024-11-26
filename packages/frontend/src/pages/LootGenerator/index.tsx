@@ -53,6 +53,7 @@ interface LootGeneratorContext {
         place: "active" | "preset",
     ) => boolean;
     deleteEntry: (key: string, place: "active" | "preset") => boolean;
+    deletePreset: (key: string) => boolean;
     createSubEntry: (
         key: string,
         type: LootItem["type"] | LootTable["type"],
@@ -68,6 +69,7 @@ const defaultLootGeneratorContext: LootGeneratorContext = {
     getEntry: () => null,
     mutateEntryField: () => false,
     deleteEntry: () => false,
+    deletePreset: () => false,
     createSubEntry: () => false,
     saveEntryAsPreset: () => false,
 };
@@ -254,6 +256,44 @@ export function LootGenerator() {
         [saveCopy, getEntry],
     );
 
+    const deletePreset = useCallback(
+        (key: string): boolean => {
+            if (!lootGeneratorState.presetsMap.has(key)) return false;
+
+            const presetsCopy = getCopy("preset").copy as LootGeneratorState["presets"];
+            const activeCopy = getCopy("active").copy as LootGeneratorState["lootTable"];
+
+            presetsCopy.splice(
+                presetsCopy.findIndex((preset) => preset.key === key),
+                1,
+            );
+
+            const search = (currentEntry: LootTable) => {
+                const { length } = currentEntry.props.loot;
+                for (let i = length - 1; i >= 0; i--) {
+                    const subEntry = currentEntry.props.loot[i];
+                    if (subEntry.type === "preset") {
+                        if (subEntry.id === key) currentEntry.props.loot.splice(i, 1);
+                    }
+                    if (subEntry.type === "table") search(subEntry);
+                }
+                return false;
+            };
+
+            // Delete all occurrences of preset as 'preset'-type entry in loot tables
+            presetsCopy.forEach((preset) => {
+                if (preset.type === "table") search(preset);
+            });
+            search(activeCopy);
+
+            saveCopy("active", activeCopy);
+            saveCopy("preset", presetsCopy);
+
+            return true;
+        },
+        [lootGeneratorState.presetsMap, getCopy, saveCopy],
+    );
+
     const createSubEntry = useCallback(
         (
             key: string,
@@ -327,6 +367,7 @@ export function LootGenerator() {
                     getEntry,
                     mutateEntryField,
                     deleteEntry,
+                    deletePreset,
                     createSubEntry,
                     saveEntryAsPreset,
                 }),
@@ -337,6 +378,7 @@ export function LootGenerator() {
                     getEntry,
                     mutateEntryField,
                     deleteEntry,
+                    deletePreset,
                     createSubEntry,
                     saveEntryAsPreset,
                 ],
