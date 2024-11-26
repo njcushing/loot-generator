@@ -93,7 +93,11 @@ export function TableEntry({
                                 if (preset.type === "item") {
                                     return (
                                         <ItemEntry
-                                            entry={{ ...preset, key: subEntryKey }}
+                                            entry={{
+                                                ...subEntry,
+                                                type: preset.type,
+                                                props: preset.props,
+                                            }}
                                             isPresetEntry
                                             isDescendantOfPresetEntry={
                                                 isPresetEntry || isDescendantOfPresetEntry
@@ -105,7 +109,11 @@ export function TableEntry({
                                 if (preset.type === "table") {
                                     return (
                                         <TableEntry
-                                            entry={{ ...preset, key: subEntryKey }}
+                                            entry={{
+                                                ...subEntry,
+                                                type: preset.type,
+                                                props: preset.props,
+                                            }}
                                             isPresetEntry
                                             isDescendantOfPresetEntry={
                                                 isPresetEntry || isDescendantOfPresetEntry
