@@ -13,6 +13,7 @@ export function CreateNewPresetOptions() {
                     e.currentTarget.blur();
                 }}
             >
+                <p className={`${styles["symbol"]} material-symbols-sharp`}>Table</p>
                 New Table
             </button>
             <button
@@ -25,6 +26,7 @@ export function CreateNewPresetOptions() {
                     e.currentTarget.blur();
                 }}
             >
+                <p className={`${styles["symbol"]} material-symbols-sharp`}>Nutrition</p>
                 New Item
             </button>
         </div>
