@@ -3,7 +3,7 @@ import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { TableEntry } from "../TableEntry";
 import { ItemEntry } from "../ItemEntry";
 import styles from "./index.module.css";
-import { CreateNewPresetButton } from "../CreateNewPresetButton";
+import { CreateNewPresetOptions } from "../CreateNewPresetOptions";
 
 export function Presets() {
     const { lootGeneratorState } = useContext(LootGeneratorContext);
@@ -34,7 +34,7 @@ export function Presets() {
                     return elements;
                 })}
             </ul>
-            <CreateNewPresetButton />
+            <CreateNewPresetOptions />
         </div>
     );
 }
