@@ -13,6 +13,7 @@ import styles from "./index.module.css";
 
 export type TTableEntry = {
     entry: LootTable;
+    isActiveBase?: boolean;
     isPreset?: boolean;
     isPresetEntry?: boolean;
     isDescendantOfPresetEntry?: boolean;
@@ -20,6 +21,7 @@ export type TTableEntry = {
 
 export function TableEntry({
     entry,
+    isActiveBase = false,
     isPreset = false,
     isPresetEntry = false,
     isDescendantOfPresetEntry = false,
@@ -52,7 +54,7 @@ export function TableEntry({
                         <SaveAsPresetButton entry={entry} />
                     </div>
                 )}
-                {!isDescendantOfPresetEntry && (
+                {!isActiveBase && !isDescendantOfPresetEntry && (
                     <div className={styles["delete-button-container"]}>
                         <DeleteButton entry={entry} isPreset={isPreset} />
                     </div>
