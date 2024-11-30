@@ -1,0 +1,48 @@
+.json-display {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+
+    overflow-y: auto;
+
+    pointer-events: all;
+
+    font-size: 12px;
+    font-family: "JetBrains Mono";
+
+    border: 1px solid #000;
+    background-color: #fff;
+
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+}
+
+.nesting-level-container {
+    padding-left: 2ch;
+}
+
+.json-array {
+    display: flex;
+    flex-direction: column;
+}
+
+.json-object {
+    display: flex;
+    flex-direction: column;
+}
+
+.json-field {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1ch;
+}
+
+.json-field-name {
+    color: black;
+    font-weight: bold;
+}
+
+.json-field-value {
+    color: black;
+}
