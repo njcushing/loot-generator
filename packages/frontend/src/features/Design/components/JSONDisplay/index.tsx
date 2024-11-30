@@ -1,10 +1,16 @@
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { v4 as uuid } from "uuid";
 import styles from "./index.module.css";
 
-export function JSONDisplay() {
+export type TJSONDisplay = {
+    hideFields?: string[];
+};
+
+export function JSONDisplay({ hideFields }: TJSONDisplay) {
     const { lootGeneratorState } = useContext(LootGeneratorContext);
+
+    const hideFieldsSet: Set<string> = useMemo(() => new Set(hideFields), [hideFields]);
 
     const displayJSONLine = useCallback(
         (obj: object, nestingLevel: number): (JSX.Element | null)[] => {
@@ -12,6 +18,7 @@ export function JSONDisplay() {
             return Object.keys(obj).flatMap((key) => {
                 const field = obj[key as keyof typeof obj];
                 if (!field) return null;
+                if (hideFieldsSet.has(key)) return null;
 
                 if (Array.isArray(field)) {
                     if ((field as Array<unknown>).length === 0) {
@@ -90,7 +97,7 @@ export function JSONDisplay() {
                 );
             });
         },
-        [],
+        [hideFieldsSet],
     );
 
     return (
