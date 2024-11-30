@@ -2,7 +2,7 @@ import { useContext, useCallback } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootItem, LootTable } from "@/utils/types";
 import { InteractiveContext } from "../..";
-import "./index.module.css";
+import styles from "./index.module.css";
 
 export type TNumeric = {
     entryKey: (LootItem | LootTable)["key"];
@@ -32,9 +32,13 @@ export function Numeric({
     );
 
     return (
-        <label htmlFor={`${entryKey}-${fieldPath.join()}`}>
+        <label
+            className={styles["numeric-field-label"]}
+            htmlFor={`${entryKey}-${fieldPath.join()}`}
+        >
             {labelText}:{" "}
             <input
+                className={styles["numeric-field-input"]}
                 type="number"
                 id={`${entryKey}-${fieldPath.join()}`}
                 value={value}

@@ -17,9 +17,10 @@ export function SortOptions() {
     const createSortOptionField = useCallback(
         (criteria: SortCriteria, label: string) => {
             return (
-                <fieldset>
-                    <label htmlFor={`sort-${criteria}`}>
+                <fieldset className={styles["sort-options-fieldset"]}>
+                    <label className={styles["sort-option-label"]} htmlFor={`sort-${criteria}`}>
                         <input
+                            className={styles["sort-option-input"]}
                             type="checkbox"
                             id={`sort-${criteria}`}
                             checked={lootGeneratorState.sortOptions.has(criteria)}
@@ -30,10 +31,13 @@ export function SortOptions() {
                                 });
                             }}
                         />
-                        {label}
+                        <p className={`${styles["sort-option-label-name"]} truncate-ellipsis`}>
+                            {label}
+                        </p>
                     </label>
                     {lootGeneratorState.sortOptions.has(criteria) && (
                         <select
+                            className={styles["sort-option-select"]}
                             id={`sort-${criteria}-order`}
                             name={`sort-${criteria}-order`}
                             defaultValue={
@@ -48,8 +52,18 @@ export function SortOptions() {
                                 });
                             }}
                         >
-                            <option value="ascending">Ascending</option>
-                            <option value="descending">Descending</option>
+                            <option
+                                className={styles["sort-option-select-option"]}
+                                value="ascending"
+                            >
+                                Ascending
+                            </option>
+                            <option
+                                className={styles["sort-option-select-option"]}
+                                value="descending"
+                            >
+                                Descending
+                            </option>
                         </select>
                     )}
                 </fieldset>

@@ -1,4 +1,4 @@
-label {
+.text-field-label {
     display: flex;
     gap: 8px;
 
@@ -7,7 +7,7 @@ label {
     width: 100%;
 }
 
-input {
+.text-field-input {
     color: black;
     font-family: Roboto;
     font-size: 1rem;
@@ -19,6 +19,6 @@ input {
     padding: 4px;
 }
 
-input:disabled {
+.text-field-input:disabled {
     background-color: rgba(0, 0, 0, 0.12);
 }

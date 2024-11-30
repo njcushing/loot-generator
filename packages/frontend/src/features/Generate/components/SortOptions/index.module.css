@@ -10,29 +10,37 @@
 
     width: 100%;
     height: 100%;
-    padding: 8px;
+    padding: 12px;
 }
 
-fieldset {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-}
-
-label {
+.sort-options-fieldset {
     display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.sort-option-label {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
     gap: 4px;
 
-    padding: 10px;
+    width: 100%;
 }
 
-input {
+.sort-option-label-name {
+    color: black;
+    font-size: 1rem;
+}
+
+.sort-option-input {
     min-width: 20px;
     min-height: 20px;
 }
 
-select {
-    justify-self: end;
+.sort-option-select {
+    align-self: center;
 
     color: black;
     font-size: 0.9rem;
@@ -44,25 +52,26 @@ select {
     border-radius: 2px;
     outline: 1px solid black;
 
-    width: 100%;
+    width: min-content;
+    height: min-content;
     padding: 2px 0px;
 }
 
 @media (hover: hover) {
-    select:hover {
+    .sort-option-select:hover {
         cursor: pointer;
     }
 }
 
-option {
+.sort-option-select-option {
     color: black;
     font-family: Roboto;
 }
 
-option:nth-child(2n-1) {
+.sort-option-select-option:nth-child(2n-1) {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-option:nth-child(2n) {
+.sort-option-select-option:nth-child(2n) {
     background-color: rgba(0, 0, 0, 0.16);
 }

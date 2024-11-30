@@ -2,7 +2,7 @@ import { useContext, useCallback } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootItem, LootTable } from "@/utils/types";
 import { InteractiveContext } from "../..";
-import "./index.module.css";
+import styles from "./index.module.css";
 
 export type TText = {
     entryKey: (LootItem | LootTable)["key"];
@@ -22,9 +22,10 @@ export function Text({ entryKey, labelText, value, fieldPath, disabled = false }
     );
 
     return (
-        <label htmlFor={`${entryKey}-${fieldPath.join()}`}>
+        <label className={styles["text-field-label"]} htmlFor={`${entryKey}-${fieldPath.join()}`}>
             {labelText}:{" "}
             <input
+                className={styles["text-field-input"]}
                 type="text"
                 id={`${entryKey}-${fieldPath.join()}`}
                 value={value}
