@@ -7,7 +7,11 @@ export function Design() {
         <TabSelector
             tabs={{
                 interactive: { name: "Interactive", content: <Interactive />, position: "left" },
-                JSON: { name: "JSON", content: <JSONDisplay />, position: "left" },
+                JSON: {
+                    name: "JSON",
+                    content: <JSONDisplay hideFields={["key"]} />,
+                    position: "left",
+                },
             }}
         />
     );
