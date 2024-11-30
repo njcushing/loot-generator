@@ -1,5 +1,6 @@
 .text-field-label {
     display: flex;
+    align-items: center;
     gap: 8px;
 
     text-wrap: nowrap;
