@@ -5,6 +5,7 @@ import { v4 as uuid } from "uuid";
 import { InteractiveContext } from "../..";
 import { ToggleButton } from "../ToggleButton";
 import { CreateNewEntryButton } from "../CreateNewEntryButton";
+import { LoadPresetButton } from "../LoadPresetButton";
 import { SaveAsPresetButton } from "../SaveAsPresetButton";
 import { DeleteButton } from "../DeleteButton";
 import { ItemEntry } from "../ItemEntry";
@@ -47,6 +48,11 @@ export function TableEntry({
                 {!isPresetEntry && !isDescendantOfPresetEntry && (
                     <div className={styles["create-new-entry-button-container"]}>
                         <CreateNewEntryButton entry={entry} />
+                    </div>
+                )}
+                {isPreset && (
+                    <div className={styles["load-preset-button-container"]}>
+                        <LoadPresetButton entry={entry} />
                     </div>
                 )}
                 {!isPreset && !isPresetEntry && (
