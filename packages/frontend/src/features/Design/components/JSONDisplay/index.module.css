@@ -20,6 +20,8 @@
 
 .nesting-level-container {
     margin-left: 2ch;
+
+    min-width: min-content;
 }
 
 .json-array {
@@ -41,8 +43,10 @@
 .json-field-name {
     color: black;
     font-weight: bold;
+    text-wrap: nowrap;
 }
 
 .json-field-value {
     color: black;
+    text-wrap: nowrap;
 }
