@@ -19,93 +19,64 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
                 const field = obj[key as keyof typeof obj];
                 if (!field) return null;
                 if (hideFieldsSet.has(key)) return null;
-                const displayTrailingComma = i < Object.keys(obj).length - 1;
 
-                if (Array.isArray(field)) {
-                    if ((field as Array<unknown>).length === 0) {
-                        return (
-                            <div className={styles["json-array"]} key={uuid()}>
-                                <div className={styles["json-field"]} key={uuid()}>
-                                    {displayKeys && (
-                                        <p className={styles["json-field-name"]}>{`${key}: `}</p>
-                                    )}
-                                    <p className={styles["json-field-value"]}>
-                                        []{displayTrailingComma ? "," : ""}
-                                    </p>
-                                </div>
-                            </div>
-                        );
-                    }
-                    return (
-                        <div className={styles["json-array"]} key={uuid()}>
-                            <div className={styles["json-field"]} key={uuid()}>
-                                {displayKeys && (
-                                    <p className={styles["json-field-name"]}>{`${key}: `}</p>
-                                )}
-                                <p className={styles["json-field-value"]}>[</p>
-                            </div>
-                            <div className={styles["nesting-level-container"]}>
-                                {displayJSONLine(field, nestingLevel + 1)}
-                            </div>
-                            <p className={styles["json-field-value"]}>
-                                ]{displayTrailingComma ? "," : ""}
-                            </p>
-                        </div>
-                    );
-                }
+                const comma = i < Object.keys(obj).length - 1;
+
+                let [open, close, type, empty, value, content] = ["", "", "", true, null, null];
 
                 if (typeof field === "object") {
-                    if (Object.keys(field).length === 0) {
-                        return (
-                            <div className={styles["json-object"]} key={uuid()}>
-                                <div className={styles["json-field"]} key={uuid()}>
-                                    {displayKeys && (
-                                        <p className={styles["json-field-name"]}>{`${key}: `}</p>
-                                    )}
-                                    <p
-                                        className={styles["json-field-value"]}
-                                    >{`{}${displayTrailingComma ? "," : ""}`}</p>
-                                </div>
-                            </div>
-                        );
-                    }
-                    return (
-                        <div className={styles["json-object"]} key={uuid()}>
-                            <div className={styles["json-field"]} key={uuid()}>
-                                {displayKeys && (
-                                    <p className={styles["json-field-name"]}>{`${key}: `}</p>
-                                )}
-                                <p className={styles["json-field-value"]}>{"{"}</p>
-                            </div>
-                            <div className={styles["nesting-level-container"]}>
-                                {displayJSONLine(field, nestingLevel + 1)}
-                            </div>
-                            <p
-                                className={styles["json-field-value"]}
-                            >{`}${displayTrailingComma ? "," : ""}`}</p>
-                        </div>
-                    );
+                    [open, close, type] = ["{", "}", "object"];
+                    [empty, value, content] = [Object.keys(field).length === 0, null, field];
+                }
+
+                if (Array.isArray(field)) {
+                    [open, close, type] = ["[", "]", "array"];
+                    [empty, value, content] = [(field as Array<unknown>).length === 0, null, field];
                 }
 
                 if (typeof field === "string") {
-                    return (
-                        <div className={styles["json-field"]} key={uuid()}>
-                            <p className={styles["json-field-name"]}>{`${key}: `}</p>
-                            <p className={styles["json-field-value"]}>
-                                {`"${field}"` || "undefined"}
-                                {displayTrailingComma ? "," : ""}
-                            </p>
-                        </div>
-                    );
+                    [open, close, type] = [`"`, `"`, "string"];
+                    [empty, value, content] = [(field as string).length === 0, field, null];
+                }
+
+                if (typeof field === "number") {
+                    [open, close, type] = ["", "", "number"];
+                    [empty, value, content] = [false, field, null];
                 }
 
                 return (
-                    <div className={styles["json-field"]} key={uuid()}>
-                        <p className={styles["json-field-name"]}>{`${key}: `}</p>
-                        <p className={styles["json-field-value"]}>
-                            {field || "undefined"}
-                            {displayTrailingComma ? "," : ""}
-                        </p>
+                    <div className={styles[`json-${type}`]} key={uuid()}>
+                        <div className={styles["json-field"]} key={uuid()}>
+                            {displayKeys && (
+                                <p className={styles["json-field-name"]}>{`${key}:`}&nbsp;</p>
+                            )}
+                            <p className={styles["json-field-wrapper"]}>
+                                {empty ? `${open}${close}` : `${open}`}
+                                {empty && comma ? "," : ""}
+                            </p>
+                            {value && (
+                                <>
+                                    <p className={styles["json-field-value"]}>
+                                        {value || "undefined"}
+                                    </p>
+                                    <p className={styles["json-field-wrapper"]}>
+                                        {close}
+                                        {comma ? "," : ""}
+                                    </p>
+                                </>
+                            )}
+                        </div>
+                        {content && !empty && (
+                            <>
+                                <div className={styles["nesting-level-container"]}>
+                                    {displayJSONLine(content, nestingLevel + 1)}
+                                </div>
+                                <p className={styles["json-field-wrapper"]}>
+                                    {close}
+                                    {comma ? "," : ""}
+                                </p>
+                            </>
+                        )}
                     </div>
                 );
             });

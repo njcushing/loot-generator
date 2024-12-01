@@ -37,12 +37,16 @@
 .json-field {
     display: flex;
     flex-wrap: nowrap;
-    gap: 1ch;
 }
 
 .json-field-name {
     color: black;
     font-weight: bold;
+    text-wrap: nowrap;
+}
+
+.json-field-wrapper {
+    color: black;
     text-wrap: nowrap;
 }
 
