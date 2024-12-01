@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo } from "react";
+import { useCallback, useContext, useState, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { v4 as uuid } from "uuid";
 import { LootItem, LootPreset, LootTable } from "@/utils/types";
@@ -11,6 +11,8 @@ export type TJSONDisplay = {
 export function JSONDisplay({ hideFields }: TJSONDisplay) {
     const { lootGeneratorState } = useContext(LootGeneratorContext);
 
+    const [showingHiddenFields, setShowingHiddenFields] = useState<boolean>(false);
+
     const hideFieldsSet: Set<string> = useMemo(() => new Set(hideFields), [hideFields]);
 
     const displayJSONLine = useCallback(
@@ -19,7 +21,7 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
             return Object.keys(obj).flatMap((key, i) => {
                 const field = obj[key as keyof typeof obj];
                 if (!field) return null;
-                if (hideFieldsSet.has(key)) return null;
+                if (!showingHiddenFields && hideFieldsSet.has(key)) return null;
 
                 const comma = i < Object.keys(obj).length - 1;
 
@@ -82,7 +84,7 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
                 );
             });
         },
-        [hideFieldsSet],
+        [showingHiddenFields, hideFieldsSet],
     );
 
     const copyJSON = useCallback(() => {
@@ -102,13 +104,28 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
             }
         };
 
-        deleteHiddenFields(lootTableCopy);
+        if (showingHiddenFields) deleteHiddenFields(lootTableCopy);
         navigator.clipboard.writeText(JSON.stringify(lootTableCopy));
-    }, [hideFieldsSet, lootGeneratorState.lootTable]);
+    }, [lootGeneratorState.lootTable, showingHiddenFields, hideFieldsSet]);
 
     return (
         <div className={styles["json-display"]}>
             <div className={styles["json-display-options"]}>
+                <button
+                    type="button"
+                    className={styles["show-hidden-fields-button"]}
+                    onClick={(e) => {
+                        setShowingHiddenFields(!showingHiddenFields);
+                        e.currentTarget.blur();
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.blur();
+                    }}
+                >
+                    <p className={`${styles["symbol"]} material-symbols-sharp`}>
+                        {showingHiddenFields ? "Visibility" : "Visibility_Off"}
+                    </p>
+                </button>
                 <button
                     type="button"
                     className={styles["copy-json-button"]}
