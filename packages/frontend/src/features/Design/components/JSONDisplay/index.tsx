@@ -15,10 +15,11 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
     const displayJSONLine = useCallback(
         (obj: object, nestingLevel: number): (JSX.Element | null)[] => {
             const displayKeys = !Array.isArray(obj);
-            return Object.keys(obj).flatMap((key) => {
+            return Object.keys(obj).flatMap((key, i) => {
                 const field = obj[key as keyof typeof obj];
                 if (!field) return null;
                 if (hideFieldsSet.has(key)) return null;
+                const displayTrailingComma = i < Object.keys(obj).length - 1;
 
                 if (Array.isArray(field)) {
                     if ((field as Array<unknown>).length === 0) {
@@ -28,7 +29,9 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
                                     {displayKeys && (
                                         <p className={styles["json-field-name"]}>{`${key}: `}</p>
                                     )}
-                                    <p className={styles["json-field-value"]}>[],</p>
+                                    <p className={styles["json-field-value"]}>
+                                        []{displayTrailingComma ? "," : ""}
+                                    </p>
                                 </div>
                             </div>
                         );
@@ -44,7 +47,9 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
                             <div className={styles["nesting-level-container"]}>
                                 {displayJSONLine(field, nestingLevel + 1)}
                             </div>
-                            <p className={styles["json-field-value"]}>],</p>
+                            <p className={styles["json-field-value"]}>
+                                ]{displayTrailingComma ? "," : ""}
+                            </p>
                         </div>
                     );
                 }
@@ -57,7 +62,9 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
                                     {displayKeys && (
                                         <p className={styles["json-field-name"]}>{`${key}: `}</p>
                                     )}
-                                    <p className={styles["json-field-value"]}>{"{},"}</p>
+                                    <p
+                                        className={styles["json-field-value"]}
+                                    >{`{}${displayTrailingComma ? "," : ""}`}</p>
                                 </div>
                             </div>
                         );
@@ -73,7 +80,9 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
                             <div className={styles["nesting-level-container"]}>
                                 {displayJSONLine(field, nestingLevel + 1)}
                             </div>
-                            <p className={styles["json-field-value"]}>{`},`}</p>
+                            <p
+                                className={styles["json-field-value"]}
+                            >{`}${displayTrailingComma ? "," : ""}`}</p>
                         </div>
                     );
                 }
@@ -83,7 +92,8 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
                         <div className={styles["json-field"]} key={uuid()}>
                             <p className={styles["json-field-name"]}>{`${key}: `}</p>
                             <p className={styles["json-field-value"]}>
-                                {`"${field}"` || "undefined"},
+                                {`"${field}"` || "undefined"}
+                                {displayTrailingComma ? "," : ""}
                             </p>
                         </div>
                     );
@@ -92,7 +102,10 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
                 return (
                     <div className={styles["json-field"]} key={uuid()}>
                         <p className={styles["json-field-name"]}>{`${key}: `}</p>
-                        <p className={styles["json-field-value"]}>{field || "undefined"},</p>
+                        <p className={styles["json-field-value"]}>
+                            {field || "undefined"}
+                            {displayTrailingComma ? "," : ""}
+                        </p>
                     </div>
                 );
             });
