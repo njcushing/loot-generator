@@ -1,6 +1,7 @@
 import { useCallback, useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { v4 as uuid } from "uuid";
+import { LootItem, LootPreset, LootTable } from "@/utils/types";
 import styles from "./index.module.css";
 
 export type TJSONDisplay = {
@@ -84,6 +85,27 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
         [hideFieldsSet],
     );
 
+    const copyJSON = useCallback(() => {
+        const lootTableCopy = structuredClone(lootGeneratorState.lootTable);
+
+        const deleteHiddenFields = (entry: LootItem | LootTable | LootPreset) => {
+            const mutableEntry = entry;
+            const keys = Object.keys(entry);
+
+            for (let i = keys.length - 1; i >= 0; i--) {
+                const key = keys[i] as keyof typeof entry;
+                if (hideFieldsSet.has(keys[i])) delete mutableEntry[key];
+            }
+
+            if (entry.type === "table") {
+                entry.props.loot.forEach((subEntry) => deleteHiddenFields(subEntry));
+            }
+        };
+
+        deleteHiddenFields(lootTableCopy);
+        navigator.clipboard.writeText(JSON.stringify(lootTableCopy));
+    }, [hideFieldsSet, lootGeneratorState.lootTable]);
+
     return (
         <div className={styles["json-display"]}>
             <div className={styles["json-display-options"]}>
@@ -91,6 +113,7 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
                     type="button"
                     className={styles["copy-json-button"]}
                     onClick={(e) => {
+                        copyJSON();
                         e.currentTarget.blur();
                     }}
                     onMouseLeave={(e) => {
