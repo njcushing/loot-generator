@@ -11,6 +11,12 @@ export const createLootItem = (props: RecursiveOptional<LootItem> = {}): LootIte
     props: {
         name: props.props?.name || "",
         sprite: props.props?.sprite,
+        quantity: {
+            min: props.props?.quantity?.min || 1,
+            max: props.props?.quantity?.max || 1,
+            biasFactor: props.props?.quantity?.biasFactor || 0.5,
+            biasIntensity: props.props?.quantity?.biasIntensity || 1,
+        },
         custom: props.props?.custom || {},
     },
     criteria: {

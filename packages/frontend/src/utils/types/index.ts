@@ -1,3 +1,11 @@
+export type GenerationQuantity = {
+    quantity: {
+        min: number;
+        max: number;
+        biasFactor: number;
+        biasIntensity: number;
+    };
+};
 export type GenerationCriteria = {
     criteria: {
         weight: number;
@@ -10,7 +18,7 @@ export type GenerationCriteria = {
 
 export type CustomFields = { custom: { [key: string]: unknown } };
 
-export type LootItemProps = { name?: string; sprite?: URL } & CustomFields;
+export type LootItemProps = { name?: string; sprite?: URL } & GenerationQuantity & CustomFields;
 export type LootTableProps = {
     name?: string;
     loot: (LootItem | LootTable | LootPreset)[];
@@ -34,7 +42,10 @@ export type LootPreset = {
 
 export type Preset = LootTable | LootItem;
 
-export type Item = LootItemProps & { quantity: number; value?: number };
+export type Item = Omit<LootItemProps, "quantity" | "criteria"> & {
+    quantity: number;
+    value?: number;
+};
 export type Loot = Map<string, Item>;
 
 export type SortCriteria = "name" | "quantity";
