@@ -86,7 +86,23 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
 
     return (
         <div className={styles["json-display"]}>
-            {displayJSONLine(lootGeneratorState.lootTable, 0)}
+            <div className={styles["json-display-options"]}>
+                <button
+                    type="button"
+                    className={styles["copy-json-button"]}
+                    onClick={(e) => {
+                        e.currentTarget.blur();
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.blur();
+                    }}
+                >
+                    <p className={`${styles["symbol"]} material-symbols-sharp`}>Content_Copy</p>
+                </button>
+            </div>
+            <div className={styles["json-text"]}>
+                {displayJSONLine(lootGeneratorState.lootTable, 0)}
+            </div>
         </div>
     );
 }
