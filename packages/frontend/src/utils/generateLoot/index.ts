@@ -1,5 +1,6 @@
 import { v4 as uuid } from "uuid";
 import { LootItem, LootTable, LootPreset, Preset, Loot, LootTableProps } from "../types";
+import { randomRange } from "../randomRange";
 
 type RecursiveOptional<T> = {
     [P in keyof T]?: T[P] extends object ? RecursiveOptional<T[P]> : T[P];
@@ -134,7 +135,8 @@ const rollTable = (currentLoot: Loot, workingTable: SummedTable): [Loot, SummedT
             });
         }
         // Increment quantity of existing entry
-        mutableLoot.get(rolledEntry.key)!.quantity += 1;
+        const { min, max } = rolledEntry.props.quantity;
+        mutableLoot.get(rolledEntry.key)!.quantity += randomRange(min, max, true);
     }
 
     return [mutableLoot, mutableSummedTable];
