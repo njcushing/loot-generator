@@ -2,8 +2,6 @@ export type GenerationQuantity = {
     quantity: {
         min: number;
         max: number;
-        biasFactor: number;
-        biasIntensity: number;
     };
 };
 export type GenerationCriteria = {
