@@ -23,7 +23,8 @@ export function ItemEntry({
     const { menuStates } = useContext(InteractiveContext);
 
     const { key, props, criteria } = entry;
-    const { name } = props;
+    const { name, quantity } = props;
+    const { min, max } = quantity;
     const { weight } = criteria;
 
     const disablePropsFields = isPresetEntry || isDescendantOfPresetEntry;
@@ -55,6 +56,22 @@ export function ItemEntry({
                         labelText="Name"
                         value={name || ""}
                         fieldPath={["props", "name"]}
+                        disabled={disablePropsFields}
+                    />
+                    <Inputs.Numeric
+                        entryKey={key}
+                        labelText="Min"
+                        value={min || 1}
+                        min={0}
+                        fieldPath={["props", "quantity", "min"]}
+                        disabled={disablePropsFields}
+                    />
+                    <Inputs.Numeric
+                        entryKey={key}
+                        labelText="Max"
+                        value={max || 1}
+                        min={0}
+                        fieldPath={["props", "quantity", "max"]}
                         disabled={disablePropsFields}
                     />
                     <Inputs.Numeric
