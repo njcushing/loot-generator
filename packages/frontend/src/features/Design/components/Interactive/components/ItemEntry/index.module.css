@@ -70,15 +70,13 @@
     background-color: rgb(255, 83, 83);
 }
 
-.item-entry-properties {
+.item-entry-fields {
     display: flex;
     flex-direction: column;
-    gap: 8px;
 
     pointer-events: all;
 
     outline: 1px solid black;
 
     width: 100%;
-    padding: 8px;
 }

@@ -4,6 +4,7 @@ import { InteractiveContext } from "../..";
 import { ToggleButton } from "../ToggleButton";
 import { SaveAsPresetButton } from "../SaveAsPresetButton";
 import { DeleteButton } from "../DeleteButton";
+import { EntryFieldsToggleBar } from "../EntryFieldsToggleBar";
 import { Inputs } from "../../inputs";
 import styles from "./index.module.css";
 
@@ -50,37 +51,43 @@ export function ItemEntry({
                 )}
             </div>
             {menuStates.get(key) === "expanded" && (
-                <div className={styles["item-entry-properties"]}>
-                    <Inputs.Text
-                        entryKey={key}
-                        labelText="Name"
-                        value={name || ""}
-                        fieldPath={["props", "name"]}
-                        disabled={disablePropsFields}
-                    />
-                    <Inputs.Numeric
-                        entryKey={key}
-                        labelText="Min"
-                        value={min || 1}
-                        min={0}
-                        fieldPath={["props", "quantity", "min"]}
-                        disabled={disablePropsFields}
-                    />
-                    <Inputs.Numeric
-                        entryKey={key}
-                        labelText="Max"
-                        value={max || 1}
-                        min={0}
-                        fieldPath={["props", "quantity", "max"]}
-                        disabled={disablePropsFields}
-                    />
-                    <Inputs.Numeric
-                        entryKey={key}
-                        labelText="Weight"
-                        value={weight || 1}
-                        fieldPath={["criteria", "weight"]}
-                        disabled={disableOtherFields}
-                    />
+                <div className={styles["item-entry-fields"]}>
+                    <EntryFieldsToggleBar name="Props">
+                        <Inputs.Text
+                            entryKey={key}
+                            labelText="Name"
+                            value={name || ""}
+                            fieldPath={["props", "name"]}
+                            disabled={disablePropsFields}
+                        />
+                        <EntryFieldsToggleBar name="Quantity">
+                            <Inputs.Numeric
+                                entryKey={key}
+                                labelText="Min"
+                                value={min || 1}
+                                min={0}
+                                fieldPath={["props", "quantity", "min"]}
+                                disabled={disablePropsFields}
+                            />
+                            <Inputs.Numeric
+                                entryKey={key}
+                                labelText="Max"
+                                value={max || 1}
+                                min={0}
+                                fieldPath={["props", "quantity", "max"]}
+                                disabled={disablePropsFields}
+                            />
+                        </EntryFieldsToggleBar>
+                    </EntryFieldsToggleBar>
+                    <EntryFieldsToggleBar name="Criteria">
+                        <Inputs.Numeric
+                            entryKey={key}
+                            labelText="Weight"
+                            value={weight || 1}
+                            fieldPath={["criteria", "weight"]}
+                            disabled={disableOtherFields}
+                        />
+                    </EntryFieldsToggleBar>
                 </div>
             )}
         </li>
