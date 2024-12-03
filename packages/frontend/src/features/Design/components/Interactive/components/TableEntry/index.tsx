@@ -9,6 +9,7 @@ import { LoadPresetButton } from "../LoadPresetButton";
 import { SaveAsPresetButton } from "../SaveAsPresetButton";
 import { DeleteButton } from "../DeleteButton";
 import { ItemEntry } from "../ItemEntry";
+import { EntryFieldsToggleBar } from "../EntryFieldsToggleBar";
 import { Inputs } from "../../inputs";
 import styles from "./index.module.css";
 
@@ -68,21 +69,25 @@ export function TableEntry({
             </div>
             {menuStates.get(key) === "expanded" && (
                 <>
-                    <div className={styles["table-entry-properties"]}>
-                        <Inputs.Text
-                            entryKey={key}
-                            labelText="Name"
-                            value={name || ""}
-                            fieldPath={["props", "name"]}
-                            disabled={disablePropsFields}
-                        />
-                        <Inputs.Numeric
-                            entryKey={key}
-                            labelText="Weight"
-                            value={weight || 1}
-                            fieldPath={["criteria", "weight"]}
-                            disabled={disableOtherFields}
-                        />
+                    <div className={styles["table-entry-fields"]}>
+                        <EntryFieldsToggleBar name="Props">
+                            <Inputs.Text
+                                entryKey={key}
+                                labelText="Name"
+                                value={name || ""}
+                                fieldPath={["props", "name"]}
+                                disabled={disablePropsFields}
+                            />
+                        </EntryFieldsToggleBar>
+                        <EntryFieldsToggleBar name="Criteria">
+                            <Inputs.Numeric
+                                entryKey={key}
+                                labelText="Weight"
+                                value={weight || 1}
+                                fieldPath={["criteria", "weight"]}
+                                disabled={disableOtherFields}
+                            />
+                        </EntryFieldsToggleBar>
                     </div>
                     <ul className={styles["table-entries"]}>
                         {entry.props.loot.map((subEntry) => {
