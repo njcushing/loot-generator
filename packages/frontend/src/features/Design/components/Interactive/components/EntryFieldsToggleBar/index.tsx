@@ -5,14 +5,16 @@ export type TEntryFieldsToggleBar = {
     name: string;
     isOpen?: boolean;
     onClick?: () => unknown;
-    children?: JSX.Element | JSX.Element[] | null;
+    fields?: JSX.Element | JSX.Element[] | null;
+    subCategories?: JSX.Element | JSX.Element[] | null;
 };
 
 export function EntryFieldsToggleBar({
     name,
     isOpen = false,
     onClick,
-    children,
+    fields,
+    subCategories,
 }: TEntryFieldsToggleBar) {
     const [isOpenState, setIsOpenState] = useState<boolean>(isOpen);
 
@@ -38,7 +40,12 @@ export function EntryFieldsToggleBar({
                 </p>
                 <p className={`${styles["name"]} truncate-ellipsis`}>{name}</p>
             </button>
-            {isOpenState && <div className={styles["entry-fields-container"]}>{children}</div>}
+            {isOpenState && (
+                <div className={styles["entry-fields-container"]}>
+                    <div className={styles["entry-fields"]}>{fields}</div>
+                    <div className={styles["entry-fields-subcategories"]}>{subCategories}</div>
+                </div>
+            )}
         </>
     );
 }

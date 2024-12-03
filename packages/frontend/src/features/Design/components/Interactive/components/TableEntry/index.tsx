@@ -70,24 +70,30 @@ export function TableEntry({
             {menuStates.get(key) === "expanded" && (
                 <>
                     <div className={styles["table-entry-fields"]}>
-                        <EntryFieldsToggleBar name="Props">
-                            <Inputs.Text
-                                entryKey={key}
-                                labelText="Name"
-                                value={name || ""}
-                                fieldPath={["props", "name"]}
-                                disabled={disablePropsFields}
-                            />
-                        </EntryFieldsToggleBar>
-                        <EntryFieldsToggleBar name="Criteria">
-                            <Inputs.Numeric
-                                entryKey={key}
-                                labelText="Weight"
-                                value={weight || 1}
-                                fieldPath={["criteria", "weight"]}
-                                disabled={disableOtherFields}
-                            />
-                        </EntryFieldsToggleBar>
+                        <EntryFieldsToggleBar
+                            name="Props"
+                            fields={
+                                <Inputs.Text
+                                    entryKey={key}
+                                    labelText="Name"
+                                    value={name || ""}
+                                    fieldPath={["props", "name"]}
+                                    disabled={disablePropsFields}
+                                />
+                            }
+                        />
+                        <EntryFieldsToggleBar
+                            name="Criteria"
+                            fields={
+                                <Inputs.Numeric
+                                    entryKey={key}
+                                    labelText="Weight"
+                                    value={weight || 1}
+                                    fieldPath={["criteria", "weight"]}
+                                    disabled={disableOtherFields}
+                                />
+                            }
+                        />
                     </div>
                     <ul className={styles["table-entries"]}>
                         {entry.props.loot.map((subEntry) => {

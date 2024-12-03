@@ -52,42 +52,55 @@ export function ItemEntry({
             </div>
             {menuStates.get(key) === "expanded" && (
                 <div className={styles["item-entry-fields"]}>
-                    <EntryFieldsToggleBar name="Props">
-                        <Inputs.Text
-                            entryKey={key}
-                            labelText="Name"
-                            value={name || ""}
-                            fieldPath={["props", "name"]}
-                            disabled={disablePropsFields}
-                        />
-                        <EntryFieldsToggleBar name="Quantity">
-                            <Inputs.Numeric
+                    <EntryFieldsToggleBar
+                        name="Props"
+                        fields={
+                            <Inputs.Text
                                 entryKey={key}
-                                labelText="Min"
-                                value={min || 1}
-                                min={0}
-                                fieldPath={["props", "quantity", "min"]}
+                                labelText="Name"
+                                value={name || ""}
+                                fieldPath={["props", "name"]}
                                 disabled={disablePropsFields}
                             />
+                        }
+                        subCategories={
+                            <EntryFieldsToggleBar
+                                name="Quantity"
+                                fields={
+                                    <>
+                                        <Inputs.Numeric
+                                            entryKey={key}
+                                            labelText="Min"
+                                            value={min || 1}
+                                            min={0}
+                                            fieldPath={["props", "quantity", "min"]}
+                                            disabled={disablePropsFields}
+                                        />
+                                        <Inputs.Numeric
+                                            entryKey={key}
+                                            labelText="Max"
+                                            value={max || 1}
+                                            min={0}
+                                            fieldPath={["props", "quantity", "max"]}
+                                            disabled={disablePropsFields}
+                                        />
+                                    </>
+                                }
+                            />
+                        }
+                    />
+                    <EntryFieldsToggleBar
+                        name="Criteria"
+                        fields={
                             <Inputs.Numeric
                                 entryKey={key}
-                                labelText="Max"
-                                value={max || 1}
-                                min={0}
-                                fieldPath={["props", "quantity", "max"]}
-                                disabled={disablePropsFields}
+                                labelText="Weight"
+                                value={weight || 1}
+                                fieldPath={["criteria", "weight"]}
+                                disabled={disableOtherFields}
                             />
-                        </EntryFieldsToggleBar>
-                    </EntryFieldsToggleBar>
-                    <EntryFieldsToggleBar name="Criteria">
-                        <Inputs.Numeric
-                            entryKey={key}
-                            labelText="Weight"
-                            value={weight || 1}
-                            fieldPath={["criteria", "weight"]}
-                            disabled={disableOtherFields}
-                        />
-                    </EntryFieldsToggleBar>
+                        }
+                    />
                 </div>
             )}
         </li>
