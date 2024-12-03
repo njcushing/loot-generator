@@ -1,0 +1,86 @@
+.entry-fields-toggle-bar {
+    box-sizing: border-box;
+
+    position: relative;
+
+    place-self: center;
+
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 4px;
+
+    pointer-events: auto;
+
+    border: none;
+    outline: 1px solid black;
+    background-color: transparent;
+
+    width: 100%;
+    height: 100%;
+    padding: 4px;
+}
+
+@media (hover: hover) {
+    .entry-fields-toggle-bar:hover {
+        cursor: pointer;
+
+        outline-width: 2px;
+        background-color: rgb(242, 242, 242);
+    }
+}
+
+.entry-fields-toggle-bar:focus {
+    cursor: pointer;
+
+    outline-width: 2px;
+    background-color: rgb(228, 228, 228);
+}
+
+.symbol {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.name {
+    align-self: center;
+
+    font-size: 0.9rem;
+    text-align: start;
+    text-wrap: nowrap;
+}
+
+.entry-fields-container {
+    align-self: end;
+
+    display: flex;
+    flex-direction: column;
+
+    width: calc(100% - 12px);
+}
+
+.entry-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    pointer-events: all;
+
+    border-left: 1px solid black;
+
+    width: 100%;
+    padding: 6px;
+}
+
+.entry-fields-subcategories {
+    display: flex;
+    flex-direction: column;
+
+    pointer-events: all;
+
+    border-left: 1px solid black;
+
+    width: 100%;
+}
