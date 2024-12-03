@@ -1,8 +1,11 @@
 .text-field-label {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 
+    color: black;
+    font-family: Roboto;
+    font-size: 0.9rem;
     text-wrap: nowrap;
 
     width: 100%;
@@ -11,13 +14,13 @@
 .text-field-input {
     color: black;
     font-family: Roboto;
-    font-size: 1rem;
+    font-size: 0.9rem;
 
     border: none;
     outline: 1px solid black;
 
     width: 100%;
-    padding: 4px;
+    padding: 3px;
 }
 
 .text-field-input:disabled {
