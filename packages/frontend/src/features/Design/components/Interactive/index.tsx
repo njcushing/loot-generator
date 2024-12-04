@@ -3,10 +3,11 @@ import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { TabSelector } from "@/components/structural/components/TabSelector";
 import { Active } from "./components/Active";
 import { Presets } from "./components/Presets";
+import { Items } from "./components/Items";
 import * as manageMenuStates from "./utils/manageMenuStates";
 
 interface InteractiveContext {
-    menuType: "active" | "preset";
+    menuType: "active" | "preset" | "item";
     menuStates: manageMenuStates.MenuStates;
     setMenuStates: React.Dispatch<React.SetStateAction<manageMenuStates.MenuStates>>;
 }
@@ -52,6 +53,10 @@ export function Interactive() {
         });
     }, [lootGeneratorState.presets]);
 
+    const [itemMenuStates, setItemMenuStates] = useState<Map<string, "collapsed" | "expanded">>(
+        new Map(),
+    );
+
     return (
         <TabSelector
             tabs={{
@@ -87,6 +92,24 @@ export function Interactive() {
                             )}
                         >
                             <Presets />
+                        </InteractiveContext.Provider>
+                    ),
+                    position: "left",
+                },
+                items: {
+                    name: "Items",
+                    content: (
+                        <InteractiveContext.Provider
+                            value={useMemo(
+                                () => ({
+                                    menuType: "item",
+                                    menuStates: itemMenuStates,
+                                    setMenuStates: setItemMenuStates,
+                                }),
+                                [itemMenuStates, setItemMenuStates],
+                            )}
+                        >
+                            <Items />
                         </InteractiveContext.Provider>
                     ),
                     position: "left",
