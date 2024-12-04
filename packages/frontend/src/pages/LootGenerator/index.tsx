@@ -201,7 +201,6 @@ export function LootGenerator() {
             const result = getEntry(key, place);
             if (!result) return false;
             const { entry, copy } = result;
-            if (entry.type === "preset") return false;
 
             for (let i = 0; i < fieldPaths.length; i++) {
                 let nestedEntry = entry;
