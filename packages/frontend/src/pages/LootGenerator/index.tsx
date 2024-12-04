@@ -170,16 +170,6 @@ export function LootGenerator() {
                 for (let i = 0; i < currentEntry.length; i++) {
                     const subEntry = currentEntry[i];
                     if (subEntry.key === key) {
-                        if (subEntry.type === "preset") {
-                            const preset = lootGeneratorState.presetsMap.get(subEntry.id);
-                            if (!preset) return null;
-                            return {
-                                entry: lootGeneratorState.presetsMap.get(subEntry.id)!,
-                                path: currentPath,
-                                index: i,
-                                copy,
-                            };
-                        }
                         return {
                             entry: subEntry,
                             path: currentPath,
@@ -198,7 +188,7 @@ export function LootGenerator() {
 
             return search(origin, path);
         },
-        [lootGeneratorState.presetsMap, getCopy],
+        [getCopy],
     );
 
     const mutateEntryField = useCallback(
