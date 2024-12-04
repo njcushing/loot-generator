@@ -25,6 +25,7 @@ export type LootTableProps = {
 export type LootItem = {
     type: "item";
     key: string;
+    id: string;
     props: LootItemProps;
 } & GenerationCriteria;
 export type LootTable = {
