@@ -43,7 +43,7 @@ export function TableEntry({
             <div
                 className={`${styles["table-entry-bar"]} ${styles[isPresetEntry ? "is-preset" : ""]}`}
             >
-                <div className={styles["toggle-button-container"]}>
+                <div className={styles["entry-toggle-bar-container"]}>
                     <EntryToggleBar entry={entry} />
                 </div>
                 {!isPresetEntry && !isDescendantOfPresetEntry && (

@@ -33,7 +33,7 @@
 }
 
 @media (hover: hover) {
-    .table-entry-bar:has(> .toggle-button-container:hover),
+    .table-entry-bar:has(> .entry-toggle-bar-container:hover),
     .table-entry-bar:has(> .create-new-entry-button-container:hover),
     .table-entry-bar:has(> .load-preset-button-container:hover),
     .table-entry-bar:has(> .save-as-preset-button-container:hover),
@@ -43,14 +43,14 @@
         outline-width: 3px;
     }
 
-    .table-entry-bar:has(> .toggle-button-container:hover),
+    .table-entry-bar:has(> .entry-toggle-bar-container:hover),
     .table-entry-bar:has(> .create-new-entry-button-container:hover),
     .table-entry-bar:has(> .load-preset-button-container:hover),
     .table-entry-bar:has(> .save-as-preset-button-container:hover) {
         background-color: rgb(157, 224, 210);
     }
 
-    .table-entry-bar.is-preset:has(> .toggle-button-container:hover),
+    .table-entry-bar.is-preset:has(> .entry-toggle-bar-container:hover),
     .table-entry-bar.is-preset:has(> .create-new-entry-button-container:hover),
     .table-entry-bar.is-preset:has(> .load-preset-button-container:hover),
     .table-entry-bar.is-preset:has(> .save-as-preset-button-container:hover) {
@@ -62,7 +62,7 @@
     }
 }
 
-.table-entry-bar:has(> .toggle-button-container:focus),
+.table-entry-bar:has(> .entry-toggle-bar-container:focus),
 .table-entry-bar:has(> .create-new-entry-button-container:focus),
 .table-entry-bar:has(> .load-preset-button-container:focus),
 .table-entry-bar:has(> .save-as-preset-button-container:focus),
@@ -72,11 +72,11 @@
     outline-width: 3px;
 }
 
-.table-entry-bar:has(> .toggle-button-container > button:focus) {
+.table-entry-bar:has(> .entry-toggle-bar-container > button:focus) {
     background-color: rgb(139, 206, 191);
 }
 
-.table-entry-bar.is-preset:has(> .toggle-button-container > button:focus) {
+.table-entry-bar.is-preset:has(> .entry-toggle-bar-container > button:focus) {
     background-color: rgb(226, 170, 66);
 }
 
