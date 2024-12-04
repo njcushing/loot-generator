@@ -3,7 +3,7 @@ import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootTable } from "@/utils/types";
 import { v4 as uuid } from "uuid";
 import { InteractiveContext } from "../..";
-import { ToggleButton } from "../ToggleButton";
+import { EntryToggleBar } from "../EntryToggleBar";
 import { CreateNewEntryButton } from "../CreateNewEntryButton";
 import { LoadPresetButton } from "../LoadPresetButton";
 import { SaveAsPresetButton } from "../SaveAsPresetButton";
@@ -44,7 +44,7 @@ export function TableEntry({
                 className={`${styles["table-entry-bar"]} ${styles[isPresetEntry ? "is-preset" : ""]}`}
             >
                 <div className={styles["toggle-button-container"]}>
-                    <ToggleButton entry={entry} />
+                    <EntryToggleBar entry={entry} />
                 </div>
                 {!isPresetEntry && !isDescendantOfPresetEntry && (
                     <div className={styles["create-new-entry-button-container"]}>

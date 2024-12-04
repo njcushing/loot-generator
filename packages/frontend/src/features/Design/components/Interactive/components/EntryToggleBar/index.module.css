@@ -1,4 +1,4 @@
-.toggle-button {
+.entry-toggle-bar {
     box-sizing: border-box;
 
     position: relative;
@@ -21,12 +21,12 @@
 }
 
 @media (hover: hover) {
-    .toggle-button:hover {
+    .entry-toggle-bar:hover {
         cursor: pointer;
     }
 }
 
-.toggle-button:focus {
+.entry-toggle-bar:focus {
     cursor: pointer;
 }
 

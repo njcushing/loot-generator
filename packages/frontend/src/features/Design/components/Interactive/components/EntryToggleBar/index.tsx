@@ -3,11 +3,11 @@ import { LootItem, LootTable } from "@/utils/types";
 import { InteractiveContext } from "../..";
 import styles from "./index.module.css";
 
-export type TToggleButton = {
+export type TEntryToggleBar = {
     entry: LootItem | LootTable;
 };
 
-export function ToggleButton({ entry }: TToggleButton) {
+export function EntryToggleBar({ entry }: TEntryToggleBar) {
     const { menuStates, setMenuStates } = useContext(InteractiveContext);
     const menuState = useMemo(
         () => menuStates.get(entry.key) || "collapsed",
@@ -29,7 +29,7 @@ export function ToggleButton({ entry }: TToggleButton) {
     return (
         <button
             type="button"
-            className={styles["toggle-button"]}
+            className={styles["entry-toggle-bar"]}
             onClick={(e) => {
                 toggleMenuState();
                 e.currentTarget.blur();

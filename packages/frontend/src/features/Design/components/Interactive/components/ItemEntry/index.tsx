@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { LootItem } from "@/utils/types";
 import { InteractiveContext } from "../..";
-import { ToggleButton } from "../ToggleButton";
+import { EntryToggleBar } from "../EntryToggleBar";
 import { SaveAsPresetButton } from "../SaveAsPresetButton";
 import { DeleteButton } from "../DeleteButton";
 import { EntryFieldsToggleBar } from "../EntryFieldsToggleBar";
@@ -37,7 +37,7 @@ export function ItemEntry({
                 className={`${styles["item-entry-bar"]} ${styles[isPresetEntry ? "is-preset" : ""]}`}
             >
                 <div className={styles["toggle-button-container"]}>
-                    <ToggleButton entry={entry} />
+                    <EntryToggleBar entry={entry} />
                 </div>
                 {!isPreset && !isPresetEntry && (
                     <div className={styles["save-as-preset-button-container"]}>
