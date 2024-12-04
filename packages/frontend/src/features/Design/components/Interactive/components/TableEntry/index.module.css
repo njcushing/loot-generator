@@ -87,6 +87,7 @@
 .table-entry-fields {
     display: flex;
     flex-direction: column;
+    gap: 1px;
 
     pointer-events: all;
 

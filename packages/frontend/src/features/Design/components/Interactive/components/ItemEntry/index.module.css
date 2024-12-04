@@ -73,10 +73,12 @@
 .item-entry-fields {
     display: flex;
     flex-direction: column;
+    gap: 1px;
 
     pointer-events: all;
 
     outline: 1px solid black;
 
     width: 100%;
+    padding-bottom: 1px;
 }
