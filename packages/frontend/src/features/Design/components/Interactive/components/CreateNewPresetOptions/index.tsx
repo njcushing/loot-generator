@@ -19,7 +19,7 @@ export function CreateNewPresetOptions() {
                 }}
             >
                 <p className={`${styles["symbol"]} material-symbols-sharp`}>Table</p>
-                New Table
+                <p className="truncate-ellipsis">New Table</p>
             </button>
             <button
                 type="button"
@@ -33,7 +33,7 @@ export function CreateNewPresetOptions() {
                 }}
             >
                 <p className={`${styles["symbol"]} material-symbols-sharp`}>Nutrition</p>
-                New Item
+                <p className="truncate-ellipsis">New Item</p>
             </button>
         </div>
     );
