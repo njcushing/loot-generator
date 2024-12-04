@@ -371,6 +371,10 @@ export function LootGenerator() {
     );
 
     useEffect(() => {
+        setLootGeneratorState((current) => ({ ...current, loot: new Map() }));
+    }, [lootGeneratorState.lootTable]);
+
+    useEffect(() => {
         const newPresetsMap = new Map(
             lootGeneratorState.presets.map((preset) => [preset.key, preset]),
         );
