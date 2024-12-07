@@ -3,13 +3,14 @@ import useResizeObserverElement from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
 import { Generate } from "@/features/Generate";
 import { createLootItem, createLootTable, createLootPresetFromEntry } from "@/utils/generateLoot";
-import { LootItem, LootTable, Loot, SortOptions, LootTableProps } from "@/utils/types";
+import { Items, LootItem, LootTable, Loot, SortOptions, LootTableProps } from "@/utils/types";
 import { Design } from "@/features/Design";
 import { exampleLootTable } from "@/features/Design/utils/exampleLootTable";
 import { version } from "../../../package.json";
 import styles from "./index.module.css";
 
 export type LootGeneratorState = {
+    items: Items;
     loot: Loot;
     lootTable: LootTable;
     presets: (LootItem | LootTable)[];
@@ -21,6 +22,7 @@ export type LootGeneratorState = {
 };
 
 const defaultLootGeneratorState: LootGeneratorState = {
+    items: new Map(),
     loot: new Map(),
     lootTable: exampleLootTable,
     presets: [],
