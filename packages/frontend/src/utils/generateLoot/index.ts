@@ -10,7 +10,6 @@ export const createLootItem = (props: RecursiveOptional<LootItem> = {}): LootIte
     type: "item",
     key: props.key || uuid(),
     props: {
-        id: props.props?.id || uuid(),
         name: props.props?.name || "",
         sprite: props.props?.sprite,
         quantity: {
