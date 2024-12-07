@@ -127,15 +127,11 @@ const rollTable = (currentLoot: Loot, workingTable: SummedTable): [Loot, SummedT
     // Rolled entry is an item; append to current loot
     if (rolledEntry.type === "item") {
         // Create new entry
-        if (!mutableLoot.has(rolledEntry.key)) {
-            mutableLoot.set(rolledEntry.key, {
-                ...rolledEntry.props,
-                quantity: 0,
-            });
-        }
+        if (!mutableLoot.has(rolledEntry.key)) mutableLoot.set(rolledEntry.key, 0);
         // Increment quantity of existing entry
         const { min, max } = rolledEntry.props.quantity;
-        mutableLoot.get(rolledEntry.key)!.quantity += randomRange(min, max, true);
+        const currentQuantity = mutableLoot.get(rolledEntry.key)!;
+        mutableLoot.set(rolledEntry.key, currentQuantity + randomRange(min, max, true));
     }
 
     return [mutableLoot, mutableSummedTable];

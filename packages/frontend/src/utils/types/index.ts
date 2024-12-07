@@ -41,11 +41,7 @@ export type LootPreset = {
 
 export type Preset = LootTable | LootItem;
 
-export type Item = Omit<LootItemProps, "quantity" | "criteria"> & {
-    quantity: number;
-    value?: number;
-};
-export type Loot = Map<string, Item>;
+export type Loot = Map<string, number>;
 
 export type SortCriteria = "name" | "quantity";
 export type SortOrder = "ascending" | "descending";
