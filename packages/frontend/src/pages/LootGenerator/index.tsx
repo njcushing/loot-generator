@@ -22,7 +22,7 @@ export type LootGeneratorState = {
 };
 
 const defaultLootGeneratorState: LootGeneratorState = {
-    items: new Map(),
+    items: exampleLoot.items,
     loot: new Map(),
     lootTable: exampleLoot.table,
     presets: [],
