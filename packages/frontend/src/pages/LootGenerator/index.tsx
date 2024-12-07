@@ -152,6 +152,8 @@ export function LootGenerator() {
             index: number;
             copy: LootGeneratorState["lootTable"] | LootGeneratorState["presets"];
         } | null => {
+            if (place === "items") return null;
+
             const { copy } = getCopy(place);
             if (!copy) return null;
 
