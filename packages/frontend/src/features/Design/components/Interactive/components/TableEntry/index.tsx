@@ -39,7 +39,7 @@ export function TableEntry({
     const disableOtherFields = isDescendantOfPresetEntry;
 
     return (
-        <li className={styles["table"]} key={key}>
+        <li className={styles["table-entry"]} key={key}>
             <div
                 className={`${styles["table-entry-bar"]} ${styles[isPresetEntry ? "is-preset" : ""]}`}
             >

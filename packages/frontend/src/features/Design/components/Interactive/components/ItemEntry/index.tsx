@@ -32,7 +32,7 @@ export function ItemEntry({
     const disableOtherFields = isDescendantOfPresetEntry;
 
     return (
-        <li className={styles["item"]} key={key}>
+        <li className={styles["item-entry"]} key={key}>
             <div
                 className={`${styles["item-entry-bar"]} ${styles[isPresetEntry ? "is-preset" : ""]}`}
             >
