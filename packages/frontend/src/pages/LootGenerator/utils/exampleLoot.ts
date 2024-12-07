@@ -1,7 +1,22 @@
-import { LootTable } from "@/utils/types";
+import { Items, LootTable } from "@/utils/types";
 import { createLootItem, createLootTable } from "@/utils/generateLoot";
+import { v4 as uuid } from "uuid";
 
-export const exampleLootTable: LootTable = createLootTable({
+export const items: Items = new Map([
+    [uuid(), { name: "Apple" }],
+    [uuid(), { name: "Banana" }],
+    [uuid(), { name: "Orange" }],
+    [uuid(), { name: "Peach" }],
+    [uuid(), { name: "Cherry" }],
+    [uuid(), { name: "Pineapple" }],
+    [uuid(), { name: "Kiwi" }],
+    [uuid(), { name: "Watermelon" }],
+    [uuid(), { name: "Lemon" }],
+    [uuid(), { name: "Lime" }],
+    [uuid(), { name: "Passionfruit" }],
+]);
+
+export const table: LootTable = createLootTable({
     props: {
         loot: [
             createLootItem({ props: { name: "Apple" }, criteria: { weight: 10 } }),

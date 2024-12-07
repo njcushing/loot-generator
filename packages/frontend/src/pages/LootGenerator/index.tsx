@@ -5,7 +5,7 @@ import { Generate } from "@/features/Generate";
 import { createLootItem, createLootTable, createLootPresetFromEntry } from "@/utils/generateLoot";
 import { Items, LootItem, LootTable, Loot, SortOptions, LootTableProps } from "@/utils/types";
 import { Design } from "@/features/Design";
-import { exampleLootTable } from "./utils/exampleLootTable";
+import * as exampleLoot from "./utils/exampleLoot";
 import { version } from "../../../package.json";
 import styles from "./index.module.css";
 
@@ -24,7 +24,7 @@ export type LootGeneratorState = {
 const defaultLootGeneratorState: LootGeneratorState = {
     items: new Map(),
     loot: new Map(),
-    lootTable: exampleLootTable,
+    lootTable: exampleLoot.table,
     presets: [],
     presetsMap: new Map(),
     quantitySelected: 1,
