@@ -9,8 +9,8 @@ type RecursiveOptional<T> = {
 export const createLootItem = (props: RecursiveOptional<LootItem> = {}): LootItem => ({
     type: "item",
     key: props.key || uuid(),
-    id: props.id || null,
     props: {
+        id: props.props?.id || uuid(),
         name: props.props?.name || "",
         sprite: props.props?.sprite,
         quantity: {
