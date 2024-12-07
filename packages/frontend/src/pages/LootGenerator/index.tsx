@@ -5,7 +5,7 @@ import { Generate } from "@/features/Generate";
 import { createLootItem, createLootTable, createLootPresetFromEntry } from "@/utils/generateLoot";
 import { Items, LootItem, LootTable, Loot, SortOptions, LootTableProps } from "@/utils/types";
 import { Design } from "@/features/Design";
-import { exampleLootTable } from "@/features/Design/utils/exampleLootTable";
+import { exampleLootTable } from "./utils/exampleLootTable";
 import { version } from "../../../package.json";
 import styles from "./index.module.css";
 
