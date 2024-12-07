@@ -9,8 +9,6 @@ import * as exampleLoot from "./utils/exampleLoot";
 import { version } from "../../../package.json";
 import styles from "./index.module.css";
 
-export type Place = "items" | "active" | "presets";
-
 export type LootGeneratorState = {
     items: Items;
     loot: Loot;
@@ -22,6 +20,12 @@ export type LootGeneratorState = {
     customQuantity: number;
     sortOptions: SortOptions;
 };
+
+export type Place = "items" | "active" | "presets";
+type PlaceSource =
+    | LootGeneratorState["lootTable"]
+    | LootGeneratorState["presets"]
+    | LootGeneratorState["items"];
 
 const defaultLootGeneratorState: LootGeneratorState = {
     items: exampleLoot.items,
@@ -111,23 +115,23 @@ export function LootGenerator() {
     );
 
     const getCopy = useCallback(
-        (
-            place: Place,
-        ): {
-            copy: LootGeneratorState["lootTable"] | LootGeneratorState["presets"];
-        } => {
+        (place: Place): { copy: PlaceSource } => {
             let copy;
             if (place === "active") copy = lootGeneratorState.lootTable;
             if (place === "presets") copy = lootGeneratorState.presets;
+            if (place === "items") copy = lootGeneratorState.items;
             copy = structuredClone(copy)!;
 
             return { copy };
         },
-        [lootGeneratorState.lootTable, lootGeneratorState.presets],
+        [lootGeneratorState.lootTable, lootGeneratorState.presets, lootGeneratorState.items],
     );
 
     const saveCopy = useCallback(
-        (place: Place, copy: LootGeneratorState["lootTable"] | LootGeneratorState["presets"]) => {
+        (place: Place, copy: PlaceSource) => {
+            if (place === "items") {
+                setLootGeneratorStateProperty("items", copy as LootGeneratorState["items"]);
+            }
             if (place === "active") {
                 setLootGeneratorStateProperty("lootTable", copy as LootGeneratorState["lootTable"]);
             }
