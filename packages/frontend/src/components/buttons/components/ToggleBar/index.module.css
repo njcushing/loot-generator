@@ -1,0 +1,122 @@
+.toggle-bar {
+    position: relative;
+
+    display: grid;
+    grid-template-rows: repeat(2, auto);
+    grid-template-columns: minmax(0, 1fr) auto;
+
+    outline: 1px solid black;
+}
+
+.toggle-bar-button {
+    grid-area: 1 / 1 / 2 / 2;
+
+    box-sizing: border-box;
+
+    position: relative;
+
+    place-self: center;
+
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-content: end;
+    align-items: center;
+    gap: 6px;
+
+    pointer-events: auto;
+
+    border: none;
+    outline: none;
+    background-color: transparent;
+
+    width: 100%;
+    min-height: 2rem;
+    height: 100%;
+    padding: 2px;
+}
+
+@media (hover: hover) {
+    .toggle-bar-button:hover {
+        cursor: pointer;
+    }
+}
+
+.toggle-bar-button:focus {
+    cursor: pointer;
+}
+
+.symbol {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: Roboto;
+    font-size: 1.6rem;
+    font-weight: 200;
+
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+.name {
+    font-size: 1rem;
+    text-align: start;
+    text-wrap: nowrap;
+}
+
+.options {
+    grid-area: 1 / 2 / 2 / -1;
+
+    display: flex;
+    flex-direction: row;
+    align-content: end;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.options > * {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    pointer-events: all;
+
+    color: rgba(0, 0, 0, 0.4);
+
+    border: none;
+    background-color: transparent;
+
+    height: 100%;
+    padding: 2px;
+}
+
+@media (hover: hover) {
+    .options > *:hover {
+        cursor: pointer;
+
+        color: rgba(0, 0, 0, 0.6);
+    }
+}
+
+.options > *:focus {
+    cursor: pointer;
+
+    color: rgba(0, 0, 0, 0.8);
+}
+
+@media (hover: hover) {
+    .toggle-bar:has(> .toggle-bar-button:hover),
+    .toggle-bar:has(> .options > *:hover) {
+        z-index: 1;
+
+        outline-width: 3px;
+    }
+}
+
+.toggle-bar:has(> .toggle-bar-button:focus),
+.toggle-bar:has(> .options > *:focus) {
+    z-index: 1;
+
+    outline-width: 3px;
+}
