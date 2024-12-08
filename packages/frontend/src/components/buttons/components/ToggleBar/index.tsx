@@ -41,7 +41,10 @@ export function ToggleBar({
     children,
     style,
 }: TToggleBar) {
-    const concatenatedStyles = useMemo(() => _.merge(defaultStyles, style), [style]);
+    const concatenatedStyles = useMemo(
+        () => _.merge(structuredClone(defaultStyles), style),
+        [style],
+    );
 
     const [isOpen, setIsOpen] = useState<boolean>(defaultState);
 
