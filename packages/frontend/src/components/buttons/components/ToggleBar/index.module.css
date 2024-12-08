@@ -112,8 +112,7 @@
 }
 
 @media (hover: hover) {
-    .toggle-bar:has(> .toggle-bar-button:hover),
-    .toggle-bar:has(> .options > *:hover) {
+    .toggle-bar-container:has(*:hover) {
         z-index: 1;
     }
 
@@ -123,8 +122,7 @@
     }
 }
 
-.toggle-bar:has(> .toggle-bar-button:focus),
-.toggle-bar:has(> .options > *:focus) {
+.toggle-bar-container:focus-within {
     z-index: 1;
 }
 
