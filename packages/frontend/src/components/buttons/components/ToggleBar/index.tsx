@@ -56,7 +56,11 @@ export function ToggleBar({
     );
 
     return (
-        <div className={styles["toggle-bar"]} ref={toggleBarRef}>
+        <div
+            className={styles["toggle-bar"]}
+            style={{ backgroundColor: concatenatedStyles.colours.normal }}
+            ref={toggleBarRef}
+        >
             <button
                 type="button"
                 className={styles["toggle-bar-button"]}
