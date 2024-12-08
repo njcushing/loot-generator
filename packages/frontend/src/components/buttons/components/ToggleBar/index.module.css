@@ -1,8 +1,14 @@
+.toggle-bar-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1px; /* For preventing outline overlap */
+}
+
 .toggle-bar {
     position: relative;
 
     display: grid;
-    grid-template-rows: repeat(2, auto);
+    grid-template-rows: minmax(0, 1fr);
     grid-template-columns: minmax(0, 1fr) auto;
 
     outline: 1px solid black;
@@ -109,7 +115,10 @@
     .toggle-bar:has(> .toggle-bar-button:hover),
     .toggle-bar:has(> .options > *:hover) {
         z-index: 1;
+    }
 
+    .toggle-bar:has(> .toggle-bar-button:hover),
+    .toggle-bar:has(> .options > *:hover) {
         outline-width: 3px;
     }
 }
@@ -117,6 +126,9 @@
 .toggle-bar:has(> .toggle-bar-button:focus),
 .toggle-bar:has(> .options > *:focus) {
     z-index: 1;
+}
 
+.toggle-bar:has(> .toggle-bar-button:focus),
+.toggle-bar:has(> .options > *:focus) {
     outline-width: 3px;
 }

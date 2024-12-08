@@ -56,68 +56,70 @@ export function ToggleBar({
     );
 
     return (
-        <div
-            className={styles["toggle-bar"]}
-            style={{ backgroundColor: concatenatedStyles.colours.normal }}
-            ref={toggleBarRef}
-        >
-            <button
-                type="button"
-                className={styles["toggle-bar-button"]}
-                onClick={() => {
-                    if (onClick) onClick();
-                    setIsOpen(!isOpen);
-                }}
-                onFocus={() => switchBackgroundColor(concatenatedStyles.colours.focus)}
-                onBlur={() => switchBackgroundColor(concatenatedStyles.colours.normal)}
-                onMouseDown={() => switchBackgroundColor(concatenatedStyles.colours.focus)}
-                onMouseUp={() => switchBackgroundColor(concatenatedStyles.colours.hover)}
-                onMouseEnter={() => switchBackgroundColor(concatenatedStyles.colours.hover)}
-                onMouseLeave={(e) => {
-                    switchBackgroundColor(concatenatedStyles.colours.normal);
-                    e.currentTarget.blur();
-                }}
+        <div className={styles["toggle-bar-container"]}>
+            <div
+                className={styles["toggle-bar"]}
+                style={{ backgroundColor: concatenatedStyles.colours.normal }}
+                ref={toggleBarRef}
             >
-                <p className={styles["symbol"]}>{isOpen ? "-" : "+"}</p>
-                <p
-                    className={`${styles["name"]} truncate-ellipsis`}
-                    style={{
-                        fontStyle: concatenatedStyles.nameFontStyle,
+                <button
+                    type="button"
+                    className={styles["toggle-bar-button"]}
+                    onClick={() => {
+                        if (onClick) onClick();
+                        setIsOpen(!isOpen);
+                    }}
+                    onFocus={() => switchBackgroundColor(concatenatedStyles.colours.focus)}
+                    onBlur={() => switchBackgroundColor(concatenatedStyles.colours.normal)}
+                    onMouseDown={() => switchBackgroundColor(concatenatedStyles.colours.focus)}
+                    onMouseUp={() => switchBackgroundColor(concatenatedStyles.colours.hover)}
+                    onMouseEnter={() => switchBackgroundColor(concatenatedStyles.colours.hover)}
+                    onMouseLeave={(e) => {
+                        switchBackgroundColor(concatenatedStyles.colours.normal);
+                        e.currentTarget.blur();
                     }}
                 >
-                    {name}
-                </p>
-            </button>
-            <ul className={styles["options"]}>
-                {options?.map((option) => {
-                    const { symbol, colours } = option;
-                    const { normal } = concatenatedStyles.colours;
-                    let { hover, focus } = colours || concatenatedStyles;
-                    if (!hover) hover = concatenatedStyles.colours.hover;
-                    if (!focus) focus = concatenatedStyles.colours.focus;
-                    return (
-                        <button
-                            type="button"
-                            className="material-symbols-sharp"
-                            onClick={() => {
-                                if (option.onClick) option.onClick();
-                            }}
-                            onFocus={() => switchBackgroundColor(focus)}
-                            onBlur={() => switchBackgroundColor(normal)}
-                            onMouseDown={() => switchBackgroundColor(focus)}
-                            onMouseUp={() => switchBackgroundColor(hover)}
-                            onMouseEnter={() => switchBackgroundColor(hover)}
-                            onMouseLeave={(e) => {
-                                switchBackgroundColor(normal);
-                                e.currentTarget.blur();
-                            }}
-                            key={symbol}
-                        >
-                            {symbol}
-                        </button>
-                    );
-                })}
-            </ul>
+                    <p className={styles["symbol"]}>{isOpen ? "-" : "+"}</p>
+                    <p
+                        className={`${styles["name"]} truncate-ellipsis`}
+                        style={{
+                            fontStyle: concatenatedStyles.nameFontStyle,
+                        }}
+                    >
+                        {name}
+                    </p>
+                </button>
+                <ul className={styles["options"]}>
+                    {options?.map((option) => {
+                        const { symbol, colours } = option;
+                        const { normal } = concatenatedStyles.colours;
+                        let { hover, focus } = colours || concatenatedStyles;
+                        if (!hover) hover = concatenatedStyles.colours.hover;
+                        if (!focus) focus = concatenatedStyles.colours.focus;
+                        return (
+                            <button
+                                type="button"
+                                className="material-symbols-sharp"
+                                onClick={() => {
+                                    if (option.onClick) option.onClick();
+                                }}
+                                onFocus={() => switchBackgroundColor(focus)}
+                                onBlur={() => switchBackgroundColor(normal)}
+                                onMouseDown={() => switchBackgroundColor(focus)}
+                                onMouseUp={() => switchBackgroundColor(hover)}
+                                onMouseEnter={() => switchBackgroundColor(hover)}
+                                onMouseLeave={(e) => {
+                                    switchBackgroundColor(normal);
+                                    e.currentTarget.blur();
+                                }}
+                                key={symbol}
+                            >
+                                {symbol}
+                            </button>
+                        );
+                    })}
+                </ul>
+            </div>
             {isOpen && children}
         </div>
     );
