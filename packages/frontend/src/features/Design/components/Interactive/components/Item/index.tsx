@@ -1,6 +1,8 @@
 import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
+import { EntryFieldsToggleBar } from "../EntryFieldsToggleBar";
+import { Inputs } from "../../inputs";
 import { InteractiveContext } from "../..";
 import styles from "./index.module.css";
 
@@ -48,6 +50,20 @@ export function Item({ id }: TItem) {
                 },
                 nameFontStyle: name ? "normal" : "italic",
             }}
-        />
+        >
+            <div className={styles["item-fields"]}>
+                <EntryFieldsToggleBar
+                    name="Props"
+                    fields={
+                        <Inputs.Text
+                            entryKey={id}
+                            labelText="Name"
+                            value={name || ""}
+                            fieldPath={["name"]}
+                        />
+                    }
+                />
+            </div>
+        </ToggleBar>
     );
 }
