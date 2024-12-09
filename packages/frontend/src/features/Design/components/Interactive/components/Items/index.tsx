@@ -4,7 +4,7 @@ import { Item } from "../Item";
 import styles from "./index.module.css";
 
 export function Items() {
-    const { lootGeneratorState } = useContext(LootGeneratorContext);
+    const { lootGeneratorState, addNewItem } = useContext(LootGeneratorContext);
 
     return (
         <div className={styles["items-tab"]}>
@@ -19,6 +19,7 @@ export function Items() {
                     type="button"
                     className={styles["create-new-item-button"]}
                     onClick={(e) => {
+                        addNewItem();
                         e.currentTarget.blur();
                     }}
                     onMouseLeave={(e) => {
