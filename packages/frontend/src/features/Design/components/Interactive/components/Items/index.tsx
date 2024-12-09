@@ -11,7 +11,7 @@ export function Items() {
             <ul className={styles["items"]}>
                 {[...lootGeneratorState.items.keys()].map((key) => {
                     const item = lootGeneratorState.items.get(key);
-                    return item && <Item key={key} />;
+                    return item && <Item id={key} key={key} />;
                 })}
             </ul>
             <div className={styles["create-new-item-options"]}>
