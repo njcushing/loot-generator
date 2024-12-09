@@ -18,76 +18,6 @@
     min-height: 1.9rem;
 }
 
-.table-entry-bar {
-    background-color: rgb(186, 240, 228);
-}
-
-.table-entry-bar.is-preset {
-    background-color: rgb(241, 197, 114);
-}
-
-.table-entries {
-    align-self: end;
-
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-
-    width: calc(100% - 16px);
-}
-
-@media (hover: hover) {
-    .table-entry-bar:has(> .entry-toggle-bar-container:hover),
-    .table-entry-bar:has(> .create-new-entry-button-container:hover),
-    .table-entry-bar:has(> .load-preset-button-container:hover),
-    .table-entry-bar:has(> .save-as-preset-button-container:hover),
-    .table-entry-bar:has(> .delete-button-container:hover) {
-        z-index: 1;
-
-        outline-width: 3px;
-    }
-
-    .table-entry-bar:has(> .entry-toggle-bar-container:hover),
-    .table-entry-bar:has(> .create-new-entry-button-container:hover),
-    .table-entry-bar:has(> .load-preset-button-container:hover),
-    .table-entry-bar:has(> .save-as-preset-button-container:hover) {
-        background-color: rgb(157, 224, 210);
-    }
-
-    .table-entry-bar.is-preset:has(> .entry-toggle-bar-container:hover),
-    .table-entry-bar.is-preset:has(> .create-new-entry-button-container:hover),
-    .table-entry-bar.is-preset:has(> .load-preset-button-container:hover),
-    .table-entry-bar.is-preset:has(> .save-as-preset-button-container:hover) {
-        background-color: rgb(236, 185, 89);
-    }
-
-    .table-entry-bar:has(> .delete-button-container:hover) {
-        background-color: rgb(255, 120, 120);
-    }
-}
-
-.table-entry-bar:has(> .entry-toggle-bar-container:focus),
-.table-entry-bar:has(> .create-new-entry-button-container:focus),
-.table-entry-bar:has(> .load-preset-button-container:focus),
-.table-entry-bar:has(> .save-as-preset-button-container:focus),
-.table-entry-bar:has(> .delete-button-container:focus) {
-    z-index: 1;
-
-    outline-width: 3px;
-}
-
-.table-entry-bar:has(> .entry-toggle-bar-container > button:focus) {
-    background-color: rgb(139, 206, 191);
-}
-
-.table-entry-bar.is-preset:has(> .entry-toggle-bar-container > button:focus) {
-    background-color: rgb(226, 170, 66);
-}
-
-.table-entry-bar:has(> .delete-button-container > button:focus) {
-    background-color: rgb(255, 83, 83);
-}
-
 .table-entry-fields {
     display: flex;
     flex-direction: column;
@@ -98,4 +28,14 @@
     outline: 1px solid black;
 
     width: 100%;
+}
+
+.table-entries {
+    align-self: end;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+
+    width: calc(100% - 16px);
 }

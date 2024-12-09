@@ -1,13 +1,9 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootTable } from "@/utils/types";
 import { v4 as uuid } from "uuid";
+import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
 import { InteractiveContext } from "../..";
-import { EntryToggleBar } from "../EntryToggleBar";
-import { CreateNewEntryButton } from "../CreateNewEntryButton";
-import { LoadPresetButton } from "../LoadPresetButton";
-import { SaveAsPresetButton } from "../SaveAsPresetButton";
-import { DeleteButton } from "../DeleteButton";
 import { ItemEntry } from "../ItemEntry";
 import { EntryFieldsToggleBar } from "../EntryFieldsToggleBar";
 import { Inputs } from "../../inputs";
@@ -28,8 +24,9 @@ export function TableEntry({
     isPresetEntry = false,
     isDescendantOfPresetEntry = false,
 }: TTableEntry) {
-    const { lootGeneratorState } = useContext(LootGeneratorContext);
-    const { menuStates } = useContext(InteractiveContext);
+    const { lootGeneratorState, deleteEntry, saveEntryAsPreset, deletePreset } =
+        useContext(LootGeneratorContext);
+    const { menuStates, setMenuStates, menuType } = useContext(InteractiveContext);
 
     const { key, props, criteria } = entry;
     const { name } = props;
@@ -38,36 +35,76 @@ export function TableEntry({
     const disablePropsFields = isPresetEntry || isDescendantOfPresetEntry;
     const disableOtherFields = isDescendantOfPresetEntry;
 
+    const toggleBarOptions = useMemo((): TToggleBar["options"] => {
+        const options: TToggleBar["options"] = [];
+        if (!isPresetEntry && !isDescendantOfPresetEntry) {
+            options.push({
+                symbol: "Add_Circle",
+            });
+        }
+        if (isPreset) {
+            options.push({
+                symbol: "Upload",
+            });
+        }
+        if (!isPreset && !isPresetEntry) {
+            options.push({
+                symbol: "Save",
+                onClick: () => saveEntryAsPreset(key, menuType),
+            });
+        }
+        if (!isActiveBase && !isDescendantOfPresetEntry) {
+            options.push({
+                symbol: "Delete",
+                onClick: () => {
+                    if (isPreset) {
+                        deletePreset(key);
+                    } else {
+                        deleteEntry(key, menuType);
+                    }
+                },
+                colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
+            });
+        }
+        return options;
+    }, [
+        key,
+        isActiveBase,
+        isPreset,
+        isPresetEntry,
+        isDescendantOfPresetEntry,
+        menuType,
+        deleteEntry,
+        saveEntryAsPreset,
+        deletePreset,
+    ]);
+
     return (
         <li className={styles["table-entry"]} key={key}>
-            <div
-                className={`${styles["table-entry-bar"]} ${styles[isPresetEntry ? "is-preset" : ""]}`}
+            <ToggleBar
+                name={name || "Unnamed Item"}
+                defaultState={menuStates.get(key) === "expanded"}
+                options={toggleBarOptions}
+                onClick={() => {
+                    setMenuStates((currentMenuStates) => {
+                        const newMenuStates = new Map(currentMenuStates);
+                        const currentState = newMenuStates.get(entry.key);
+                        newMenuStates.set(
+                            entry.key,
+                            currentState === "collapsed" ? "expanded" : "collapsed",
+                        );
+                        return newMenuStates;
+                    });
+                }}
+                style={{
+                    colours: {
+                        normal: isPresetEntry ? "rgb(241, 197, 114)" : "rgb(186, 240, 228)",
+                        hover: isPresetEntry ? "rgb(236, 185, 89)" : "rgb(157, 224, 210)",
+                        focus: isPresetEntry ? "rgb(226, 170, 66)" : "rgb(139, 206, 191)",
+                    },
+                    nameFontStyle: name ? "normal" : "italic",
+                }}
             >
-                <div className={styles["entry-toggle-bar-container"]}>
-                    <EntryToggleBar entry={entry} />
-                </div>
-                {!isPresetEntry && !isDescendantOfPresetEntry && (
-                    <div className={styles["create-new-entry-button-container"]}>
-                        <CreateNewEntryButton entry={entry} />
-                    </div>
-                )}
-                {isPreset && (
-                    <div className={styles["load-preset-button-container"]}>
-                        <LoadPresetButton entry={entry} />
-                    </div>
-                )}
-                {!isPreset && !isPresetEntry && (
-                    <div className={styles["save-as-preset-button-container"]}>
-                        <SaveAsPresetButton entry={entry} />
-                    </div>
-                )}
-                {!isActiveBase && !isDescendantOfPresetEntry && (
-                    <div className={styles["delete-button-container"]}>
-                        <DeleteButton entry={entry} isPreset={isPreset} />
-                    </div>
-                )}
-            </div>
-            {menuStates.get(key) === "expanded" && (
                 <>
                     <div className={styles["table-entry-fields"]}>
                         <EntryFieldsToggleBar
@@ -168,7 +205,7 @@ export function TableEntry({
                         })}
                     </ul>
                 </>
-            )}
+            </ToggleBar>
         </li>
     );
 }
