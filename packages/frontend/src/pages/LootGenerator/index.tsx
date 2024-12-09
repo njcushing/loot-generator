@@ -2,9 +2,15 @@ import { createContext, useState, useEffect, useRef, useMemo, useCallback } from
 import useResizeObserverElement from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
 import { Generate } from "@/features/Generate";
-import { createLootItem, createLootTable, createLootPresetFromEntry } from "@/utils/generateLoot";
+import {
+    createItem,
+    createLootItem,
+    createLootTable,
+    createLootPresetFromEntry,
+} from "@/utils/generateLoot";
 import { Items, LootItem, LootTable, Loot, SortOptions, LootTableProps } from "@/utils/types";
 import { Design } from "@/features/Design";
+import { v4 as uuid } from "uuid";
 import * as exampleLoot from "./utils/exampleLoot";
 import { version } from "../../../package.json";
 import styles from "./index.module.css";
@@ -46,6 +52,8 @@ interface LootGeneratorContext {
         value: LootGeneratorState[K],
     ) => void;
 
+    addNewItem: () => void;
+
     getEntry: (
         key: string,
         place: Place,
@@ -75,6 +83,8 @@ interface LootGeneratorContext {
 const defaultLootGeneratorContext: LootGeneratorContext = {
     lootGeneratorState: defaultLootGeneratorState,
     setLootGeneratorStateProperty: () => {},
+
+    addNewItem: () => {},
 
     getEntry: () => null,
     mutateEntryField: () => false,
@@ -141,6 +151,12 @@ export function LootGenerator() {
         },
         [setLootGeneratorStateProperty],
     );
+
+    const addNewItem = useCallback(() => {
+        const newItems = new Map(lootGeneratorState.items);
+        newItems.set(uuid(), createItem());
+        setLootGeneratorStateProperty("items", newItems);
+    }, [lootGeneratorState.items, setLootGeneratorStateProperty]);
 
     const getEntry = useCallback(
         (
@@ -375,6 +391,8 @@ export function LootGenerator() {
                     lootGeneratorState,
                     setLootGeneratorStateProperty,
 
+                    addNewItem,
+
                     getEntry,
                     mutateEntryField,
                     deleteEntry,
@@ -387,6 +405,8 @@ export function LootGenerator() {
                 [
                     lootGeneratorState,
                     setLootGeneratorStateProperty,
+
+                    addNewItem,
 
                     getEntry,
                     mutateEntryField,
