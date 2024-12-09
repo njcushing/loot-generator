@@ -28,31 +28,26 @@ export function Item({ id }: TItem) {
     const { name } = item;
 
     return (
-        <li className={styles["item"]}>
-            <ToggleBar
-                name={name || "Unnamed Item"}
-                defaultState={menuStates.get(id) === "expanded"}
-                options={toggleBarOptions}
-                onClick={() => {
-                    setMenuStates((currentMenuStates) => {
-                        const newMenuStates = new Map(currentMenuStates);
-                        const currentState = newMenuStates.get(id);
-                        newMenuStates.set(
-                            id,
-                            currentState === "collapsed" ? "expanded" : "collapsed",
-                        );
-                        return newMenuStates;
-                    });
-                }}
-                style={{
-                    colours: {
-                        normal: "rgb(245, 158, 240)",
-                        hover: "rgb(235, 139, 230)",
-                        focus: "rgb(226, 125, 221)",
-                    },
-                    nameFontStyle: name ? "normal" : "italic",
-                }}
-            />
-        </li>
+        <ToggleBar
+            name={name || "Unnamed Item"}
+            defaultState={menuStates.get(id) === "expanded"}
+            options={toggleBarOptions}
+            onClick={() => {
+                setMenuStates((currentMenuStates) => {
+                    const newMenuStates = new Map(currentMenuStates);
+                    const currentState = newMenuStates.get(id);
+                    newMenuStates.set(id, currentState === "collapsed" ? "expanded" : "collapsed");
+                    return newMenuStates;
+                });
+            }}
+            style={{
+                colours: {
+                    normal: "rgb(245, 158, 240)",
+                    hover: "rgb(235, 139, 230)",
+                    focus: "rgb(226, 125, 221)",
+                },
+                nameFontStyle: name ? "normal" : "italic",
+            }}
+        />
     );
 }
