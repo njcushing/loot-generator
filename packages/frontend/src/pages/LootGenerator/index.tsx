@@ -53,6 +53,7 @@ interface LootGeneratorContext {
     ) => void;
 
     addNewItem: () => void;
+    updateItem: (key: string, fieldPaths: string[][], value: unknown) => boolean;
     deleteItem: (key: string) => boolean;
 
     getEntry: (
@@ -86,6 +87,7 @@ const defaultLootGeneratorContext: LootGeneratorContext = {
     setLootGeneratorStateProperty: () => {},
 
     addNewItem: () => {},
+    updateItem: () => false,
     deleteItem: () => false,
 
     getEntry: () => null,
@@ -159,6 +161,35 @@ export function LootGenerator() {
         newItems.set(uuid(), createItem());
         setLootGeneratorStateProperty("items", newItems);
     }, [lootGeneratorState.items, setLootGeneratorStateProperty]);
+
+    const updateItem = useCallback(
+        (id: string, fieldPaths: string[][], value: unknown): boolean => {
+            const itemsCopy = structuredClone(lootGeneratorState.items);
+            const item = itemsCopy.get(id);
+            if (!item) return false;
+
+            for (let i = 0; i < fieldPaths.length; i++) {
+                let currentField = item;
+                const fieldPath = fieldPaths[i];
+                for (let j = 0; j < fieldPath.length; j++) {
+                    const fieldName = fieldPath[j] as keyof typeof currentField;
+                    const field = currentField[fieldName];
+                    if (j === fieldPath.length - 1) {
+                        (currentField[fieldName] as unknown) = value;
+                        break;
+                    }
+                    if (typeof field === "object" && field !== null) {
+                        (currentField as unknown) = field;
+                    } else break;
+                }
+            }
+
+            saveCopy("items", itemsCopy);
+
+            return true;
+        },
+        [lootGeneratorState.items, saveCopy],
+    );
 
     const deleteItem = useCallback(
         (key: string): boolean => {
@@ -405,6 +436,7 @@ export function LootGenerator() {
                     setLootGeneratorStateProperty,
 
                     addNewItem,
+                    updateItem,
                     deleteItem,
 
                     getEntry,
@@ -421,6 +453,7 @@ export function LootGenerator() {
                     setLootGeneratorStateProperty,
 
                     addNewItem,
+                    updateItem,
                     deleteItem,
 
                     getEntry,
