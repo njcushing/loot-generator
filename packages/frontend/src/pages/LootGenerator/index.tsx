@@ -10,6 +10,7 @@ import {
 } from "@/utils/generateLoot";
 import { Items, LootItem, LootTable, Loot, SortOptions, LootTableProps } from "@/utils/types";
 import { Design } from "@/features/Design";
+import { updateFieldsInObject, TFieldToUpdate } from "@/utils/mutateFieldsInObject";
 import { v4 as uuid } from "uuid";
 import * as exampleLoot from "./utils/exampleLoot";
 import { version } from "../../../package.json";
@@ -53,7 +54,7 @@ interface LootGeneratorContext {
     ) => void;
 
     addNewItem: () => void;
-    updateItem: (key: string, fieldPaths: string[][], value: unknown) => boolean;
+    updateItem: (key: string, fieldsToMutate: TFieldToUpdate[]) => boolean;
     deleteItem: (key: string) => boolean;
 
     getEntry: (
@@ -64,12 +65,7 @@ interface LootGeneratorContext {
         path: LootTable[];
         copy: LootGeneratorState["lootTable"] | LootGeneratorState["presets"];
     } | null;
-    mutateEntryField: (
-        key: string,
-        fieldPaths: string[][],
-        value: unknown,
-        place: Place,
-    ) => boolean;
+    mutateEntryField: (key: string, fieldsToMutate: TFieldToUpdate[], place: Place) => boolean;
     deleteEntry: (key: string, place: Place) => boolean;
     createSubEntry: (
         key: string,
@@ -163,26 +159,12 @@ export function LootGenerator() {
     }, [lootGeneratorState.items, setLootGeneratorStateProperty]);
 
     const updateItem = useCallback(
-        (id: string, fieldPaths: string[][], value: unknown): boolean => {
+        (id: string, fieldsToUpdate: TFieldToUpdate[]): boolean => {
             const itemsCopy = structuredClone(lootGeneratorState.items);
             const item = itemsCopy.get(id);
             if (!item) return false;
 
-            for (let i = 0; i < fieldPaths.length; i++) {
-                let currentField = item;
-                const fieldPath = fieldPaths[i];
-                for (let j = 0; j < fieldPath.length; j++) {
-                    const fieldName = fieldPath[j] as keyof typeof currentField;
-                    const field = currentField[fieldName];
-                    if (j === fieldPath.length - 1) {
-                        (currentField[fieldName] as unknown) = value;
-                        break;
-                    }
-                    if (typeof field === "object" && field !== null) {
-                        (currentField as unknown) = field;
-                    } else break;
-                }
-            }
+            updateFieldsInObject(item, fieldsToUpdate);
 
             saveCopy("items", itemsCopy);
 
@@ -259,26 +241,12 @@ export function LootGenerator() {
     );
 
     const mutateEntryField = useCallback(
-        (key: string, fieldPaths: string[][], value: unknown, place: Place): boolean => {
+        (key: string, fieldsToUpdate: TFieldToUpdate[], place: Place): boolean => {
             const result = getEntry(key, place);
             if (!result) return false;
             const { entry, copy } = result;
 
-            for (let i = 0; i < fieldPaths.length; i++) {
-                let nestedEntry = entry;
-                const fieldPath = fieldPaths[i];
-                for (let j = 0; j < fieldPath.length; j++) {
-                    const fieldName = fieldPath[j] as keyof typeof nestedEntry;
-                    const field = nestedEntry[fieldName];
-                    if (j === fieldPath.length - 1) {
-                        (nestedEntry[fieldName] as unknown) = value;
-                        break;
-                    }
-                    if (typeof field === "object" && field !== null) {
-                        (nestedEntry as unknown) = field;
-                    } else break;
-                }
-            }
+            updateFieldsInObject(entry, fieldsToUpdate);
 
             saveCopy(place, copy);
 

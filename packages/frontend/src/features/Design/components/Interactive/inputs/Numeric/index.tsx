@@ -41,9 +41,10 @@ export function Numeric({
                     let newValue = Number(e.target.value);
                     if (min) newValue = Math.max(min, newValue);
                     if (max) newValue = Math.min(max, newValue);
-                    if (menuType === "items") updateItem(entryKey, [fieldPath], newValue);
+                    const fieldToUpdate = { path: fieldPath, newValue };
+                    if (menuType === "items") updateItem(entryKey, [fieldToUpdate]);
                     if (menuType === "active" || menuType === "presets") {
-                        mutateEntryField(entryKey, [fieldPath], newValue, menuType);
+                        mutateEntryField(entryKey, [fieldToUpdate], menuType);
                     }
                 }}
                 disabled={disabled}

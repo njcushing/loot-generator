@@ -26,9 +26,10 @@ export function Text({ entryKey, labelText, value, fieldPath, disabled = false }
                 value={value}
                 onChange={(e) => {
                     const newValue = e.target.value;
-                    if (menuType === "items") updateItem(entryKey, [fieldPath], newValue);
+                    const fieldToUpdate = { path: fieldPath, newValue };
+                    if (menuType === "items") updateItem(entryKey, [fieldToUpdate]);
                     if (menuType === "active" || menuType === "presets") {
-                        mutateEntryField(entryKey, [fieldPath], newValue, menuType);
+                        mutateEntryField(entryKey, [fieldToUpdate], menuType);
                     }
                 }}
                 disabled={disabled}
