@@ -1,4 +1,4 @@
-import { useContext, useCallback } from "react";
+import { useContext } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootItem, LootTable } from "@/utils/types";
 import { InteractiveContext } from "../..";
@@ -13,13 +13,8 @@ export type TText = {
 };
 
 export function Text({ entryKey, labelText, value, fieldPath, disabled = false }: TText) {
-    const { mutateEntryField } = useContext(LootGeneratorContext);
+    const { updateItem, mutateEntryField } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
-
-    const editEntryField = useCallback(
-        (newValue: unknown) => mutateEntryField(entryKey, [fieldPath], newValue, menuType),
-        [entryKey, fieldPath, mutateEntryField, menuType],
-    );
 
     return (
         <label className={styles["text-field-label"]} htmlFor={`${entryKey}-${fieldPath.join()}`}>
@@ -31,7 +26,10 @@ export function Text({ entryKey, labelText, value, fieldPath, disabled = false }
                 value={value}
                 onChange={(e) => {
                     const newValue = e.target.value;
-                    editEntryField(newValue);
+                    if (menuType === "items") updateItem(entryKey, [fieldPath], newValue);
+                    if (menuType === "active" || menuType === "presets") {
+                        mutateEntryField(entryKey, [fieldPath], newValue, menuType);
+                    }
                 }}
                 disabled={disabled}
             ></input>
