@@ -11,7 +11,7 @@ export type TItem = {
 };
 
 export function Item({ id }: TItem) {
-    const { lootGeneratorState } = useContext(LootGeneratorContext);
+    const { lootGeneratorState, deleteItem } = useContext(LootGeneratorContext);
     const { menuStates, setMenuStates } = useContext(InteractiveContext);
 
     const item = useMemo(() => lootGeneratorState.items.get(id), [id, lootGeneratorState.items]);
@@ -20,10 +20,11 @@ export function Item({ id }: TItem) {
         const options: TToggleBar["options"] = [];
         options.push({
             symbol: "Delete",
+            onClick: () => deleteItem(id),
             colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
         });
         return options;
-    }, []);
+    }, [id, deleteItem]);
 
     if (!item) return null;
 
