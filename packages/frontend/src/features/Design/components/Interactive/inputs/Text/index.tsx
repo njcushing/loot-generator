@@ -13,7 +13,7 @@ export type TText = {
 };
 
 export function Text({ entryKey, labelText, value, fieldPath, disabled = false }: TText) {
-    const { updateItem, mutateEntryField } = useContext(LootGeneratorContext);
+    const { updateItem, updateEntry } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
 
     return (
@@ -29,7 +29,7 @@ export function Text({ entryKey, labelText, value, fieldPath, disabled = false }
                     const fieldToUpdate = { path: fieldPath, newValue };
                     if (menuType === "items") updateItem(entryKey, [fieldToUpdate]);
                     if (menuType === "active" || menuType === "presets") {
-                        mutateEntryField(entryKey, [fieldToUpdate], menuType);
+                        updateEntry(entryKey, [fieldToUpdate], menuType);
                     }
                 }}
                 disabled={disabled}

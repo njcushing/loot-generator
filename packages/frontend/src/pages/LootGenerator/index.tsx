@@ -65,7 +65,7 @@ interface LootGeneratorContext {
         path: LootTable[];
         copy: LootGeneratorState["lootTable"] | LootGeneratorState["presets"];
     } | null;
-    mutateEntryField: (key: string, fieldsToMutate: TFieldToUpdate[], place: Place) => boolean;
+    updateEntry: (key: string, fieldsToMutate: TFieldToUpdate[], place: Place) => boolean;
     deleteEntry: (key: string, place: Place) => boolean;
     createSubEntry: (
         key: string,
@@ -87,7 +87,7 @@ const defaultLootGeneratorContext: LootGeneratorContext = {
     deleteItem: () => false,
 
     getEntry: () => null,
-    mutateEntryField: () => false,
+    updateEntry: () => false,
     deleteEntry: () => false,
     createSubEntry: () => false,
 
@@ -240,7 +240,7 @@ export function LootGenerator() {
         [getCopy],
     );
 
-    const mutateEntryField = useCallback(
+    const updateEntry = useCallback(
         (key: string, fieldsToUpdate: TFieldToUpdate[], place: Place): boolean => {
             const result = getEntry(key, place);
             if (!result) return false;
@@ -408,7 +408,7 @@ export function LootGenerator() {
                     deleteItem,
 
                     getEntry,
-                    mutateEntryField,
+                    updateEntry,
                     deleteEntry,
                     createSubEntry,
 
@@ -425,7 +425,7 @@ export function LootGenerator() {
                     deleteItem,
 
                     getEntry,
-                    mutateEntryField,
+                    updateEntry,
                     deleteEntry,
                     createSubEntry,
 
