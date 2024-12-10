@@ -53,6 +53,7 @@ interface LootGeneratorContext {
     ) => void;
 
     addNewItem: () => void;
+    deleteItem: (key: string) => boolean;
 
     getEntry: (
         key: string,
@@ -85,6 +86,7 @@ const defaultLootGeneratorContext: LootGeneratorContext = {
     setLootGeneratorStateProperty: () => {},
 
     addNewItem: () => {},
+    deleteItem: () => false,
 
     getEntry: () => null,
     mutateEntryField: () => false,
@@ -157,6 +159,17 @@ export function LootGenerator() {
         newItems.set(uuid(), createItem());
         setLootGeneratorStateProperty("items", newItems);
     }, [lootGeneratorState.items, setLootGeneratorStateProperty]);
+
+    const deleteItem = useCallback(
+        (key: string): boolean => {
+            if (!lootGeneratorState.items.has(key)) return false;
+            const newItems = new Map(lootGeneratorState.items);
+            newItems.delete(key);
+            setLootGeneratorStateProperty("items", newItems);
+            return true;
+        },
+        [lootGeneratorState.items, setLootGeneratorStateProperty],
+    );
 
     const getEntry = useCallback(
         (
@@ -392,6 +405,7 @@ export function LootGenerator() {
                     setLootGeneratorStateProperty,
 
                     addNewItem,
+                    deleteItem,
 
                     getEntry,
                     mutateEntryField,
@@ -407,6 +421,7 @@ export function LootGenerator() {
                     setLootGeneratorStateProperty,
 
                     addNewItem,
+                    deleteItem,
 
                     getEntry,
                     mutateEntryField,
