@@ -24,7 +24,7 @@ export type TToggleBar = {
     };
 };
 
-const defaultStyles: TToggleBar["style"] = {
+const defaultStyles: Required<TToggleBar["style"]> = {
     colours: {
         normal: "rgba(0, 0, 0, 0)",
         hover: "rgba(0, 0, 0, 0.1)",
@@ -42,7 +42,7 @@ export function ToggleBar({
     style,
 }: TToggleBar) {
     const concatenatedStyles = useMemo(
-        () => _.merge(structuredClone(defaultStyles), style),
+        () => _.merge(structuredClone(defaultStyles), style || {}),
         [style],
     );
 
@@ -53,7 +53,8 @@ export function ToggleBar({
     const switchBackgroundColor = useCallback(
         (color: CSSProperties["backgroundColor"]) => {
             if (!toggleBarRef.current) return;
-            toggleBarRef.current.style.backgroundColor = color || concatenatedStyles.colours.normal;
+            toggleBarRef.current.style.backgroundColor =
+                color || concatenatedStyles.colours.normal!;
         },
         [concatenatedStyles],
     );
@@ -96,9 +97,8 @@ export function ToggleBar({
                     {options?.map((option) => {
                         const { symbol, colours } = option;
                         const { normal } = concatenatedStyles.colours;
-                        let { hover, focus } = colours || concatenatedStyles;
-                        if (!hover) hover = concatenatedStyles.colours.hover;
-                        if (!focus) focus = concatenatedStyles.colours.focus;
+                        const hover = colours?.hover || concatenatedStyles.colours.hover;
+                        const focus = colours?.focus || concatenatedStyles.colours.focus;
                         return (
                             <button
                                 type="button"
