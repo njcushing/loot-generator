@@ -1,7 +1,6 @@
 import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
-import { v4 as uuid } from "uuid";
 import { EntryFieldsToggleBar } from "../EntryFieldsToggleBar";
 import { Inputs } from "../../inputs";
 import { InteractiveContext } from "../..";
