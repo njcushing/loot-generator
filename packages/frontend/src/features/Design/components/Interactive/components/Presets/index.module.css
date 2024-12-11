@@ -33,3 +33,13 @@
     height: 2px;
     margin: 8px 0px;
 }
+
+.create-new-preset-options {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}

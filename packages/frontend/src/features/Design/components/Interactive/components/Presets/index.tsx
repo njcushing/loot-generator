@@ -1,12 +1,12 @@
 import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
+import { Option } from "@/features/Design/components/Option";
 import { TableEntry } from "../TableEntry";
 import { ItemEntry } from "../ItemEntry";
 import styles from "./index.module.css";
-import { CreateNewPresetOptions } from "../CreateNewPresetOptions";
 
 export function Presets() {
-    const { lootGeneratorState } = useContext(LootGeneratorContext);
+    const { lootGeneratorState, createPreset } = useContext(LootGeneratorContext);
 
     const sortedPresets = useMemo(() => {
         return lootGeneratorState.presets.sort((a, b) => b.type.localeCompare(a.type));
@@ -34,7 +34,10 @@ export function Presets() {
                     return elements;
                 })}
             </ul>
-            <CreateNewPresetOptions />
+            <div className={styles["create-new-preset-options"]}>
+                <Option symbol="Table" text="New Table" onClick={() => createPreset("table")} />
+                <Option symbol="Nutrition" text="New Item" onClick={() => createPreset("item")} />
+            </div>
         </div>
     );
 }
