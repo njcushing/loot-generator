@@ -2,6 +2,7 @@ import { useCallback, useContext, useState, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { v4 as uuid } from "uuid";
 import { LootItem, LootPreset, LootTable } from "@/utils/types";
+import { Option } from "../Option";
 import styles from "./index.module.css";
 
 export type TJSONDisplay = {
@@ -111,34 +112,11 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
     return (
         <div className={styles["json-display"]}>
             <div className={styles["json-display-options"]}>
-                <button
-                    type="button"
-                    className={styles["show-hidden-fields-button"]}
-                    onClick={(e) => {
-                        setShowingHiddenFields(!showingHiddenFields);
-                        e.currentTarget.blur();
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.blur();
-                    }}
-                >
-                    <p className={`${styles["symbol"]} material-symbols-sharp`}>
-                        {showingHiddenFields ? "Visibility" : "Visibility_Off"}
-                    </p>
-                </button>
-                <button
-                    type="button"
-                    className={styles["copy-json-button"]}
-                    onClick={(e) => {
-                        copyJSON();
-                        e.currentTarget.blur();
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.blur();
-                    }}
-                >
-                    <p className={`${styles["symbol"]} material-symbols-sharp`}>Content_Copy</p>
-                </button>
+                <Option
+                    symbol={showingHiddenFields ? "Visibility" : "Visibility_Off"}
+                    onClick={() => setShowingHiddenFields(!showingHiddenFields)}
+                />
+                <Option symbol="Content_Copy" onClick={() => copyJSON()} />
             </div>
             <div className={styles["json-text"]}>
                 {displayJSONLine(lootGeneratorState.lootTable, 0)}
