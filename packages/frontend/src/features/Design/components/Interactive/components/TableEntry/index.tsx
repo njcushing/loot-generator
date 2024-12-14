@@ -82,7 +82,7 @@ export function TableEntry({
     return (
         <li className={styles["table-entry"]} key={key}>
             <ToggleBar
-                name={name || "Unnamed Item"}
+                name={name || "Unnamed Table"}
                 defaultState={menuStates.get(key) === "expanded"}
                 options={toggleBarOptions}
                 onClick={() => {
