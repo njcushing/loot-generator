@@ -15,6 +15,7 @@ export type TToggleBar = {
     onClick?: () => unknown;
     children?: JSX.Element | JSX.Element[];
     style?: {
+        size?: "m" | "s";
         colours?: {
             normal?: CSSProperties["color"];
             hover?: CSSProperties["color"];
@@ -26,6 +27,7 @@ export type TToggleBar = {
 };
 
 const defaultStyles: Required<TToggleBar["style"]> = {
+    size: "m",
     colours: {
         normal: "rgba(0, 0, 0, 0)",
         hover: "rgba(0, 0, 0, 0.1)",
@@ -68,7 +70,7 @@ export function ToggleBar({
     }
 
     return (
-        <div className={styles["toggle-bar-container"]}>
+        <div className={`${styles["toggle-bar-container"]} ${styles[concatenatedStyles.size]}`}>
             <div
                 className={styles["toggle-bar"]}
                 style={{ backgroundColor: concatenatedStyles.colours.normal }}
@@ -98,7 +100,7 @@ export function ToggleBar({
                             justifyContent: "center",
                             alignItems: "center",
 
-                            fontSize: "1.5rem",
+                            fontSize: concatenatedStyles.size === "m" ? "1.5rem" : "1.2rem",
                             fontWeight: 100,
                         }}
                     >
@@ -134,6 +136,14 @@ export function ToggleBar({
                                 onMouseLeave={(e) => {
                                     switchBackgroundColor(normal);
                                     e.currentTarget.blur();
+                                }}
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+
+                                    fontSize: concatenatedStyles.size === "m" ? "1.5rem" : "1.4rem",
+                                    fontWeight: 100,
                                 }}
                                 key={symbol}
                             >

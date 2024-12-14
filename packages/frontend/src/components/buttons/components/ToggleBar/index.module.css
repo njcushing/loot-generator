@@ -37,9 +37,17 @@
     background-color: transparent;
 
     width: 100%;
-    min-height: 2rem;
+    min-height: 1.7rem;
     height: 100%;
     padding: 2px;
+}
+
+.toggle-bar-container.m .toggle-bar-button {
+    min-height: 2rem;
+}
+
+.toggle-bar-container.s .toggle-bar-button {
+    min-height: 1.7rem;
 }
 
 @media (hover: hover) {
@@ -60,6 +68,14 @@
     font-size: 1rem;
     text-align: start;
     text-wrap: nowrap;
+}
+
+.toggle-bar-container.m .name {
+    font-size: 1rem;
+}
+
+.toggle-bar-container.s .name {
+    font-size: 0.9rem;
 }
 
 .options {
@@ -107,9 +123,14 @@
         z-index: 1;
     }
 
-    .toggle-bar:has(> .toggle-bar-button:hover),
-    .toggle-bar:has(> .options > *:hover) {
+    .toggle-bar-container.m .toggle-bar:has(> .toggle-bar-button:hover),
+    .toggle-bar-container.m .toggle-bar:has(> .options > *:hover) {
         outline-width: 3px;
+    }
+
+    .toggle-bar-container.s .toggle-bar:has(> .toggle-bar-button:hover),
+    .toggle-bar-container.s .toggle-bar:has(> .options > *:hover) {
+        outline-width: 2px;
     }
 }
 
@@ -117,7 +138,12 @@
     z-index: 1;
 }
 
-.toggle-bar:has(> .toggle-bar-button:focus),
-.toggle-bar:has(> .options > *:focus) {
+.toggle-bar-container.m .toggle-bar:has(> .toggle-bar-button:focus),
+.toggle-bar-container.m .toggle-bar:has(> .options > *:focus) {
     outline-width: 3px;
+}
+
+.toggle-bar-container.s .toggle-bar:has(> .toggle-bar-button:focus),
+.toggle-bar-container.s .toggle-bar:has(> .options > *:focus) {
+    outline-width: 2px;
 }
