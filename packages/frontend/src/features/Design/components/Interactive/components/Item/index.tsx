@@ -39,7 +39,7 @@ export function Item({ id }: TItem) {
                 setMenuStates((currentMenuStates) => {
                     const newMenuStates = new Map(currentMenuStates);
                     const currentState = newMenuStates.get(id);
-                    newMenuStates.set(id, currentState === "collapsed" ? "expanded" : "collapsed");
+                    newMenuStates.set(id, currentState === "expanded" ? "collapsed" : "expanded");
                     return newMenuStates;
                 });
             }}

@@ -91,7 +91,7 @@ export function TableEntry({
                         const currentState = newMenuStates.get(entry.key);
                         newMenuStates.set(
                             entry.key,
-                            currentState === "collapsed" ? "expanded" : "collapsed",
+                            currentState === "expanded" ? "collapsed" : "expanded",
                         );
                         return newMenuStates;
                     });
