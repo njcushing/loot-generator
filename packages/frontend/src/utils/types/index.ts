@@ -44,7 +44,7 @@ export type LootPreset = {
     id: string;
 } & GenerationCriteria;
 
-export type Preset = LootTable | LootItem;
+export type Preset = LootTable;
 
 export type Loot = Map<string, number>;
 

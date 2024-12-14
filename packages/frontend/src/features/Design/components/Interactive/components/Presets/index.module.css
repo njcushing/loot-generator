@@ -35,11 +35,9 @@
 }
 
 .create-new-preset-options {
-    display: grid;
-    grid-template-rows: minmax(0, 1fr);
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
+
+    width: 100%;
 }

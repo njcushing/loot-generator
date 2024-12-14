@@ -9,18 +9,11 @@ import styles from "./index.module.css";
 
 export type TItemEntry = {
     entry: LootItem;
-    isPreset?: boolean;
-    isPresetEntry?: boolean;
     isDescendantOfPresetEntry?: boolean;
 };
 
-export function ItemEntry({
-    entry,
-    isPreset = false,
-    isPresetEntry = false,
-    isDescendantOfPresetEntry = false,
-}: TItemEntry) {
-    const { deleteEntry, saveEntryAsPreset, deletePreset } = useContext(LootGeneratorContext);
+export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEntry) {
+    const { deleteEntry } = useContext(LootGeneratorContext);
     const { menuStates, setMenuStates, menuType } = useContext(InteractiveContext);
 
     const { key, props, criteria } = entry;
@@ -28,41 +21,17 @@ export function ItemEntry({
     const { min, max } = quantity;
     const { weight } = criteria;
 
-    const disablePropsFields = isPresetEntry || isDescendantOfPresetEntry;
-    const disableOtherFields = isDescendantOfPresetEntry;
-
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
-        if (!isPreset && !isPresetEntry) {
-            options.push({
-                symbol: "Save",
-                onClick: () => saveEntryAsPreset(key, menuType),
-            });
-        }
         if (!isDescendantOfPresetEntry) {
             options.push({
                 symbol: "Delete",
-                onClick: () => {
-                    if (isPreset) {
-                        deletePreset(key);
-                    } else {
-                        deleteEntry(key, menuType);
-                    }
-                },
+                onClick: () => deleteEntry(key, menuType),
                 colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
             });
         }
         return options;
-    }, [
-        key,
-        isPreset,
-        isPresetEntry,
-        isDescendantOfPresetEntry,
-        menuType,
-        deleteEntry,
-        saveEntryAsPreset,
-        deletePreset,
-    ]);
+    }, [key, isDescendantOfPresetEntry, menuType, deleteEntry]);
 
     return (
         <li className={styles["item-entry"]} key={key}>
@@ -83,9 +52,9 @@ export function ItemEntry({
                 }}
                 style={{
                     colours: {
-                        normal: isPresetEntry ? "rgb(241, 197, 114)" : "rgb(170, 238, 149)",
-                        hover: isPresetEntry ? "rgb(236, 185, 89)" : "rgb(151, 226, 128)",
-                        focus: isPresetEntry ? "rgb(226, 170, 66)" : "rgb(132, 206, 110)",
+                        normal: "rgb(170, 238, 149)",
+                        hover: "rgb(151, 226, 128)",
+                        focus: "rgb(132, 206, 110)",
                     },
                     nameFontStyle: name ? "normal" : "italic",
                 }}
@@ -99,7 +68,7 @@ export function ItemEntry({
                                 labelText="Name"
                                 value={name || ""}
                                 fieldPath={["props", "name"]}
-                                disabled={disablePropsFields}
+                                disabled={isDescendantOfPresetEntry}
                             />
                         }
                         subCategories={
@@ -113,7 +82,7 @@ export function ItemEntry({
                                             value={min || 1}
                                             min={0}
                                             fieldPath={["props", "quantity", "min"]}
-                                            disabled={disablePropsFields}
+                                            disabled={isDescendantOfPresetEntry}
                                         />
                                         <Inputs.Numeric
                                             entryKey={key}
@@ -121,7 +90,7 @@ export function ItemEntry({
                                             value={max || 1}
                                             min={0}
                                             fieldPath={["props", "quantity", "max"]}
-                                            disabled={disablePropsFields}
+                                            disabled={isDescendantOfPresetEntry}
                                         />
                                     </>
                                 }
@@ -136,7 +105,7 @@ export function ItemEntry({
                                 labelText="Weight"
                                 value={weight || 1}
                                 fieldPath={["criteria", "weight"]}
-                                disabled={disableOtherFields}
+                                disabled={isDescendantOfPresetEntry}
                             />
                         }
                     />

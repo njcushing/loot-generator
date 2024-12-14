@@ -2,7 +2,6 @@ import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { Option } from "@/features/Design/components/Option";
 import { TableEntry } from "../TableEntry";
-import { ItemEntry } from "../ItemEntry";
 import styles from "./index.module.css";
 
 export function Presets() {
@@ -28,15 +27,11 @@ export function Presets() {
                     if (preset.type === "table") {
                         elements.push(<TableEntry entry={preset} isPreset key={preset.key} />);
                     }
-                    if (preset.type === "item") {
-                        elements.push(<ItemEntry entry={preset} isPreset key={preset.key} />);
-                    }
                     return elements;
                 })}
             </ul>
             <div className={styles["create-new-preset-options"]}>
-                <Option symbol="Table" text="New Table" onClick={() => createPreset("table")} />
-                <Option symbol="Nutrition" text="New Item" onClick={() => createPreset("item")} />
+                <Option symbol="Add" onClick={() => createPreset()} style={{ width: "100%" }} />
             </div>
         </div>
     );

@@ -67,11 +67,6 @@ const substitutePresets = (lootTable: LootTable, presets: Preset[]) => {
                 const preset = presetsMap.get(entry.id);
                 if (!preset) {
                     mutableTable.props.loot.splice(i, 1);
-                } else if (preset.type === "item") {
-                    mutableTable.props.loot[i] = createLootItem({
-                        ...mutableTable.props.loot[i],
-                        props: structuredClone(preset.props),
-                    } as unknown as LootItem);
                 } else if (preset.type === "table") {
                     mutableTable.props.loot[i] = createLootTable({
                         ...mutableTable.props.loot[i],

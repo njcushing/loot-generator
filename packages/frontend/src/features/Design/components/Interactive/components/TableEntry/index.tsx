@@ -146,22 +146,6 @@ export function TableEntry({
                             if (subEntry.type === "preset") {
                                 const preset = lootGeneratorState.presetsMap.get(subEntry.id);
                                 if (!preset) return null;
-                                if (preset.type === "item") {
-                                    return (
-                                        <ItemEntry
-                                            entry={{
-                                                ...subEntry,
-                                                type: preset.type,
-                                                props: preset.props,
-                                            }}
-                                            isPresetEntry
-                                            isDescendantOfPresetEntry={
-                                                isPresetEntry || isDescendantOfPresetEntry
-                                            }
-                                            key={subEntry.key}
-                                        />
-                                    );
-                                }
                                 if (preset.type === "table") {
                                     return (
                                         <TableEntry
