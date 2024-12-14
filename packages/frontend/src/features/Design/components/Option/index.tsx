@@ -45,7 +45,7 @@ export function Option({ symbol, text, onClick, disabled = false, style }: TOpti
             }}
         >
             <p className={`${styles["symbol"]} material-symbols-sharp`}>{symbol}</p>
-            {text && <p className="truncate-ellipsis">New Table</p>}
+            {text && <p className="truncate-ellipsis">{text}</p>}
         </button>
     );
 }
