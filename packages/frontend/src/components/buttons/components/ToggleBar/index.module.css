@@ -53,16 +53,7 @@
 }
 
 .symbol {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    font-family: Roboto;
-    font-size: 1.6rem;
-    font-weight: 200;
-
-    width: 1.1rem;
-    height: 1.1rem;
+    width: 1.2rem;
 }
 
 .name {

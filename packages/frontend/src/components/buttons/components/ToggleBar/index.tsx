@@ -20,6 +20,7 @@ export type TToggleBar = {
             hover?: CSSProperties["color"];
             focus?: CSSProperties["color"];
         };
+        indicator?: "signs" | "arrows";
         nameFontStyle?: CSSProperties["fontStyle"];
     };
 };
@@ -30,6 +31,7 @@ const defaultStyles: Required<TToggleBar["style"]> = {
         hover: "rgba(0, 0, 0, 0.1)",
         focus: "rgba(0, 0, 0, 0.2)",
     },
+    indicator: "signs",
     nameFontStyle: "normal",
 };
 
@@ -59,6 +61,12 @@ export function ToggleBar({
         [concatenatedStyles],
     );
 
+    let toggleBarSymbol = "";
+    if (concatenatedStyles.indicator === "signs") toggleBarSymbol = isOpen ? "Remove" : "Add";
+    if (concatenatedStyles.indicator === "arrows") {
+        toggleBarSymbol = isOpen ? "Keyboard_Arrow_Down" : "Keyboard_Arrow_Right";
+    }
+
     return (
         <div className={styles["toggle-bar-container"]}>
             <div
@@ -83,7 +91,19 @@ export function ToggleBar({
                         e.currentTarget.blur();
                     }}
                 >
-                    <p className={styles["symbol"]}>{isOpen ? "-" : "+"}</p>
+                    <p
+                        className={`${styles["symbol"]} material-symbols-sharp`}
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+
+                            fontSize: "1.5rem",
+                            fontWeight: 100,
+                        }}
+                    >
+                        {toggleBarSymbol}
+                    </p>
                     <p
                         className={`${styles["name"]} truncate-ellipsis`}
                         style={{
