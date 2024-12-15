@@ -24,6 +24,7 @@ export type GenerationCriteria = {
 
 export type LootTableProps = {
     name?: string;
+    // eslint-disable-next-line no-use-before-define
     loot: (LootItem | LootTable | LootPreset)[];
 } & CustomFields;
 
