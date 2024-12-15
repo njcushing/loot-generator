@@ -9,7 +9,7 @@ import {
     Loot,
     LootTableProps,
 } from "../types";
-// import { randomRange } from "../randomRange";
+import { randomRange } from "../randomRange";
 
 type RecursiveOptional<T> = {
     [P in keyof T]?: T[P] extends object ? RecursiveOptional<T[P]> : T[P];
@@ -28,6 +28,10 @@ export const createLootItem = (props: RecursiveOptional<LootItem> = {}): LootIte
     criteria: {
         weight: props.criteria?.weight || 0,
         rolls: props.criteria?.rolls || {},
+    },
+    quantity: {
+        min: props.quantity?.min || 1,
+        max: props.quantity?.max || 1,
     },
 });
 
@@ -141,10 +145,9 @@ const rollTable = (
             // Create new entry
             if (!mutableLoot.has(rolledEntry.id)) mutableLoot.set(rolledEntry.id, 0);
             // Increment quantity of existing entry
-            // const { min, max } = rolledEntry.props.quantity;
+            const { min, max } = rolledEntry.quantity;
             const currentQuantity = mutableLoot.get(rolledEntry.id)!;
-            // mutableLoot.set(rolledEntry.id, currentQuantity + randomRange(min, max, true));
-            mutableLoot.set(rolledEntry.id, currentQuantity + 1);
+            mutableLoot.set(rolledEntry.id, currentQuantity + randomRange(min, max, true));
         }
     }
 

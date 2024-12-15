@@ -16,7 +16,9 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
     const { lootGeneratorState, deleteEntry } = useContext(LootGeneratorContext);
     const { menuStates, setMenuStates, menuType } = useContext(InteractiveContext);
 
-    const { key, criteria } = entry;
+    const { key, quantity, criteria } = entry;
+    const { min, max } = quantity;
+    const { weight } = criteria;
 
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
@@ -36,12 +38,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
     }, [entry.id, lootGeneratorState.items]);
     if (!item) return null;
 
-    const { name /* , quantity */ } = item;
-    /*
-    const { min, max } = quantity;
-    */
-    const [min, max] = [1, 1];
-    const { weight } = criteria;
+    const { name } = item;
 
     return (
         <li className={styles["item-entry"]} key={key}>
@@ -81,30 +78,28 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                                 disabled={isDescendantOfPresetEntry}
                             />
                         }
-                        subCategories={
-                            <EntryFieldsToggleBar
-                                name="Quantity"
-                                fields={
-                                    <>
-                                        <Inputs.Numeric
-                                            entryKey={key}
-                                            labelText="Min"
-                                            value={min || 1}
-                                            min={0}
-                                            fieldPath={["props", "quantity", "min"]}
-                                            disabled={isDescendantOfPresetEntry}
-                                        />
-                                        <Inputs.Numeric
-                                            entryKey={key}
-                                            labelText="Max"
-                                            value={max || 1}
-                                            min={0}
-                                            fieldPath={["props", "quantity", "max"]}
-                                            disabled={isDescendantOfPresetEntry}
-                                        />
-                                    </>
-                                }
-                            />
+                    />
+                    <EntryFieldsToggleBar
+                        name="Quantity"
+                        fields={
+                            <>
+                                <Inputs.Numeric
+                                    entryKey={key}
+                                    labelText="Min"
+                                    value={min || 1}
+                                    min={0}
+                                    fieldPath={["props", "quantity", "min"]}
+                                    disabled={isDescendantOfPresetEntry}
+                                />
+                                <Inputs.Numeric
+                                    entryKey={key}
+                                    labelText="Max"
+                                    value={max || 1}
+                                    min={0}
+                                    fieldPath={["props", "quantity", "max"]}
+                                    disabled={isDescendantOfPresetEntry}
+                                />
+                            </>
                         }
                     />
                     <EntryFieldsToggleBar

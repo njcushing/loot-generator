@@ -22,7 +22,6 @@ export type GenerationCriteria = {
     };
 };
 
-export type LootItemProps = Item & GenerationQuantity & CustomFields;
 export type LootTableProps = {
     name?: string;
     loot: (LootItem | LootTable | LootPreset)[];
@@ -32,7 +31,8 @@ export type LootItem = {
     type: "item";
     key: string;
     id: string | null;
-} & GenerationCriteria;
+} & GenerationQuantity &
+    GenerationCriteria;
 export type LootTable = {
     type: "table";
     key: string;
