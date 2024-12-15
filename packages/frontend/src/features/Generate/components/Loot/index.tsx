@@ -8,21 +8,25 @@ export function Loot() {
 
     return (
         <ul className={styles["loot"]}>
-            {[...sortLoot(lootGeneratorState.loot, lootGeneratorState.sortOptions).keys()].map(
-                (key) => {
-                    const item = lootGeneratorState.items.get(key);
-                    const quantity = lootGeneratorState.loot.get(key) || 0;
-                    const name = item ? item.name : key;
-                    return (
-                        item && (
-                            <li className={styles["item"]} key={key}>
-                                <p className={`${styles["item-name"]} truncate-ellipsis`}>{name}</p>
-                                <p className={styles["item-quantity"]}>{quantity}</p>
-                            </li>
-                        )
-                    );
-                },
-            )}
+            {[
+                ...sortLoot(
+                    lootGeneratorState.loot,
+                    lootGeneratorState.items,
+                    lootGeneratorState.sortOptions,
+                ).keys(),
+            ].map((key) => {
+                const item = lootGeneratorState.items.get(key);
+                const quantity = lootGeneratorState.loot.get(key) || 0;
+                const name = item ? item.name : key;
+                return (
+                    item && (
+                        <li className={styles["item"]} key={key}>
+                            <p className={`${styles["item-name"]} truncate-ellipsis`}>{name}</p>
+                            <p className={styles["item-quantity"]}>{quantity}</p>
+                        </li>
+                    )
+                );
+            })}
         </ul>
     );
 }

@@ -1,6 +1,6 @@
-import { Loot, SortOptions } from "../types";
+import { Items, Loot, SortOptions } from "../types";
 
-export const sortLoot = (loot: Loot, sorts: SortOptions): Loot => {
+export const sortLoot = (loot: Loot, items: Items, sorts: SortOptions): Loot => {
     let mutableLoot = new Map([...loot.entries()]);
 
     [...sorts.keys()].forEach((criteria) => {
@@ -10,11 +10,11 @@ export const sortLoot = (loot: Loot, sorts: SortOptions): Loot => {
                 // Sort by 'name' as a priority, and fall back on key in its absence
                 mutableLoot = new Map(
                     [...mutableLoot.entries()].sort((a, b) => {
-                        const [keyA, valueA] = a;
-                        const [keyB, valueB] = b;
+                        const [keyA] = a;
+                        const [keyB] = b;
 
-                        const nameA = valueA?.name;
-                        const nameB = valueB?.name;
+                        const nameA = items.get(keyA)?.name || keyA;
+                        const nameB = items.get(keyB)?.name || keyB;
 
                         let result;
 
@@ -30,8 +30,8 @@ export const sortLoot = (loot: Loot, sorts: SortOptions): Loot => {
             case "quantity":
                 mutableLoot = new Map(
                     [...mutableLoot.entries()].sort((a, b) => {
-                        const quantityA = a[1].quantity;
-                        const quantityB = b[1].quantity;
+                        const [, quantityA] = a;
+                        const [, quantityB] = b;
 
                         return (quantityA - quantityB) * (order === "descending" ? -1 : 1);
                     }),
