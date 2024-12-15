@@ -52,9 +52,9 @@ export function Item({ id, displayingWithinEntry = false }: TItem) {
             style={{
                 size: !displayingWithinEntry ? "m" : "s",
                 colours: {
-                    normal: "rgb(245, 158, 240)",
-                    hover: "rgb(235, 139, 230)",
-                    focus: "rgb(226, 125, 221)",
+                    normal: !displayingWithinEntry ? "rgb(245, 158, 240)" : "rgb(181, 186, 255)",
+                    hover: !displayingWithinEntry ? "rgb(235, 139, 230)" : "rgb(164, 169, 252)",
+                    focus: !displayingWithinEntry ? "rgb(226, 125, 221)" : "rgb(155, 161, 252)",
                 },
                 nameFontStyle: name ? "normal" : "italic",
             }}
