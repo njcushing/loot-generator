@@ -13,7 +13,7 @@ export type TItem = {
 
 export function Item({ id, displayingWithinEntry = false }: TItem) {
     const { lootGeneratorState, deleteItem } = useContext(LootGeneratorContext);
-    const { menuStates, setMenuStates } = useContext(InteractiveContext);
+    const { menuStates, setMenuStates, menuType } = useContext(InteractiveContext);
 
     const item = useMemo(() => lootGeneratorState.items.get(id), [id, lootGeneratorState.items]);
 
@@ -42,12 +42,17 @@ export function Item({ id, displayingWithinEntry = false }: TItem) {
             defaultState={menuStates.get(id) === "expanded"}
             options={toggleBarOptions}
             onClick={() => {
-                setMenuStates((currentMenuStates) => {
-                    const newMenuStates = new Map(currentMenuStates);
-                    const currentState = newMenuStates.get(id);
-                    newMenuStates.set(id, currentState === "expanded" ? "collapsed" : "expanded");
-                    return newMenuStates;
-                });
+                if (menuType === "items") {
+                    setMenuStates((currentMenuStates) => {
+                        const newMenuStates = new Map(currentMenuStates);
+                        const currentState = newMenuStates.get(id);
+                        newMenuStates.set(
+                            id,
+                            currentState === "expanded" ? "collapsed" : "expanded",
+                        );
+                        return newMenuStates;
+                    });
+                }
             }}
             style={{
                 size: !displayingWithinEntry ? "m" : "s",
