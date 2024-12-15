@@ -1,6 +1,15 @@
 import { v4 as uuid } from "uuid";
-import { Item, LootItem, LootTable, LootPreset, Preset, Loot, LootTableProps } from "../types";
-import { randomRange } from "../randomRange";
+import {
+    Item,
+    Items,
+    LootItem,
+    LootTable,
+    LootPreset,
+    Preset,
+    Loot,
+    LootTableProps,
+} from "../types";
+// import { randomRange } from "../randomRange";
 
 type RecursiveOptional<T> = {
     [P in keyof T]?: T[P] extends object ? RecursiveOptional<T[P]> : T[P];
@@ -9,20 +18,13 @@ type RecursiveOptional<T> = {
 export const createItem = (props: RecursiveOptional<Item> = {}): Item => ({
     name: props.name || "",
     sprite: props.sprite,
+    custom: props.custom || {},
 });
 
 export const createLootItem = (props: RecursiveOptional<LootItem> = {}): LootItem => ({
     type: "item",
     key: props.key || uuid(),
-    props: {
-        name: props.props?.name || "",
-        sprite: props.props?.sprite,
-        quantity: {
-            min: props.props?.quantity?.min || 1,
-            max: props.props?.quantity?.max || 1,
-        },
-        custom: props.props?.custom || {},
-    },
+    id: props.id || null,
     criteria: {
         weight: props.criteria?.weight || 0,
         rolls: props.criteria?.rolls || {},
@@ -55,7 +57,7 @@ export const createLootPresetFromEntry = (
     },
 });
 
-const substitutePresets = (lootTable: LootTable, presets: Preset[]) => {
+const substituteEntries = (lootTable: LootTable, items: Items, presets: Preset[]) => {
     const presetsMap = new Map(presets.map((preset) => [preset.key, preset]));
 
     const search = (table: LootTable) => {
@@ -63,6 +65,10 @@ const substitutePresets = (lootTable: LootTable, presets: Preset[]) => {
         const entryCount = table.props.loot.length;
         for (let i = entryCount - 1; i >= 0; i--) {
             const entry = table.props.loot[i];
+            if (entry.type === "item") {
+                const item = entry.id !== null ? items.get(entry.id) : null;
+                if (!item) mutableTable.props.loot.splice(i, 1);
+            }
             if (entry.type === "preset") {
                 const preset = presetsMap.get(entry.id);
                 if (!preset) {
@@ -97,7 +103,11 @@ const sumWeights = <K extends LootTable>(lootTable: K): K & { totalWeight: numbe
     return mutableLootTable;
 };
 
-const rollTable = (currentLoot: Loot, workingTable: SummedTable): [Loot, SummedTable] => {
+const rollTable = (
+    currentLoot: Loot,
+    items: Items,
+    workingTable: SummedTable,
+): [Loot, SummedTable] => {
     let mutableLoot = new Map(currentLoot);
     const mutableSummedTable = { ...workingTable };
 
@@ -119,18 +129,23 @@ const rollTable = (currentLoot: Loot, workingTable: SummedTable): [Loot, SummedT
     if (rolledEntry.type === "table") {
         [mutableLoot, rolledEntry as SummedTable] = rollTable(
             mutableLoot,
+            items,
             rolledEntry as SummedTable,
         );
     }
 
     // Rolled entry is an item; append to current loot
-    if (rolledEntry.type === "item") {
-        // Create new entry
-        if (!mutableLoot.has(rolledEntry.key)) mutableLoot.set(rolledEntry.key, 0);
-        // Increment quantity of existing entry
-        const { min, max } = rolledEntry.props.quantity;
-        const currentQuantity = mutableLoot.get(rolledEntry.key)!;
-        mutableLoot.set(rolledEntry.key, currentQuantity + randomRange(min, max, true));
+    if (rolledEntry.type === "item" && rolledEntry.id !== null) {
+        const item = items.get(rolledEntry.id);
+        if (item) {
+            // Create new entry
+            if (!mutableLoot.has(rolledEntry.id)) mutableLoot.set(rolledEntry.id, 0);
+            // Increment quantity of existing entry
+            // const { min, max } = rolledEntry.props.quantity;
+            const currentQuantity = mutableLoot.get(rolledEntry.id)!;
+            // mutableLoot.set(rolledEntry.id, currentQuantity + randomRange(min, max, true));
+            mutableLoot.set(rolledEntry.id, currentQuantity + 1);
+        }
     }
 
     return [mutableLoot, mutableSummedTable];
@@ -138,6 +153,7 @@ const rollTable = (currentLoot: Loot, workingTable: SummedTable): [Loot, SummedT
 
 export const generateLoot = (
     lootTable: LootTable,
+    items: Items,
     presets: Preset[],
     rolls: number = 1,
     appendToExisting: Loot = new Map(),
@@ -145,11 +161,11 @@ export const generateLoot = (
     let loot = new Map(appendToExisting);
 
     let workingTable = JSON.parse(JSON.stringify(lootTable));
-    substitutePresets(workingTable, presets);
+    substituteEntries(workingTable, items, presets);
     workingTable = sumWeights(workingTable);
 
     for (let i = 0; i < rolls; i++) {
-        [loot, workingTable] = rollTable(loot, workingTable as SummedTable);
+        [loot, workingTable] = rollTable(loot, items, workingTable as SummedTable);
     }
 
     return loot;

@@ -1,7 +1,9 @@
+export type CustomFields = { custom: { [key: string]: unknown } };
+
 export type Item = {
     name?: string;
     sprite?: URL;
-};
+} & CustomFields;
 export type Items = Map<string, Item>;
 
 export type GenerationQuantity = {
@@ -20,8 +22,6 @@ export type GenerationCriteria = {
     };
 };
 
-export type CustomFields = { custom: { [key: string]: unknown } };
-
 export type LootItemProps = Item & GenerationQuantity & CustomFields;
 export type LootTableProps = {
     name?: string;
@@ -31,7 +31,7 @@ export type LootTableProps = {
 export type LootItem = {
     type: "item";
     key: string;
-    props: LootItemProps;
+    id: string | null;
 } & GenerationCriteria;
 export type LootTable = {
     type: "table";

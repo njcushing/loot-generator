@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
-import { LootItem } from "@/utils/types";
+import { Item, LootItem } from "@/utils/types";
 import { InteractiveContext } from "../..";
 import { EntryFieldsToggleBar } from "../EntryFieldsToggleBar";
 import { Inputs } from "../../inputs";
@@ -13,13 +13,10 @@ export type TItemEntry = {
 };
 
 export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEntry) {
-    const { deleteEntry } = useContext(LootGeneratorContext);
+    const { lootGeneratorState, deleteEntry } = useContext(LootGeneratorContext);
     const { menuStates, setMenuStates, menuType } = useContext(InteractiveContext);
 
-    const { key, props, criteria } = entry;
-    const { name, quantity } = props;
-    const { min, max } = quantity;
-    const { weight } = criteria;
+    const { key, criteria } = entry;
 
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
@@ -32,6 +29,19 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
         }
         return options;
     }, [key, isDescendantOfPresetEntry, menuType, deleteEntry]);
+
+    const item: Item | null = useMemo(() => {
+        if (!entry.id) return null;
+        return lootGeneratorState.items.get(entry.id) || null;
+    }, [entry.id, lootGeneratorState.items]);
+    if (!item) return null;
+
+    const { name /* , quantity */ } = item;
+    /*
+    const { min, max } = quantity;
+    */
+    const [min, max] = [1, 1];
+    const { weight } = criteria;
 
     return (
         <li className={styles["item-entry"]} key={key}>
