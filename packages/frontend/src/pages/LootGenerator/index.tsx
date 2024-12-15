@@ -8,7 +8,15 @@ import {
     createLootTable,
     createLootPresetFromEntry,
 } from "@/utils/generateLoot";
-import { Items, LootItem, LootTable, Loot, SortOptions, LootTableProps } from "@/utils/types";
+import {
+    Items,
+    LootItem,
+    LootTable,
+    Preset,
+    Loot,
+    SortOptions,
+    LootTableProps,
+} from "@/utils/types";
 import { Design } from "@/features/Design";
 import { updateFieldsInObject, TFieldToUpdate } from "@/utils/mutateFieldsInObject";
 import { v4 as uuid } from "uuid";
@@ -20,8 +28,8 @@ export type LootGeneratorState = {
     items: Items;
     loot: Loot;
     lootTable: LootTable;
-    presets: (LootItem | LootTable)[];
-    presetsMap: Map<string, LootItem | LootTable>;
+    presets: Preset[];
+    presetsMap: Map<string, Preset>;
     quantitySelected: number;
     quantityOptionSelected: number;
     customQuantity: number;
