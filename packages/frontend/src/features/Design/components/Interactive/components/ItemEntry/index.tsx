@@ -76,7 +76,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                                     labelText="Min"
                                     value={min || 1}
                                     min={0}
-                                    fieldPath={["props", "quantity", "min"]}
+                                    fieldPath={["quantity", "min"]}
                                     disabled={isDescendantOfPresetEntry}
                                 />
                                 <Inputs.Numeric
@@ -84,7 +84,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                                     labelText="Max"
                                     value={max || 1}
                                     min={0}
-                                    fieldPath={["props", "quantity", "max"]}
+                                    fieldPath={["quantity", "max"]}
                                     disabled={isDescendantOfPresetEntry}
                                 />
                             </>
