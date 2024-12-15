@@ -8,9 +8,10 @@ import styles from "./index.module.css";
 
 export type TItem = {
     id: string;
+    displayingWithinEntry?: boolean;
 };
 
-export function Item({ id }: TItem) {
+export function Item({ id, displayingWithinEntry = false }: TItem) {
     const { lootGeneratorState, deleteItem } = useContext(LootGeneratorContext);
     const { menuStates, setMenuStates } = useContext(InteractiveContext);
 
@@ -18,21 +19,26 @@ export function Item({ id }: TItem) {
 
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
-        options.push({
-            symbol: "Delete",
-            onClick: () => deleteItem(id),
-            colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
-        });
+        if (!displayingWithinEntry) {
+            options.push({
+                symbol: "Delete",
+                onClick: () => deleteItem(id),
+                colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
+            });
+        }
         return options;
-    }, [id, deleteItem]);
+    }, [id, displayingWithinEntry, deleteItem]);
 
     if (!item) return null;
 
     const { name } = item;
+    let displayName;
+    if (!displayingWithinEntry) displayName = name || "Unnamed Item";
+    else displayName = "Item Properties";
 
     return (
         <ToggleBar
-            name={name || "Unnamed Item"}
+            name={displayName}
             defaultState={menuStates.get(id) === "expanded"}
             options={toggleBarOptions}
             onClick={() => {
@@ -44,6 +50,7 @@ export function Item({ id }: TItem) {
                 });
             }}
             style={{
+                size: !displayingWithinEntry ? "m" : "s",
                 colours: {
                     normal: "rgb(245, 158, 240)",
                     hover: "rgb(235, 139, 230)",
@@ -54,16 +61,12 @@ export function Item({ id }: TItem) {
             key={`${id}-${menuStates.get(id)}`}
         >
             <div className={styles["item-fields"]}>
-                <EntryFieldsToggleBar
-                    name="Props"
-                    fields={
-                        <Inputs.Text
-                            entryKey={id}
-                            labelText="Name"
-                            value={name || ""}
-                            fieldPath={["name"]}
-                        />
-                    }
+                <Inputs.Text
+                    entryKey={id}
+                    labelText="Name"
+                    value={name || ""}
+                    fieldPath={["name"]}
+                    disabled={displayingWithinEntry}
                 />
             </div>
         </ToggleBar>

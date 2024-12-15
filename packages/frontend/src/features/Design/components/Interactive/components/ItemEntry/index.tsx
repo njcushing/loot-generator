@@ -1,8 +1,9 @@
 import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
-import { Item, LootItem } from "@/utils/types";
+import { Item as ItemTypes, LootItem } from "@/utils/types";
 import { InteractiveContext } from "../..";
+import { Item } from "../Item";
 import { EntryFieldsToggleBar } from "../EntryFieldsToggleBar";
 import { Inputs } from "../../inputs";
 import styles from "./index.module.css";
@@ -16,7 +17,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
     const { lootGeneratorState, deleteEntry } = useContext(LootGeneratorContext);
     const { menuStates, setMenuStates, menuType } = useContext(InteractiveContext);
 
-    const { key, quantity, criteria } = entry;
+    const { key, id, quantity, criteria } = entry;
     const { min, max } = quantity;
     const { weight } = criteria;
 
@@ -35,7 +36,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
         return options;
     }, [key, isDescendantOfPresetEntry, menuType, deleteEntry]);
 
-    const item: Item | null = useMemo(() => {
+    const item: ItemTypes | null = useMemo(() => {
         if (!entry.id) return null;
         return lootGeneratorState.items.get(entry.id) || null;
     }, [entry.id, lootGeneratorState.items]);
@@ -69,6 +70,9 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                     nameFontStyle: name ? "normal" : "italic",
                 }}
             >
+                <div className={styles["item-container"]}>
+                    <Item id={id!} displayingWithinEntry />
+                </div>
                 <div className={styles["item-entry-fields"]}>
                     <EntryFieldsToggleBar
                         name="Quantity"
