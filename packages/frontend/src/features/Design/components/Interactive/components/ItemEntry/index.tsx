@@ -40,14 +40,13 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
         if (!entry.id) return null;
         return lootGeneratorState.items.get(entry.id) || null;
     }, [entry.id, lootGeneratorState.items]);
-    if (!item) return null;
 
-    const { name } = item;
+    const name = item && item.name ? item.name : "Unnamed Item";
 
     return (
         <li className={styles["item-entry"]} key={key}>
             <ToggleBar
-                name={name || "Unnamed Item"}
+                name={name}
                 defaultState={menuStates.get(key) === "expanded"}
                 options={toggleBarOptions}
                 onClick={() => {
@@ -71,7 +70,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                 }}
             >
                 <div className={styles["item-container"]}>
-                    <Item id={id!} displayingWithinEntry />
+                    {item && <Item id={id!} displayingWithinEntry />}
                 </div>
                 <div className={styles["item-entry-fields"]}>
                     <EntryFieldsToggleBar
