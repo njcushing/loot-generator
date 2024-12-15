@@ -68,18 +68,6 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
             >
                 <div className={styles["item-entry-fields"]}>
                     <EntryFieldsToggleBar
-                        name="Props"
-                        fields={
-                            <Inputs.Text
-                                entryKey={key}
-                                labelText="Name"
-                                value={name || ""}
-                                fieldPath={["props", "name"]}
-                                disabled={isDescendantOfPresetEntry}
-                            />
-                        }
-                    />
-                    <EntryFieldsToggleBar
                         name="Quantity"
                         fields={
                             <>
