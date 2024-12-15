@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useMemo } from "react";
-import { LootGeneratorContext, Place } from "@/pages/LootGenerator";
+import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { TabSelector } from "@/components/structural/components/TabSelector";
 import { Active } from "./components/Active";
 import { Presets } from "./components/Presets";
@@ -7,7 +7,7 @@ import { Items } from "./components/Items";
 import * as manageMenuStates from "./utils/manageMenuStates";
 
 interface InteractiveContext {
-    menuType: Place;
+    menuType: "active" | "presets" | "items";
     menuStates: manageMenuStates.MenuStates;
     setMenuStates: React.Dispatch<React.SetStateAction<manageMenuStates.MenuStates>>;
 }

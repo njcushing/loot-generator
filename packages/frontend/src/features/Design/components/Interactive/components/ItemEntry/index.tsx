@@ -25,7 +25,10 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
         if (!isDescendantOfPresetEntry) {
             options.push({
                 symbol: "Delete",
-                onClick: () => deleteEntry(key, menuType),
+                onClick: () => {
+                    if (menuType !== "active" && menuType !== "presets") return;
+                    deleteEntry(key, menuType);
+                },
                 colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
             });
         }

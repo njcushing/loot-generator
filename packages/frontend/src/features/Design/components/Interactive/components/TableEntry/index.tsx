@@ -50,7 +50,10 @@ export function TableEntry({
         if (!isPreset && !isPresetEntry) {
             options.push({
                 symbol: "Save",
-                onClick: () => saveEntryAsPreset(key, menuType),
+                onClick: () => {
+                    if (menuType !== "active" && menuType !== "presets") return;
+                    saveEntryAsPreset(key, menuType);
+                },
             });
         }
         if (!isActiveBase && !isDescendantOfPresetEntry) {
@@ -60,6 +63,7 @@ export function TableEntry({
                     if (isPreset) {
                         deletePreset(key);
                     } else {
+                        if (menuType !== "active" && menuType !== "presets") return;
                         deleteEntry(key, menuType);
                     }
                 },

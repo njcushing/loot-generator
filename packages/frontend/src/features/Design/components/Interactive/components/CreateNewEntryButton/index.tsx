@@ -35,7 +35,9 @@ export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
                         type="button"
                         className={styles["create-new-table-button"]}
                         onClick={(e) => {
-                            createSubEntry(entry.key, "table", menuType);
+                            if (menuType === "active" || menuType === "presets") {
+                                createSubEntry(entry.key, "table", menuType);
+                            }
                             setMenuOpen(!menuOpen);
                             e.currentTarget.blur();
                         }}
@@ -49,7 +51,9 @@ export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
                         type="button"
                         className={styles["create-new-item-button"]}
                         onClick={(e) => {
-                            createSubEntry(entry.key, "item", menuType);
+                            if (menuType === "active" || menuType === "presets") {
+                                createSubEntry(entry.key, "item", menuType);
+                            }
                             setMenuOpen(!menuOpen);
                             e.currentTarget.blur();
                         }}
