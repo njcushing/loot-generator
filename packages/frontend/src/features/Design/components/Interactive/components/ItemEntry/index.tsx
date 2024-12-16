@@ -43,6 +43,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
     }, [entry.id, lootGeneratorState.items]);
 
     const name = item && item.name ? item.name : "Unnamed Item";
+    const nameFontStyle = item && item.name ? "normal" : "italic";
 
     return (
         <li className={styles["item-entry"]} key={key}>
@@ -67,7 +68,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                         hover: "rgb(151, 226, 128)",
                         focus: "rgb(132, 206, 110)",
                     },
-                    nameFontStyle: name ? "normal" : "italic",
+                    nameFontStyle,
                 }}
             >
                 <div className={styles["item-container"]}>
