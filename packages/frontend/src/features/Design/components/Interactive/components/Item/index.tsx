@@ -9,12 +9,14 @@ export type TItem = {
     id: string;
     displayingWithinEntry?: boolean;
     displayingWithinSelection?: boolean;
+    onClick?: () => unknown;
 };
 
 export function Item({
     id,
     displayingWithinEntry = false,
     displayingWithinSelection = true,
+    onClick,
 }: TItem) {
     const { lootGeneratorState, deleteItem } = useContext(LootGeneratorContext);
     const { menuStates, setMenuStates, menuType } = useContext(InteractiveContext);
@@ -57,6 +59,7 @@ export function Item({
                         return newMenuStates;
                     });
                 }
+                if (onClick) onClick();
             }}
             style={{
                 size: !displayingWithinEntry ? "m" : "s",
