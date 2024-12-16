@@ -6,6 +6,7 @@ export type TToggleBarButton = {
     symbol?: string;
     onClick?: () => unknown;
     colours?: { hover?: CSSProperties["color"]; focus?: CSSProperties["color"] };
+    disabled?: boolean;
 };
 
 export type TToggleBar = {
@@ -13,6 +14,7 @@ export type TToggleBar = {
     name: string;
     options?: TToggleBarButton[];
     onClick?: () => unknown;
+    disabled?: boolean;
     children?: JSX.Element | JSX.Element[];
     style?: {
         size?: "m" | "s";
@@ -42,6 +44,7 @@ export function ToggleBar({
     defaultState = false,
     options,
     onClick,
+    disabled = false,
     children,
     style,
 }: TToggleBar) {
@@ -92,6 +95,7 @@ export function ToggleBar({
                         switchBackgroundColor(concatenatedStyles.colours.normal);
                         e.currentTarget.blur();
                     }}
+                    disabled={disabled}
                 >
                     <p
                         className={`${styles["symbol"]} material-symbols-sharp`}
@@ -117,7 +121,7 @@ export function ToggleBar({
                 </button>
                 <ul className={styles["options"]}>
                     {options?.map((option) => {
-                        const { symbol, colours } = option;
+                        const { symbol, colours, disabled: optionDisabled } = option;
                         const { normal } = concatenatedStyles.colours;
                         const hover = colours?.hover || concatenatedStyles.colours.hover;
                         const focus = colours?.focus || concatenatedStyles.colours.focus;
@@ -137,6 +141,7 @@ export function ToggleBar({
                                     switchBackgroundColor(normal);
                                     e.currentTarget.blur();
                                 }}
+                                disabled={optionDisabled}
                                 style={{
                                     display: "flex",
                                     justifyContent: "center",

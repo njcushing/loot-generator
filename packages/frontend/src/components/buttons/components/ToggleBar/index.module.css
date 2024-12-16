@@ -124,13 +124,13 @@
         z-index: 1;
     }
 
-    .toggle-bar-container.m .toggle-bar:has(> .toggle-bar-button:hover),
-    .toggle-bar-container.m .toggle-bar:has(> .options > *:hover) {
+    .toggle-bar-container.m .toggle-bar:has(> .toggle-bar-button:not(:disabled):hover),
+    .toggle-bar-container.m .toggle-bar:has(> .options > *:not(:disabled):hover) {
         outline-width: 3px;
     }
 
-    .toggle-bar-container.s .toggle-bar:has(> .toggle-bar-button:hover),
-    .toggle-bar-container.s .toggle-bar:has(> .options > *:hover) {
+    .toggle-bar-container.s .toggle-bar:has(> .toggle-bar-button:not(:disabled):hover),
+    .toggle-bar-container.s .toggle-bar:has(> .options > *:not(:disabled):hover) {
         outline-width: 2px;
     }
 }
@@ -139,12 +139,12 @@
     z-index: 1;
 }
 
-.toggle-bar-container.m .toggle-bar:has(> .toggle-bar-button:focus),
-.toggle-bar-container.m .toggle-bar:has(> .options > *:focus) {
+.toggle-bar-container.m .toggle-bar:has(> .toggle-bar-button:not(:disabled):focus),
+.toggle-bar-container.m .toggle-bar:has(> .options > *:not(:disabled):focus) {
     outline-width: 3px;
 }
 
-.toggle-bar-container.s .toggle-bar:has(> .toggle-bar-button:focus),
-.toggle-bar-container.s .toggle-bar:has(> .options > *:focus) {
+.toggle-bar-container.s .toggle-bar:has(> .toggle-bar-button:not(:disabled):focus),
+.toggle-bar-container.s .toggle-bar:has(> .options > *:not(:disabled):focus) {
     outline-width: 2px;
 }
