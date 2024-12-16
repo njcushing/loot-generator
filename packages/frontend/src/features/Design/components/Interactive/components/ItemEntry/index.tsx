@@ -4,6 +4,7 @@ import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar
 import { Item as ItemTypes, LootItem } from "@/utils/types";
 import { InteractiveContext } from "../..";
 import { Item } from "../Item";
+import { SelectItem } from "../SelectItem";
 import { EntryFieldsToggleBar } from "../EntryFieldsToggleBar";
 import { Inputs } from "../../inputs";
 import styles from "./index.module.css";
@@ -70,7 +71,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                 }}
             >
                 <div className={styles["item-container"]}>
-                    {item && <Item id={id!} displayingWithinEntry />}
+                    {item ? <Item id={id!} displayingWithinEntry /> : <SelectItem />}
                 </div>
                 <div className={styles["item-entry-fields"]}>
                     <EntryFieldsToggleBar
