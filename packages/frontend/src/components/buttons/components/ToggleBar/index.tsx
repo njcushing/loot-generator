@@ -23,7 +23,7 @@ export type TToggleBar = {
             hover?: CSSProperties["color"];
             focus?: CSSProperties["color"];
         };
-        indicator?: "signs" | "arrows";
+        indicator?: "signs" | "arrows" | "none";
         nameFontStyle?: CSSProperties["fontStyle"];
     };
 };
@@ -97,19 +97,21 @@ export function ToggleBar({
                     }}
                     disabled={disabled}
                 >
-                    <p
-                        className={`${styles["symbol"]} material-symbols-sharp`}
-                        style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
+                    {concatenatedStyles.indicator !== "none" && (
+                        <p
+                            className={`${styles["symbol"]} material-symbols-sharp`}
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
 
-                            fontSize: concatenatedStyles.size === "m" ? "1.5rem" : "1.2rem",
-                            fontWeight: 100,
-                        }}
-                    >
-                        {toggleBarSymbol}
-                    </p>
+                                fontSize: concatenatedStyles.size === "m" ? "1.5rem" : "1.2rem",
+                                fontWeight: 100,
+                            }}
+                        >
+                            {toggleBarSymbol}
+                        </p>
+                    )}
                     <p
                         className={`${styles["name"]} truncate-ellipsis`}
                         style={{

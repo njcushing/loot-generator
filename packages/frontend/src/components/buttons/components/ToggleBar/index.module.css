@@ -25,7 +25,7 @@
 
     display: grid;
     grid-template-rows: minmax(0, 1fr);
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: auto minmax(0, 1fr);
     align-content: end;
     align-items: center;
     gap: 6px;
@@ -39,7 +39,7 @@
     width: 100%;
     min-height: 1.7rem;
     height: 100%;
-    padding: 2px;
+    padding: 2px 2px 2px 4px;
 }
 
 .toggle-bar-container.m .toggle-bar-button {
