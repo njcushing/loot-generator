@@ -62,7 +62,7 @@ export function Item({
                 if (onClick) onClick();
             }}
             style={{
-                size: !displayingWithinEntry ? "m" : "s",
+                size: !displayingWithinEntry && !displayingWithinSelection ? "m" : "s",
                 colours: {
                     normal: !displayingWithinEntry ? "rgb(245, 158, 240)" : "rgb(181, 186, 255)",
                     hover: !displayingWithinEntry ? "rgb(235, 139, 230)" : "rgb(164, 169, 252)",
