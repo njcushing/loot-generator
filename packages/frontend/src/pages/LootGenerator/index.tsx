@@ -72,6 +72,7 @@ interface LootGeneratorContext {
         fieldsToMutate: TFieldToUpdate[],
         source: "active" | "presets",
     ) => boolean;
+    setItemOnEntry: (key: string, itemId: string, source: "active" | "presets") => boolean;
     deleteEntry: (key: string, source: "active" | "presets") => boolean;
     createSubEntry: (
         key: string,
@@ -94,6 +95,7 @@ const defaultLootGeneratorContext: LootGeneratorContext = {
 
     getEntry: () => null,
     updateEntry: () => false,
+    setItemOnEntry: () => false,
     deleteEntry: () => false,
     createSubEntry: () => false,
 
@@ -274,6 +276,24 @@ export function LootGenerator() {
         [saveCopy, getEntry],
     );
 
+    const setItemOnEntry = useCallback(
+        (key: string, itemId: string, source: "active" | "presets") => {
+            if (lootGeneratorState.items.has(itemId)) return false;
+
+            const result = getEntry(key, source);
+            if (!result) return false;
+            const { entry, copy } = result;
+            if (entry.type !== "item") return false;
+
+            entry.id = itemId;
+
+            saveCopy(source, copy);
+
+            return true;
+        },
+        [lootGeneratorState.items, getEntry, saveCopy],
+    );
+
     const deleteEntry = useCallback(
         (key: string, source: "active" | "presets"): boolean => {
             const result = getEntry(key, source);
@@ -422,6 +442,7 @@ export function LootGenerator() {
 
                     getEntry,
                     updateEntry,
+                    setItemOnEntry,
                     deleteEntry,
                     createSubEntry,
 
@@ -439,6 +460,7 @@ export function LootGenerator() {
 
                     getEntry,
                     updateEntry,
+                    setItemOnEntry,
                     deleteEntry,
                     createSubEntry,
 
