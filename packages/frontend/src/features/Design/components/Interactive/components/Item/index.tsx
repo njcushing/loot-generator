@@ -8,9 +8,14 @@ import styles from "./index.module.css";
 export type TItem = {
     id: string;
     displayingWithinEntry?: boolean;
+    displayingWithinSelection?: boolean;
 };
 
-export function Item({ id, displayingWithinEntry = false }: TItem) {
+export function Item({
+    id,
+    displayingWithinEntry = false,
+    displayingWithinSelection = true,
+}: TItem) {
     const { lootGeneratorState, deleteItem } = useContext(LootGeneratorContext);
     const { menuStates, setMenuStates, menuType } = useContext(InteractiveContext);
 
@@ -18,7 +23,7 @@ export function Item({ id, displayingWithinEntry = false }: TItem) {
 
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
-        if (!displayingWithinEntry) {
+        if (!displayingWithinEntry && !displayingWithinSelection) {
             options.push({
                 symbol: "Delete",
                 onClick: () => deleteItem(id),
@@ -26,7 +31,7 @@ export function Item({ id, displayingWithinEntry = false }: TItem) {
             });
         }
         return options;
-    }, [id, displayingWithinEntry, deleteItem]);
+    }, [id, displayingWithinEntry, displayingWithinSelection, deleteItem]);
 
     if (!item) return null;
 
@@ -60,6 +65,7 @@ export function Item({ id, displayingWithinEntry = false }: TItem) {
                     hover: !displayingWithinEntry ? "rgb(235, 139, 230)" : "rgb(164, 169, 252)",
                     focus: !displayingWithinEntry ? "rgb(226, 125, 221)" : "rgb(155, 161, 252)",
                 },
+                indicator: !displayingWithinSelection ? "signs" : "none",
                 nameFontStyle: name ? "normal" : "italic",
             }}
             key={`${id}-${menuStates.get(id)}`}
@@ -70,7 +76,7 @@ export function Item({ id, displayingWithinEntry = false }: TItem) {
                     labelText="Name"
                     value={name || ""}
                     fieldPath={["name"]}
-                    disabled={displayingWithinEntry}
+                    disabled={displayingWithinEntry || displayingWithinSelection}
                 />
             </div>
         </ToggleBar>
