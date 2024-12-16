@@ -4,6 +4,12 @@
     gap: 1px;
 }
 
+.item-container {
+    outline: 1px solid black;
+
+    padding: 4px;
+}
+
 .item-entry-fields {
     display: flex;
     flex-direction: column;
