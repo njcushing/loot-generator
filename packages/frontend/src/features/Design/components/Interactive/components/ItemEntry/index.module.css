@@ -10,6 +10,16 @@
     padding: 4px;
 }
 
+.selection-items {
+    overflow-y: auto;
+
+    border: 1px solid #000;
+    outline: 1px solid black;
+
+    max-height: 200px;
+    padding: 4px;
+}
+
 .item-entry-fields {
     display: flex;
     flex-direction: column;

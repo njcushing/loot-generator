@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { useContext, useState, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
 import { Item as ItemTypes, LootItem } from "@/utils/types";
@@ -17,6 +17,8 @@ export type TItemEntry = {
 export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEntry) {
     const { lootGeneratorState, deleteEntry } = useContext(LootGeneratorContext);
     const { menuStates, setMenuStates, menuType } = useContext(InteractiveContext);
+
+    const [selectingItem, setSelectingItem] = useState<boolean>(false);
 
     const { key, id, quantity, criteria } = entry;
     const { min, max } = quantity;
@@ -72,7 +74,23 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                 }}
             >
                 <div className={styles["item-container"]}>
-                    {item ? <Item id={id!} displayingWithinEntry /> : <SelectItem />}
+                    {item ? (
+                        <Item id={id!} displayingWithinEntry />
+                    ) : (
+                        <SelectItem onClick={() => setSelectingItem(!selectingItem)} />
+                    )}
+                    {selectingItem && (
+                        <ul className={styles["selection-items"]}>
+                            {[...lootGeneratorState.items.keys()].map((itemId) => {
+                                const selectionItem = lootGeneratorState.items.get(itemId);
+                                return (
+                                    selectionItem && (
+                                        <Item id={itemId} displayingWithinSelection key={itemId} />
+                                    )
+                                );
+                            })}
+                        </ul>
+                    )}
                 </div>
                 <div className={styles["item-entry-fields"]}>
                     <EntryFieldsToggleBar
