@@ -1,0 +1,15 @@
+.select-item {
+    outline: 1px solid black;
+
+    padding: 4px;
+}
+
+.selection-list {
+    overflow-y: auto;
+
+    border: 1px solid #000;
+    outline: 1px solid black;
+
+    max-height: 200px;
+    padding: 4px;
+}

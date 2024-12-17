@@ -1,40 +1,90 @@
-import { useMemo } from "react";
+import { useContext, useState, useMemo } from "react";
+import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
+import { Item as ItemTypes } from "@/utils/types";
+import { InteractiveContext } from "../..";
+import { Item } from "../Item";
+import styles from "./index.module.css";
 
 export type TSelectItem = {
-    onClick?: () => unknown;
+    entryKey: string;
+    id: string | null;
 };
 
-export function SelectItem({ onClick }: TSelectItem) {
+export function SelectItem({ entryKey, id }: TSelectItem) {
+    const { lootGeneratorState, setItemOnEntry } = useContext(LootGeneratorContext);
+    const { menuType } = useContext(InteractiveContext);
+
+    const [selectingItem, setSelectingItem] = useState<boolean>(false);
+
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
         options.push({
             symbol: "Edit",
-            onClick: () => {
-                if (onClick) onClick();
-            },
+            onClick: () => setSelectingItem(!selectingItem),
         });
         return options;
-    }, [onClick]);
+    }, [selectingItem]);
+
+    const item: ItemTypes | null = useMemo(() => {
+        if (!id) return null;
+        return lootGeneratorState.items.get(id) || null;
+    }, [id, lootGeneratorState.items]);
 
     return (
-        <ToggleBar
-            name="Please select an item"
-            defaultState={false}
-            options={toggleBarOptions}
-            onClick={() => {
-                if (onClick) onClick();
-            }}
-            style={{
-                size: "s",
-                colours: {
-                    normal: "rgb(181, 186, 255)",
-                    hover: "rgb(164, 169, 252)",
-                    focus: "rgb(155, 161, 252)",
-                },
-                indicator: "none",
-                nameFontStyle: "italic",
-            }}
-        />
+        <div className={styles["select-item"]}>
+            {item && !selectingItem ? (
+                <Item
+                    id={id!}
+                    displayMode="entry"
+                    onClick={(optionClicked) => {
+                        if (optionClicked === "edit") setSelectingItem(true);
+                    }}
+                />
+            ) : (
+                <ToggleBar
+                    name="Please select an item"
+                    defaultState={false}
+                    options={toggleBarOptions}
+                    onClick={() => setSelectingItem(!selectingItem)}
+                    style={{
+                        size: "s",
+                        colours: {
+                            normal: "rgb(181, 186, 255)",
+                            hover: "rgb(164, 169, 252)",
+                            focus: "rgb(155, 161, 252)",
+                        },
+                        indicator: "none",
+                        nameFontStyle: "italic",
+                    }}
+                />
+            )}
+            {selectingItem && (
+                <ul className={styles["selection-list"]}>
+                    {[...lootGeneratorState.items.keys()].map((itemId) => {
+                        const selectionItem = lootGeneratorState.items.get(itemId);
+                        return (
+                            selectionItem && (
+                                <Item
+                                    id={itemId}
+                                    displayMode="selection"
+                                    onClick={() => {
+                                        if (menuType === "active" || menuType === "presets") {
+                                            const success = setItemOnEntry(
+                                                entryKey,
+                                                itemId,
+                                                menuType,
+                                            );
+                                            if (success) setSelectingItem(false);
+                                        }
+                                    }}
+                                    key={itemId}
+                                />
+                            )
+                        );
+                    })}
+                </ul>
+            )}
+        </div>
     );
 }

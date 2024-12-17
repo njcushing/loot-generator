@@ -1,9 +1,8 @@
-import { useContext, useState, useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
 import { Item as ItemTypes, LootItem } from "@/utils/types";
 import { InteractiveContext } from "../..";
-import { Item } from "../Item";
 import { SelectItem } from "../SelectItem";
 import { EntryFieldsToggleBar } from "../EntryFieldsToggleBar";
 import { Inputs } from "../../inputs";
@@ -15,10 +14,8 @@ export type TItemEntry = {
 };
 
 export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEntry) {
-    const { lootGeneratorState, setItemOnEntry, deleteEntry } = useContext(LootGeneratorContext);
+    const { lootGeneratorState, deleteEntry } = useContext(LootGeneratorContext);
     const { menuStates, setMenuStates, menuType } = useContext(InteractiveContext);
-
-    const [selectingItem, setSelectingItem] = useState<boolean>(false);
 
     const { key, id, quantity, criteria } = entry;
     const { min, max } = quantity;
@@ -73,48 +70,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                     nameFontStyle,
                 }}
             >
-                <div className={styles["item-container"]}>
-                    {item && !selectingItem ? (
-                        <Item
-                            id={id!}
-                            displayMode="entry"
-                            onClick={(optionClicked) => {
-                                if (optionClicked === "edit") setSelectingItem(true);
-                            }}
-                        />
-                    ) : (
-                        <SelectItem onClick={() => setSelectingItem(!selectingItem)} />
-                    )}
-                    {selectingItem && (
-                        <ul className={styles["selection-items"]}>
-                            {[...lootGeneratorState.items.keys()].map((itemId) => {
-                                const selectionItem = lootGeneratorState.items.get(itemId);
-                                return (
-                                    selectionItem && (
-                                        <Item
-                                            id={itemId}
-                                            displayMode="selection"
-                                            onClick={() => {
-                                                if (
-                                                    menuType === "active" ||
-                                                    menuType === "presets"
-                                                ) {
-                                                    const success = setItemOnEntry(
-                                                        key,
-                                                        itemId,
-                                                        menuType,
-                                                    );
-                                                    if (success) setSelectingItem(false);
-                                                }
-                                            }}
-                                            key={itemId}
-                                        />
-                                    )
-                                );
-                            })}
-                        </ul>
-                    )}
-                </div>
+                <SelectItem entryKey={key} id={id} />
                 <div className={styles["item-entry-fields"]}>
                     <EntryFieldsToggleBar
                         name="Quantity"
