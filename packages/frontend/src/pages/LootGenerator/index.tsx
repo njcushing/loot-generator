@@ -278,7 +278,7 @@ export function LootGenerator() {
 
     const setItemOnEntry = useCallback(
         (key: string, itemId: string, source: "active" | "presets") => {
-            if (lootGeneratorState.items.has(itemId)) return false;
+            if (!lootGeneratorState.items.has(itemId)) return false;
 
             const result = getEntry(key, source);
             if (!result) return false;
