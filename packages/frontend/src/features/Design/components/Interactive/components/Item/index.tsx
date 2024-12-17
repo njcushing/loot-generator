@@ -48,7 +48,7 @@ export function Item({ id, displayMode = "normal", onClick }: TItem) {
     return (
         <ToggleBar
             name={displayName}
-            defaultState={menuStates.get(id) === "expanded"}
+            defaultState={menuType === "items" && menuStates.get(id) === "expanded"}
             options={toggleBarOptions}
             onClick={() => {
                 if (menuType === "items") {
