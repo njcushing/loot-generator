@@ -9,7 +9,7 @@ export function SelectItem({ onClick }: TSelectItem) {
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
         options.push({
-            symbol: "Edit_Square",
+            symbol: "Edit",
             onClick: () => {
                 if (onClick) onClick();
             },
