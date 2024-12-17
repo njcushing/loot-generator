@@ -32,8 +32,14 @@ export function Item({
                 colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
             });
         }
+        if (displayingWithinEntry) {
+            options.push({
+                symbol: "Edit",
+                onClick: () => onClick && onClick(),
+            });
+        }
         return options;
-    }, [id, displayingWithinEntry, displayingWithinSelection, deleteItem]);
+    }, [id, displayingWithinEntry, displayingWithinSelection, onClick, deleteItem]);
 
     if (!item) return null;
 
