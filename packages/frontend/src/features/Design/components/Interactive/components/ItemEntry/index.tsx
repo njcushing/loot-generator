@@ -93,7 +93,12 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                                                     menuType === "active" ||
                                                     menuType === "presets"
                                                 ) {
-                                                    setItemOnEntry(key, itemId, menuType);
+                                                    const success = setItemOnEntry(
+                                                        key,
+                                                        itemId,
+                                                        menuType,
+                                                    );
+                                                    if (success) setSelectingItem(false);
                                                 }
                                             }}
                                             key={itemId}
