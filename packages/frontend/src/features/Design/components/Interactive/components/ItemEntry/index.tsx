@@ -15,7 +15,7 @@ export type TItemEntry = {
 };
 
 export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEntry) {
-    const { lootGeneratorState, deleteEntry } = useContext(LootGeneratorContext);
+    const { lootGeneratorState, setItemOnEntry, deleteEntry } = useContext(LootGeneratorContext);
     const { menuStates, setMenuStates, menuType } = useContext(InteractiveContext);
 
     const [selectingItem, setSelectingItem] = useState<boolean>(false);
@@ -85,7 +85,19 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                                 const selectionItem = lootGeneratorState.items.get(itemId);
                                 return (
                                     selectionItem && (
-                                        <Item id={itemId} displayingWithinSelection key={itemId} />
+                                        <Item
+                                            id={itemId}
+                                            displayingWithinSelection
+                                            onClick={() => {
+                                                if (
+                                                    menuType === "active" ||
+                                                    menuType === "presets"
+                                                ) {
+                                                    setItemOnEntry(key, itemId, menuType);
+                                                }
+                                            }}
+                                            key={itemId}
+                                        />
                                     )
                                 );
                             })}
