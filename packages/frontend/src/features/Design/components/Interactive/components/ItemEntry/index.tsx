@@ -74,8 +74,14 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                 }}
             >
                 <div className={styles["item-container"]}>
-                    {item ? (
-                        <Item id={id!} displayMode="entry" />
+                    {item && !selectingItem ? (
+                        <Item
+                            id={id!}
+                            displayMode="entry"
+                            onClick={(optionClicked) => {
+                                if (optionClicked === "edit") setSelectingItem(true);
+                            }}
+                        />
                     ) : (
                         <SelectItem onClick={() => setSelectingItem(!selectingItem)} />
                     )}
