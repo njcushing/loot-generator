@@ -75,7 +75,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
             >
                 <div className={styles["item-container"]}>
                     {item ? (
-                        <Item id={id!} displayingWithinEntry />
+                        <Item id={id!} displayMode="entry" />
                     ) : (
                         <SelectItem onClick={() => setSelectingItem(!selectingItem)} />
                     )}
@@ -87,7 +87,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                                     selectionItem && (
                                         <Item
                                             id={itemId}
-                                            displayingWithinSelection
+                                            displayMode="selection"
                                             onClick={() => {
                                                 if (
                                                     menuType === "active" ||
