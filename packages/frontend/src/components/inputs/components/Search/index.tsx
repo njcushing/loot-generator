@@ -1,7 +1,7 @@
 import styles from "./index.module.css";
 
 export type TSearch = {
-    value?: number;
+    value?: string;
     disabled?: boolean;
     onChange?: (value: string) => unknown;
 };
