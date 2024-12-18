@@ -15,7 +15,7 @@ export type TItemEntry = {
 
 export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEntry) {
     const { lootGeneratorState, deleteEntry } = useContext(LootGeneratorContext);
-    const { menuStates, setMenuStates, menuType } = useContext(InteractiveContext);
+    const { menuType } = useContext(InteractiveContext);
 
     const { key, id, quantity, criteria } = entry;
     const { min, max } = quantity;
@@ -48,19 +48,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
         <li className={styles["item-entry"]} key={key}>
             <ToggleBar
                 name={name}
-                defaultState={menuStates.get(key) === "expanded"}
                 options={toggleBarOptions}
-                onClick={() => {
-                    setMenuStates((currentMenuStates) => {
-                        const newMenuStates = new Map(currentMenuStates);
-                        const currentState = newMenuStates.get(entry.key);
-                        newMenuStates.set(
-                            entry.key,
-                            currentState === "expanded" ? "collapsed" : "expanded",
-                        );
-                        return newMenuStates;
-                    });
-                }}
                 style={{
                     colours: {
                         normal: "rgb(170, 238, 149)",

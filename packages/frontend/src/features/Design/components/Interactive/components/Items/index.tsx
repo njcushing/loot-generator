@@ -2,24 +2,22 @@ import { useContext, useState, useCallback } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { Option } from "@/features/Design/components/Option";
 import { Inputs } from "@/components/inputs";
-import { InteractiveContext } from "../..";
 import { Item } from "../Item";
 import styles from "./index.module.css";
 
 export function Items() {
     const { lootGeneratorState, addNewItem } = useContext(LootGeneratorContext);
-    const { setMenuStates } = useContext(InteractiveContext);
 
     const [currentSearch, setCurrentSearch] = useState<string>("");
     const filterRegex = new RegExp(`${currentSearch}`, "i");
 
     const expandItems = useCallback(() => {
-        setMenuStates(new Map(lootGeneratorState.items.keys().map((key) => [key, "expanded"])));
-    }, [lootGeneratorState.items, setMenuStates]);
+        // Temporarily removed functionality
+    }, []);
 
     const collapseItems = useCallback(() => {
-        setMenuStates(new Map(lootGeneratorState.items.keys().map((key) => [key, "collapsed"])));
-    }, [lootGeneratorState.items, setMenuStates]);
+        // Temporarily removed functionality
+    }, []);
 
     return (
         <div className={styles["items-tab"]}>

@@ -1,62 +1,20 @@
-import { createContext, useContext, useState, useEffect, useMemo } from "react";
-import { LootGeneratorContext } from "@/pages/LootGenerator";
+import { createContext, useMemo } from "react";
 import { TabSelector } from "@/components/structural/components/TabSelector";
 import { Active } from "./components/Active";
 import { Presets } from "./components/Presets";
 import { Items } from "./components/Items";
-import * as manageMenuStates from "./utils/manageMenuStates";
 
 interface InteractiveContext {
     menuType: "active" | "presets" | "items";
-    menuStates: manageMenuStates.MenuStates;
-    setMenuStates: React.Dispatch<React.SetStateAction<manageMenuStates.MenuStates>>;
 }
 
 const defaultInteractiveContext: InteractiveContext = {
     menuType: "active",
-    menuStates: new Map(),
-    setMenuStates: () => {},
 };
 
 export const InteractiveContext = createContext<InteractiveContext>(defaultInteractiveContext);
 
 export function Interactive() {
-    const { lootGeneratorState } = useContext(LootGeneratorContext);
-
-    const [activeMenuStates, setActiveMenuStates] = useState<Map<string, "collapsed" | "expanded">>(
-        () => {
-            return manageMenuStates.update([lootGeneratorState.lootTable], new Map(), new Map());
-        },
-    );
-    useEffect(() => {
-        setActiveMenuStates((currentActiveMenuStates) => {
-            return manageMenuStates.update(
-                [lootGeneratorState.lootTable],
-                currentActiveMenuStates,
-                new Map(),
-            );
-        });
-    }, [lootGeneratorState.lootTable]);
-
-    const [presetMenuStates, setPresetMenuStates] = useState<Map<string, "collapsed" | "expanded">>(
-        () => {
-            return manageMenuStates.update(lootGeneratorState.presets, new Map(), new Map());
-        },
-    );
-    useEffect(() => {
-        setPresetMenuStates((currentPresetMenuStates) => {
-            return manageMenuStates.update(
-                lootGeneratorState.presets,
-                currentPresetMenuStates,
-                new Map(),
-            );
-        });
-    }, [lootGeneratorState.presets]);
-
-    const [itemMenuStates, setItemMenuStates] = useState<Map<string, "collapsed" | "expanded">>(
-        new Map(),
-    );
-
     return (
         <TabSelector
             tabs={{
@@ -67,10 +25,8 @@ export function Interactive() {
                             value={useMemo(
                                 () => ({
                                     menuType: "active",
-                                    menuStates: activeMenuStates,
-                                    setMenuStates: setActiveMenuStates,
                                 }),
-                                [activeMenuStates, setActiveMenuStates],
+                                [],
                             )}
                         >
                             <Active />
@@ -85,10 +41,8 @@ export function Interactive() {
                             value={useMemo(
                                 () => ({
                                     menuType: "presets",
-                                    menuStates: presetMenuStates,
-                                    setMenuStates: setPresetMenuStates,
                                 }),
-                                [presetMenuStates, setPresetMenuStates],
+                                [],
                             )}
                         >
                             <Presets />
@@ -103,10 +57,8 @@ export function Interactive() {
                             value={useMemo(
                                 () => ({
                                     menuType: "items",
-                                    menuStates: itemMenuStates,
-                                    setMenuStates: setItemMenuStates,
                                 }),
-                                [itemMenuStates, setItemMenuStates],
+                                [],
                             )}
                         >
                             <Items />

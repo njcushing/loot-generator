@@ -2,7 +2,6 @@ import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
 import { Inputs } from "../../inputs";
-import { InteractiveContext } from "../..";
 import styles from "./index.module.css";
 
 export type TItem = {
@@ -13,7 +12,6 @@ export type TItem = {
 
 export function Item({ id, displayMode = "normal", onClick }: TItem) {
     const { lootGeneratorState, deleteItem } = useContext(LootGeneratorContext);
-    const { menuStates, setMenuStates, menuType } = useContext(InteractiveContext);
 
     const item = useMemo(() => lootGeneratorState.items.get(id), [id, lootGeneratorState.items]);
 
@@ -60,29 +58,15 @@ export function Item({ id, displayMode = "normal", onClick }: TItem) {
     return (
         <ToggleBar
             name={displayName}
-            defaultState={menuType === "items" && menuStates.get(id) === "expanded"}
             options={toggleBarOptions}
-            onClick={() => {
-                if (menuType === "items") {
-                    setMenuStates((currentMenuStates) => {
-                        const newMenuStates = new Map(currentMenuStates);
-                        const currentState = newMenuStates.get(id);
-                        newMenuStates.set(
-                            id,
-                            currentState === "expanded" ? "collapsed" : "expanded",
-                        );
-                        return newMenuStates;
-                    });
-                }
-                if (onClick) onClick("toggle");
-            }}
+            onClick={() => onClick && onClick("toggle")}
             style={{
                 size: displayMode === "normal" ? "m" : "s",
                 colours,
                 indicator: displayMode !== "selection" ? "signs" : "none",
                 nameFontStyle: name ? "normal" : "italic",
             }}
-            key={`${id}-${menuStates.get(id)}`}
+            key={id}
         >
             <div className={styles["item-fields"]}>
                 <Inputs.Text

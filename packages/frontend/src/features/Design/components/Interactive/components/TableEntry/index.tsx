@@ -26,7 +26,7 @@ export function TableEntry({
 }: TTableEntry) {
     const { lootGeneratorState, deleteEntry, saveEntryAsPreset, deletePreset } =
         useContext(LootGeneratorContext);
-    const { menuStates, setMenuStates, menuType } = useContext(InteractiveContext);
+    const { menuType } = useContext(InteractiveContext);
 
     const { key, props, criteria } = entry;
     const { name } = props;
@@ -87,19 +87,7 @@ export function TableEntry({
         <li className={styles["table-entry"]} key={key}>
             <ToggleBar
                 name={name || "Unnamed Table"}
-                defaultState={menuStates.get(key) === "expanded"}
                 options={toggleBarOptions}
-                onClick={() => {
-                    setMenuStates((currentMenuStates) => {
-                        const newMenuStates = new Map(currentMenuStates);
-                        const currentState = newMenuStates.get(entry.key);
-                        newMenuStates.set(
-                            entry.key,
-                            currentState === "expanded" ? "collapsed" : "expanded",
-                        );
-                        return newMenuStates;
-                    });
-                }}
                 style={{
                     colours: {
                         normal: isPresetEntry ? "rgb(241, 197, 114)" : "rgb(186, 240, 228)",
