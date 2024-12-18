@@ -7,7 +7,7 @@ import styles from "./index.module.css";
 
 export type TItem = {
     id: string;
-    displayMode?: "normal" | "entry" | "selection";
+    displayMode?: "normal" | "entry" | "entryViewOnly" | "selection";
     onClick?: (optionClicked: "toggle" | "delete" | "edit") => unknown;
 };
 
@@ -41,9 +41,21 @@ export function Item({ id, displayMode = "normal", onClick }: TItem) {
     if (!item) return null;
 
     const { name } = item;
-    let displayName;
-    if (displayMode !== "entry") displayName = name || "Unnamed Item";
-    else displayName = "Item Properties";
+    let displayName = name || "Unnamed Item";
+    if (displayMode === "entry" || displayMode === "entryViewOnly") displayName = "Item Properties";
+
+    let colours = {
+        normal: "rgb(245, 158, 240)",
+        hover: "rgb(235, 139, 230)",
+        focus: "rgb(226, 125, 221)",
+    };
+    if (displayMode === "entry" || displayMode === "entryViewOnly") {
+        colours = {
+            normal: "rgb(181, 186, 255)",
+            hover: "rgb(164, 169, 252)",
+            focus: "rgb(155, 161, 252)",
+        };
+    }
 
     return (
         <ToggleBar
@@ -66,11 +78,7 @@ export function Item({ id, displayMode = "normal", onClick }: TItem) {
             }}
             style={{
                 size: displayMode === "normal" ? "m" : "s",
-                colours: {
-                    normal: displayMode !== "entry" ? "rgb(245, 158, 240)" : "rgb(181, 186, 255)",
-                    hover: displayMode !== "entry" ? "rgb(235, 139, 230)" : "rgb(164, 169, 252)",
-                    focus: displayMode !== "entry" ? "rgb(226, 125, 221)" : "rgb(155, 161, 252)",
-                },
+                colours,
                 indicator: displayMode !== "selection" ? "signs" : "none",
                 nameFontStyle: name ? "normal" : "italic",
             }}
