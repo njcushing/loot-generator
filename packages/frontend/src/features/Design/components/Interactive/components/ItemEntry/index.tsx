@@ -70,7 +70,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                     nameFontStyle,
                 }}
             >
-                <SelectItem entryKey={key} id={id} />
+                <SelectItem entryKey={key} id={id} disabled={isDescendantOfPresetEntry} />
                 <div className={styles["item-entry-fields"]}>
                     <EntryFieldsToggleBar
                         name="Quantity"
