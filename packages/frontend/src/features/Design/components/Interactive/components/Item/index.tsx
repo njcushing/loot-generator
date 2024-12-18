@@ -7,7 +7,7 @@ import styles from "./index.module.css";
 
 export type TItem = {
     id: string;
-    displayMode: "normal" | "entry" | "selection";
+    displayMode?: "normal" | "entry" | "selection";
     onClick?: (optionClicked: "toggle" | "delete" | "edit") => unknown;
 };
 
