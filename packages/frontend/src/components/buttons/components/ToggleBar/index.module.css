@@ -65,6 +65,7 @@
 }
 
 .name {
+    color: black;
     font-size: 1rem;
     text-align: start;
     text-wrap: nowrap;
