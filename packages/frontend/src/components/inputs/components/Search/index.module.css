@@ -1,0 +1,15 @@
+.search-input {
+    color: black;
+    font-family: Roboto;
+    font-size: 0.9rem;
+
+    border: none;
+    outline: 1px solid black;
+
+    width: 100%;
+    padding: 3px;
+}
+
+.search-input:disabled {
+    background-color: rgba(0, 0, 0, 0.12);
+}
