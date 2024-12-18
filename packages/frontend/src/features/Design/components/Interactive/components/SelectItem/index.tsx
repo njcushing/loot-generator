@@ -9,9 +9,10 @@ import styles from "./index.module.css";
 export type TSelectItem = {
     entryKey: string;
     id: string | null;
+    disabled?: boolean;
 };
 
-export function SelectItem({ entryKey, id }: TSelectItem) {
+export function SelectItem({ entryKey, id, disabled }: TSelectItem) {
     const { lootGeneratorState, setItemOnEntry } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
 
@@ -19,12 +20,14 @@ export function SelectItem({ entryKey, id }: TSelectItem) {
 
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
-        options.push({
-            symbol: "Edit",
-            onClick: () => setSelectingItem(!selectingItem),
-        });
+        if (!disabled) {
+            options.push({
+                symbol: "Edit",
+                onClick: () => setSelectingItem(!selectingItem),
+            });
+        }
         return options;
-    }, [selectingItem]);
+    }, [disabled, selectingItem]);
 
     const item: ItemTypes | null = useMemo(() => {
         if (!id) return null;
@@ -36,17 +39,18 @@ export function SelectItem({ entryKey, id }: TSelectItem) {
             {item && !selectingItem ? (
                 <Item
                     id={id!}
-                    displayMode="entry"
+                    displayMode={!disabled ? "entry" : "entryViewOnly"}
                     onClick={(optionClicked) => {
                         if (optionClicked === "edit") setSelectingItem(true);
                     }}
                 />
             ) : (
                 <ToggleBar
-                    name="Please select an item"
+                    name={!disabled ? "Please select an item" : "Cannot select item"}
                     defaultState={false}
                     options={toggleBarOptions}
                     onClick={() => setSelectingItem(!selectingItem)}
+                    disabled={disabled}
                     style={{
                         size: "s",
                         colours: {
@@ -59,7 +63,7 @@ export function SelectItem({ entryKey, id }: TSelectItem) {
                     }}
                 />
             )}
-            {selectingItem && (
+            {!disabled && selectingItem && (
                 <ul className={styles["selection-list"]}>
                     {[...lootGeneratorState.items.keys()].map((itemId) => {
                         const selectionItem = lootGeneratorState.items.get(itemId);
