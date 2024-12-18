@@ -11,8 +11,9 @@
 }
 
 .items-tab-options {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-columns: 1fr repeat(2, auto);
     justify-content: end;
     align-items: center;
     flex-wrap: wrap;

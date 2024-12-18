@@ -1,6 +1,7 @@
 import { useCallback, useContext } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { Option } from "@/features/Design/components/Option";
+import { Inputs } from "@/components/inputs";
 import { InteractiveContext } from "../..";
 import { Item } from "../Item";
 import styles from "./index.module.css";
@@ -20,6 +21,7 @@ export function Items() {
     return (
         <div className={styles["items-tab"]}>
             <div className={styles["items-tab-options"]}>
+                <Inputs.Search />
                 <Option symbol="Expand_Content" onClick={() => expandItems()} />
                 <Option symbol="Collapse_Content" onClick={() => collapseItems()} />
             </div>
