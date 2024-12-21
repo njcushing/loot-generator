@@ -27,7 +27,7 @@ import styles from "./index.module.css";
 export type LootGeneratorState = {
     items: Items;
     loot: Loot;
-    lootTable: LootTable;
+    active: LootTable;
     presets: Preset[];
     presetsMap: Map<string, Preset>;
     quantitySelected: number;
@@ -39,7 +39,7 @@ export type LootGeneratorState = {
 const defaultLootGeneratorState: LootGeneratorState = {
     items: exampleLoot.items,
     loot: new Map(),
-    lootTable: exampleLoot.table,
+    active: exampleLoot.table,
     presets: [],
     presetsMap: new Map(),
     quantitySelected: 1,
@@ -65,7 +65,7 @@ interface LootGeneratorContext {
     ) => {
         entry: LootTableProps["loot"][number] | LootGeneratorState["presets"][number];
         path: LootTable[];
-        copy: LootGeneratorState["lootTable"] | LootGeneratorState["presets"];
+        copy: LootGeneratorState["active"] | LootGeneratorState["presets"];
     } | null;
     updateEntry: (
         key: string,
@@ -137,26 +137,26 @@ export function LootGenerator() {
             source: "active" | "presets" | "items",
         ): {
             copy:
-                | LootGeneratorState["lootTable"]
+                | LootGeneratorState["active"]
                 | LootGeneratorState["presets"]
                 | LootGeneratorState["items"];
         } => {
             let copy;
             if (source === "items") copy = lootGeneratorState.items;
-            if (source === "active") copy = lootGeneratorState.lootTable;
+            if (source === "active") copy = lootGeneratorState.active;
             if (source === "presets") copy = lootGeneratorState.presets;
             copy = structuredClone(copy)!;
 
             return { copy };
         },
-        [lootGeneratorState.lootTable, lootGeneratorState.presets, lootGeneratorState.items],
+        [lootGeneratorState.active, lootGeneratorState.presets, lootGeneratorState.items],
     );
 
     const saveCopy = useCallback(
         (
             source: "active" | "presets" | "items",
             copy:
-                | LootGeneratorState["lootTable"]
+                | LootGeneratorState["active"]
                 | LootGeneratorState["presets"]
                 | LootGeneratorState["items"],
         ) => {
@@ -164,7 +164,7 @@ export function LootGenerator() {
                 setLootGeneratorStateProperty("items", copy as LootGeneratorState["items"]);
             }
             if (source === "active") {
-                setLootGeneratorStateProperty("lootTable", copy as LootGeneratorState["lootTable"]);
+                setLootGeneratorStateProperty("active", copy as LootGeneratorState["active"]);
             }
             if (source === "presets") {
                 setLootGeneratorStateProperty("presets", copy as LootGeneratorState["presets"]);
@@ -213,20 +213,20 @@ export function LootGenerator() {
             entry: LootTableProps["loot"][number] | LootGeneratorState["presets"][number];
             path: LootTable[];
             index: number;
-            copy: LootGeneratorState["lootTable"] | LootGeneratorState["presets"];
+            copy: LootGeneratorState["active"] | LootGeneratorState["presets"];
         } | null => {
             let copy;
-            if (source === "active") copy = structuredClone(lootGeneratorState.lootTable);
+            if (source === "active") copy = structuredClone(lootGeneratorState.active);
             if (source === "presets") copy = structuredClone(lootGeneratorState.presets);
             if (!copy) return null;
 
             let origin;
-            if (source === "active") origin = (copy as LootGeneratorState["lootTable"]).props.loot;
+            if (source === "active") origin = (copy as LootGeneratorState["active"]).props.loot;
             if (source === "presets") origin = copy as LootGeneratorState["presets"];
             if (!origin) return null;
 
             const path: LootTable[] = [];
-            if (source === "active") path.push(copy as LootGeneratorState["lootTable"]);
+            if (source === "active") path.push(copy as LootGeneratorState["active"]);
 
             const search = (
                 currentEntry: LootTableProps["loot"] | LootGeneratorState["presets"],
@@ -235,7 +235,7 @@ export function LootGenerator() {
                 entry: LootTableProps["loot"][number] | LootGeneratorState["presets"][number];
                 path: LootTable[];
                 index: number;
-                copy: LootGeneratorState["lootTable"] | LootGeneratorState["presets"];
+                copy: LootGeneratorState["active"] | LootGeneratorState["presets"];
             } | null => {
                 for (let i = 0; i < currentEntry.length; i++) {
                     const subEntry = currentEntry[i];
@@ -258,7 +258,7 @@ export function LootGenerator() {
 
             return search(origin, path);
         },
-        [lootGeneratorState.lootTable, lootGeneratorState.presets],
+        [lootGeneratorState.active, lootGeneratorState.presets],
     );
 
     const updateEntry = useCallback(
@@ -385,7 +385,7 @@ export function LootGenerator() {
             if (!lootGeneratorState.presetsMap.has(key)) return false;
 
             const presetsCopy = getCopy("presets").copy as LootGeneratorState["presets"];
-            const activeCopy = getCopy("active").copy as LootGeneratorState["lootTable"];
+            const activeCopy = getCopy("active").copy as LootGeneratorState["active"];
 
             presetsCopy.splice(
                 presetsCopy.findIndex((preset) => preset.key === key),
@@ -420,7 +420,7 @@ export function LootGenerator() {
 
     useEffect(() => {
         setLootGeneratorState((current) => ({ ...current, loot: new Map() }));
-    }, [lootGeneratorState.lootTable]);
+    }, [lootGeneratorState.active]);
 
     useEffect(() => {
         const newPresetsMap = new Map(

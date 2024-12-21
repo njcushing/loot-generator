@@ -8,9 +8,7 @@ export function Active() {
 
     return (
         <ul className={styles["active"]}>
-            {lootGeneratorState.lootTable && (
-                <TableEntry entry={lootGeneratorState.lootTable} isActive />
-            )}
+            {lootGeneratorState.active && <TableEntry entry={lootGeneratorState.active} isActive />}
         </ul>
     );
 }
