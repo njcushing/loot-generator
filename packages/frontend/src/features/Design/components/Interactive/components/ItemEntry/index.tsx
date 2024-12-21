@@ -10,10 +10,15 @@ import styles from "./index.module.css";
 
 export type TItemEntry = {
     entry: LootItem;
+    isActive?: boolean;
     isDescendantOfPresetEntry?: boolean;
 };
 
-export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEntry) {
+export function ItemEntry({
+    entry,
+    isActive = false,
+    isDescendantOfPresetEntry = false,
+}: TItemEntry) {
     const { lootGeneratorState, deleteEntry } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
 
@@ -21,20 +26,25 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
     const { min, max } = quantity;
     const { weight } = criteria;
 
+    const disableItemSelection = isActive || isDescendantOfPresetEntry;
+    const disablePropsFields = isActive || isDescendantOfPresetEntry;
+
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
-        if (!isDescendantOfPresetEntry) {
-            options.push({
-                symbol: "Delete",
-                onClick: () => {
-                    if (menuType !== "active" && menuType !== "presets") return;
-                    deleteEntry(key, menuType);
-                },
-                colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
-            });
+        if (!isActive) {
+            if (!isDescendantOfPresetEntry) {
+                options.push({
+                    symbol: "Delete",
+                    onClick: () => {
+                        if (menuType !== "active" && menuType !== "presets") return;
+                        deleteEntry(key, menuType);
+                    },
+                    colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
+                });
+            }
         }
         return options;
-    }, [key, isDescendantOfPresetEntry, menuType, deleteEntry]);
+    }, [isActive, isDescendantOfPresetEntry, deleteEntry, menuType, key]);
 
     const item: ItemTypes | null = useMemo(() => {
         if (!entry.id) return null;
@@ -58,7 +68,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                     nameFontStyle,
                 }}
             >
-                <SelectItem entryKey={key} id={id} disabled={isDescendantOfPresetEntry} />
+                <SelectItem entryKey={key} id={id} disabled={disableItemSelection} />
                 <div className={styles["item-entry-fields"]}>
                     <EntryFieldsToggleBar
                         name="Quantity"
@@ -70,7 +80,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                                     value={typeof min === "number" ? min : 1}
                                     min={0}
                                     fieldPath={["quantity", "min"]}
-                                    disabled={isDescendantOfPresetEntry}
+                                    disabled={disablePropsFields}
                                 />
                                 <Inputs.Numeric
                                     entryKey={key}
@@ -78,7 +88,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                                     value={typeof max === "number" ? max : 1}
                                     min={0}
                                     fieldPath={["quantity", "max"]}
-                                    disabled={isDescendantOfPresetEntry}
+                                    disabled={disablePropsFields}
                                 />
                             </>
                         }
@@ -91,7 +101,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                                 labelText="Weight"
                                 value={typeof weight === "number" ? weight : 1}
                                 fieldPath={["criteria", "weight"]}
-                                disabled={isDescendantOfPresetEntry}
+                                disabled={disablePropsFields}
                             />
                         }
                     />

@@ -11,7 +11,7 @@ import styles from "./index.module.css";
 
 export type TTableEntry = {
     entry: LootTable;
-    isActiveBase?: boolean;
+    isActive?: boolean;
     isPreset?: boolean;
     isPresetEntry?: boolean;
     isDescendantOfPresetEntry?: boolean;
@@ -19,7 +19,7 @@ export type TTableEntry = {
 
 export function TableEntry({
     entry,
-    isActiveBase = false,
+    isActive = false,
     isPreset = false,
     isPresetEntry = false,
     isDescendantOfPresetEntry = false,
@@ -32,48 +32,50 @@ export function TableEntry({
     const { name } = props;
     const { weight } = criteria;
 
-    const disablePropsFields = isPresetEntry || isDescendantOfPresetEntry;
-    const disableOtherFields = isDescendantOfPresetEntry;
+    const disablePropsFields = isActive || isPresetEntry || isDescendantOfPresetEntry;
+    const disableOtherFields = isActive || isDescendantOfPresetEntry;
 
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
-        if (!isPresetEntry && !isDescendantOfPresetEntry) {
-            options.push({
-                symbol: "Add_Circle",
-            });
-        }
-        if (isPreset) {
-            options.push({
-                symbol: "Upload",
-            });
-        }
-        if (!isPreset && !isPresetEntry) {
-            options.push({
-                symbol: "Save",
-                onClick: () => {
-                    if (menuType !== "active" && menuType !== "presets") return;
-                    saveEntryAsPreset(key, menuType);
-                },
-            });
-        }
-        if (!isActiveBase && !isDescendantOfPresetEntry) {
-            options.push({
-                symbol: "Delete",
-                onClick: () => {
-                    if (isPreset) {
-                        deletePreset(key);
-                    } else {
+        if (!isActive) {
+            if (!isPresetEntry && !isDescendantOfPresetEntry) {
+                options.push({
+                    symbol: "Add_Circle",
+                });
+            }
+            if (isPreset) {
+                options.push({
+                    symbol: "Upload",
+                });
+            }
+            if (!isPreset && !isPresetEntry) {
+                options.push({
+                    symbol: "Save",
+                    onClick: () => {
                         if (menuType !== "active" && menuType !== "presets") return;
-                        deleteEntry(key, menuType);
-                    }
-                },
-                colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
-            });
+                        saveEntryAsPreset(key, menuType);
+                    },
+                });
+            }
+            if (!isDescendantOfPresetEntry) {
+                options.push({
+                    symbol: "Delete",
+                    onClick: () => {
+                        if (isPreset) {
+                            deletePreset(key);
+                        } else {
+                            if (menuType !== "active" && menuType !== "presets") return;
+                            deleteEntry(key, menuType);
+                        }
+                    },
+                    colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
+                });
+            }
         }
         return options;
     }, [
         key,
-        isActiveBase,
+        isActive,
         isPreset,
         isPresetEntry,
         isDescendantOfPresetEntry,
@@ -83,17 +85,19 @@ export function TableEntry({
         deletePreset,
     ]);
 
+    const toggleBarColours = {
+        normal: !isActive && isPresetEntry ? "rgb(241, 197, 114)" : "rgb(186, 240, 228)",
+        hover: !isActive && isPresetEntry ? "rgb(236, 185, 89)" : "rgb(157, 224, 210)",
+        focus: !isActive && isPresetEntry ? "rgb(226, 170, 66)" : "rgb(139, 206, 191)",
+    };
+
     return (
         <li className={styles["table-entry"]} key={key}>
             <ToggleBar
                 name={name || "Unnamed Table"}
                 options={toggleBarOptions}
                 style={{
-                    colours: {
-                        normal: isPresetEntry ? "rgb(241, 197, 114)" : "rgb(186, 240, 228)",
-                        hover: isPresetEntry ? "rgb(236, 185, 89)" : "rgb(157, 224, 210)",
-                        focus: isPresetEntry ? "rgb(226, 170, 66)" : "rgb(139, 206, 191)",
-                    },
+                    colours: toggleBarColours,
                     nameFontStyle: name ? "normal" : "italic",
                 }}
             >
@@ -146,6 +150,7 @@ export function TableEntry({
                                                 type: preset.type,
                                                 props: preset.props,
                                             }}
+                                            isActive={isActive}
                                             isPresetEntry
                                             isDescendantOfPresetEntry={
                                                 isPresetEntry || isDescendantOfPresetEntry
@@ -159,6 +164,7 @@ export function TableEntry({
                                 return (
                                     <ItemEntry
                                         entry={{ ...subEntry, key: subEntryKey }}
+                                        isActive={isActive}
                                         isDescendantOfPresetEntry={
                                             isPresetEntry || isDescendantOfPresetEntry
                                         }
@@ -170,6 +176,7 @@ export function TableEntry({
                                 return (
                                     <TableEntry
                                         entry={{ ...subEntry, key: subEntryKey }}
+                                        isActive={isActive}
                                         isDescendantOfPresetEntry={
                                             isPresetEntry || isDescendantOfPresetEntry
                                         }
