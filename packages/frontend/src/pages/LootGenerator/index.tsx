@@ -27,7 +27,7 @@ import styles from "./index.module.css";
 export type LootGeneratorState = {
     items: Items;
     loot: Loot;
-    active: LootTable;
+    active: LootTable | null;
     presets: Preset[];
     presetsMap: Map<string, Preset>;
     quantitySelected: number;
@@ -39,8 +39,8 @@ export type LootGeneratorState = {
 const defaultLootGeneratorState: LootGeneratorState = {
     items: exampleLoot.items,
     loot: new Map(),
-    active: exampleLoot.table,
-    presets: [],
+    active: null,
+    presets: [exampleLoot.table],
     presetsMap: new Map(),
     quantitySelected: 1,
     quantityOptionSelected: 0,
