@@ -39,8 +39,8 @@ export function Numeric({
                 value={value}
                 onChange={(e) => {
                     let newValue = Number(e.target.value);
-                    if (min) newValue = Math.max(min, newValue);
-                    if (max) newValue = Math.min(max, newValue);
+                    if (typeof min === "number") newValue = Math.max(min, newValue);
+                    if (typeof max === "number") newValue = Math.min(max, newValue);
                     const fieldToUpdate = { path: fieldPath, newValue };
                     if (menuType === "items") updateItem(entryKey, [fieldToUpdate]);
                     if (menuType === "active" || menuType === "presets") {
