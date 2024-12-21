@@ -76,6 +76,7 @@ export function SortOptions() {
         <form className={styles["sort-options"]}>
             {createSortOptionField("name", "Name")}
             {createSortOptionField("quantity", "Quantity")}
+            {createSortOptionField("value", "Value")}
         </form>
     );
 }

@@ -37,6 +37,19 @@ export const sortLoot = (loot: Loot, items: Items, sorts: SortOptions): Loot => 
                     }),
                 );
                 break;
+            case "value":
+                mutableLoot = new Map(
+                    [...mutableLoot.entries()].sort((a, b) => {
+                        const [keyA] = a;
+                        const [keyB] = b;
+
+                        const valueA = items.get(keyA)?.value || 1;
+                        const valueB = items.get(keyB)?.value || 1;
+
+                        return (valueA - valueB) * (order === "descending" ? -1 : 1);
+                    }),
+                );
+                break;
             default:
         }
     });
