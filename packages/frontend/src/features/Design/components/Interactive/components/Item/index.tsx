@@ -38,7 +38,7 @@ export function Item({ id, displayMode = "normal", onClick }: TItem) {
 
     if (!item) return null;
 
-    const { name } = item;
+    const { name, value } = item;
     let displayName = name || "Unnamed Item";
     if (displayMode === "entry" || displayMode === "entryViewOnly") displayName = "Item Properties";
 
@@ -74,6 +74,14 @@ export function Item({ id, displayMode = "normal", onClick }: TItem) {
                     labelText="Name"
                     value={name || ""}
                     fieldPath={["name"]}
+                    disabled={displayMode !== "normal"}
+                />
+                <Inputs.Numeric
+                    entryKey={id}
+                    labelText="Value"
+                    value={typeof value === "number" ? value : 1}
+                    min={0}
+                    fieldPath={["value"]}
                     disabled={displayMode !== "normal"}
                 />
             </div>
