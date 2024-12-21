@@ -42,19 +42,7 @@ export function Items() {
                     })}
             </ul>
             <div className={styles["create-new-item-options"]}>
-                <button
-                    type="button"
-                    className={styles["create-new-item-button"]}
-                    onClick={(e) => {
-                        addNewItem();
-                        e.currentTarget.blur();
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.blur();
-                    }}
-                >
-                    <p className="truncate-ellipsis">+</p>
-                </button>
+                <Option symbol="Add" onClick={() => addNewItem()} style={{ width: "100%" }} />
             </div>
         </div>
     );
