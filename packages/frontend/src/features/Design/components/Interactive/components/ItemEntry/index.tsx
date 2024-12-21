@@ -67,7 +67,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                                 <Inputs.Numeric
                                     entryKey={key}
                                     labelText="Min"
-                                    value={min || 1}
+                                    value={typeof min === "number" ? min : 1}
                                     min={0}
                                     fieldPath={["quantity", "min"]}
                                     disabled={isDescendantOfPresetEntry}
@@ -75,7 +75,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                                 <Inputs.Numeric
                                     entryKey={key}
                                     labelText="Max"
-                                    value={max || 1}
+                                    value={typeof max === "number" ? max : 1}
                                     min={0}
                                     fieldPath={["quantity", "max"]}
                                     disabled={isDescendantOfPresetEntry}
@@ -89,7 +89,7 @@ export function ItemEntry({ entry, isDescendantOfPresetEntry = false }: TItemEnt
                             <Inputs.Numeric
                                 entryKey={key}
                                 labelText="Weight"
-                                value={weight || 1}
+                                value={typeof weight === "number" ? weight : 1}
                                 fieldPath={["criteria", "weight"]}
                                 disabled={isDescendantOfPresetEntry}
                             />

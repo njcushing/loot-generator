@@ -117,7 +117,7 @@ export function TableEntry({
                                 <Inputs.Numeric
                                     entryKey={key}
                                     labelText="Weight"
-                                    value={weight || 1}
+                                    value={typeof weight === "number" ? weight : 1}
                                     fieldPath={["criteria", "weight"]}
                                     disabled={disableOtherFields}
                                 />
