@@ -3,6 +3,7 @@ export type CustomFields = { custom: { [key: string]: unknown } };
 export type Item = {
     name?: string;
     sprite?: URL;
+    value: number;
 } & CustomFields;
 export type Items = Map<string, Item>;
 

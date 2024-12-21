@@ -18,6 +18,7 @@ type RecursiveOptional<T> = {
 export const createItem = (props: RecursiveOptional<Item> = {}): Item => ({
     name: props.name || "",
     sprite: props.sprite,
+    value: props.value || 1,
     custom: props.custom || {},
 });
 
