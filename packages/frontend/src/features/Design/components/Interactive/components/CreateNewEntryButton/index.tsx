@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootTable } from "@/utils/types";
-import { InteractiveContext } from "../..";
 import styles from "./index.module.css";
 
 export type TCreateNewEntryButton = {
@@ -10,7 +9,6 @@ export type TCreateNewEntryButton = {
 
 export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
     const { createSubEntry } = useContext(LootGeneratorContext);
-    const { menuType } = useContext(InteractiveContext);
 
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
@@ -35,9 +33,7 @@ export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
                         type="button"
                         className={styles["create-new-table-button"]}
                         onClick={(e) => {
-                            if (menuType === "active" || menuType === "presets") {
-                                createSubEntry(entry.key, "table", menuType);
-                            }
+                            createSubEntry(entry.key, "table");
                             setMenuOpen(!menuOpen);
                             e.currentTarget.blur();
                         }}
@@ -51,9 +47,7 @@ export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
                         type="button"
                         className={styles["create-new-item-button"]}
                         onClick={(e) => {
-                            if (menuType === "active" || menuType === "presets") {
-                                createSubEntry(entry.key, "item", menuType);
-                            }
+                            createSubEntry(entry.key, "item");
                             setMenuOpen(!menuOpen);
                             e.currentTarget.blur();
                         }}
@@ -62,19 +56,6 @@ export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
                         }}
                     >
                         Create New Item
-                    </button>
-                    <button
-                        type="button"
-                        className={styles["add-preset-button"]}
-                        onClick={(e) => {
-                            setMenuOpen(!menuOpen);
-                            e.currentTarget.blur();
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.blur();
-                        }}
-                    >
-                        Add Preset
                     </button>
                 </div>
             )}

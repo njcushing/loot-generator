@@ -1,9 +1,7 @@
 import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootTable } from "@/utils/types";
-import { v4 as uuid } from "uuid";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
-import { InteractiveContext } from "../..";
 import { ItemEntry } from "../ItemEntry";
 import { EntryFieldsToggleBar } from "../EntryFieldsToggleBar";
 import { Inputs } from "../../inputs";
@@ -12,60 +10,48 @@ import styles from "./index.module.css";
 export type TTableEntry = {
     entry: LootTable;
     isActive?: boolean;
-    isPreset?: boolean;
-    isPresetEntry?: boolean;
-    isDescendantOfPresetEntry?: boolean;
+    isBaseTable?: boolean;
+    isBaseTableEntry?: boolean;
+    isDescendantOfBaseTableEntry?: boolean;
 };
 
 export function TableEntry({
     entry,
     isActive = false,
-    isPreset = false,
-    isPresetEntry = false,
-    isDescendantOfPresetEntry = false,
+    isBaseTable = false,
+    isBaseTableEntry = false,
+    isDescendantOfBaseTableEntry = false,
 }: TTableEntry) {
-    const { lootGeneratorState, deleteEntry, saveEntryAsPreset, deletePreset } =
-        useContext(LootGeneratorContext);
-    const { menuType } = useContext(InteractiveContext);
+    const { deleteTable, deleteEntry } = useContext(LootGeneratorContext);
 
     const { key, props, criteria } = entry;
     const { name } = props;
     const { weight } = criteria;
 
-    const disablePropsFields = isActive || isPresetEntry || isDescendantOfPresetEntry;
-    const disableOtherFields = isActive || isDescendantOfPresetEntry;
+    const disablePropsFields = isActive || isBaseTableEntry || isDescendantOfBaseTableEntry;
+    const disableOtherFields = isActive || isDescendantOfBaseTableEntry;
 
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
         if (!isActive) {
-            if (!isPresetEntry && !isDescendantOfPresetEntry) {
+            if (!isBaseTableEntry && !isDescendantOfBaseTableEntry) {
                 options.push({
                     symbol: "Add_Circle",
                 });
             }
-            if (isPreset) {
+            if (isBaseTable) {
                 options.push({
                     symbol: "Upload",
                 });
             }
-            if (!isPreset && !isPresetEntry) {
-                options.push({
-                    symbol: "Save",
-                    onClick: () => {
-                        if (menuType !== "active" && menuType !== "presets") return;
-                        saveEntryAsPreset(key, menuType);
-                    },
-                });
-            }
-            if (!isDescendantOfPresetEntry) {
+            if (!isDescendantOfBaseTableEntry) {
                 options.push({
                     symbol: "Delete",
                     onClick: () => {
-                        if (isPreset) {
-                            deletePreset(key);
+                        if (isBaseTable) {
+                            deleteTable(key);
                         } else {
-                            if (menuType !== "active" && menuType !== "presets") return;
-                            deleteEntry(key, menuType);
+                            deleteEntry(key);
                         }
                     },
                     colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
@@ -76,19 +62,17 @@ export function TableEntry({
     }, [
         key,
         isActive,
-        isPreset,
-        isPresetEntry,
-        isDescendantOfPresetEntry,
-        menuType,
+        isBaseTable,
+        isBaseTableEntry,
+        isDescendantOfBaseTableEntry,
+        deleteTable,
         deleteEntry,
-        saveEntryAsPreset,
-        deletePreset,
     ]);
 
     const toggleBarColours = {
-        normal: !isActive && isPresetEntry ? "rgb(241, 197, 114)" : "rgb(186, 240, 228)",
-        hover: !isActive && isPresetEntry ? "rgb(236, 185, 89)" : "rgb(157, 224, 210)",
-        focus: !isActive && isPresetEntry ? "rgb(226, 170, 66)" : "rgb(139, 206, 191)",
+        normal: !isActive && isBaseTableEntry ? "rgb(241, 197, 114)" : "rgb(186, 240, 228)",
+        hover: !isActive && isBaseTableEntry ? "rgb(236, 185, 89)" : "rgb(157, 224, 210)",
+        focus: !isActive && isBaseTableEntry ? "rgb(226, 170, 66)" : "rgb(139, 206, 191)",
     };
 
     return (
@@ -130,43 +114,13 @@ export function TableEntry({
                     </div>
                     <ul className={styles["table-entries"]}>
                         {entry.props.loot.map((subEntry) => {
-                            /*
-                             * Doing this here to give all entries that are descendants of presets
-                             * a unique key that won't match any entries in the LootGenerator
-                             * component's 'lootTable' or 'presets' state values. These entries are
-                             * informational only; they are part of presets and thus should not be
-                             * mutable outside of the top-level preset itself in the 'Presets' tab.
-                             */
-                            const subEntryKey = isDescendantOfPresetEntry ? uuid() : subEntry.key;
-
-                            if (subEntry.type === "preset") {
-                                const preset = lootGeneratorState.presetsMap.get(subEntry.id);
-                                if (!preset) return null;
-                                if (preset.type === "table") {
-                                    return (
-                                        <TableEntry
-                                            entry={{
-                                                ...subEntry,
-                                                type: preset.type,
-                                                props: preset.props,
-                                            }}
-                                            isActive={isActive}
-                                            isPresetEntry
-                                            isDescendantOfPresetEntry={
-                                                isPresetEntry || isDescendantOfPresetEntry
-                                            }
-                                            key={subEntry.key}
-                                        />
-                                    );
-                                }
-                            }
                             if (subEntry.type === "item") {
                                 return (
                                     <ItemEntry
-                                        entry={{ ...subEntry, key: subEntryKey }}
+                                        entry={subEntry}
                                         isActive={isActive}
-                                        isDescendantOfPresetEntry={
-                                            isPresetEntry || isDescendantOfPresetEntry
+                                        isDescendantOfBaseTableEntry={
+                                            isBaseTableEntry || isDescendantOfBaseTableEntry
                                         }
                                         key={subEntry.key}
                                     />
@@ -175,10 +129,10 @@ export function TableEntry({
                             if (subEntry.type === "table") {
                                 return (
                                     <TableEntry
-                                        entry={{ ...subEntry, key: subEntryKey }}
+                                        entry={subEntry}
                                         isActive={isActive}
-                                        isDescendantOfPresetEntry={
-                                            isPresetEntry || isDescendantOfPresetEntry
+                                        isDescendantOfBaseTableEntry={
+                                            isBaseTableEntry || isDescendantOfBaseTableEntry
                                         }
                                         key={subEntry.key}
                                     />

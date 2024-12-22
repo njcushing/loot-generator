@@ -1,11 +1,11 @@
 import { createContext, useMemo } from "react";
 import { TabSelector } from "@/components/structural/components/TabSelector";
 import { Active } from "./components/Active";
-import { Presets } from "./components/Presets";
+import { Tables } from "./components/Tables";
 import { Items } from "./components/Items";
 
 interface InteractiveContext {
-    menuType: "active" | "presets" | "items";
+    menuType: "active" | "tables" | "items";
 }
 
 const defaultInteractiveContext: InteractiveContext = {
@@ -34,18 +34,18 @@ export function Interactive() {
                     ),
                     position: "left",
                 },
-                presets: {
-                    name: "Presets",
+                tables: {
+                    name: "Tables",
                     content: (
                         <InteractiveContext.Provider
                             value={useMemo(
                                 () => ({
-                                    menuType: "presets",
+                                    menuType: "tables",
                                 }),
                                 [],
                             )}
                         >
-                            <Presets />
+                            <Tables />
                         </InteractiveContext.Provider>
                     ),
                     position: "left",

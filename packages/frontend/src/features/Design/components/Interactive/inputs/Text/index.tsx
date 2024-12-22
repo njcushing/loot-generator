@@ -28,9 +28,7 @@ export function Text({ entryKey, labelText, value, fieldPath, disabled = false }
                     const newValue = e.target.value;
                     const fieldToUpdate = { path: fieldPath, newValue };
                     if (menuType === "items") updateItem(entryKey, [fieldToUpdate]);
-                    if (menuType === "active" || menuType === "presets") {
-                        updateEntry(entryKey, [fieldToUpdate], menuType);
-                    }
+                    if (menuType === "tables") updateEntry(entryKey, [fieldToUpdate]);
                 }}
                 disabled={disabled}
             ></input>

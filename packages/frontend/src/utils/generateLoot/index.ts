@@ -1,19 +1,24 @@
 import { v4 as uuid } from "uuid";
-import {
-    Item,
-    Items,
-    LootItem,
-    LootTable,
-    LootPreset,
-    Preset,
-    Loot,
-    LootTableProps,
-} from "../types";
+import { Item, Items, LootItem, LootTable, LootTables, Loot, LootTableProps } from "../types";
 import { randomRange } from "../randomRange";
 
 type RecursiveOptional<T> = {
     [P in keyof T]?: T[P] extends object ? RecursiveOptional<T[P]> : T[P];
 };
+
+export const createLootTable = (props: RecursiveOptional<LootTable> = {}): LootTable => ({
+    type: "table",
+    key: props.key || uuid(),
+    props: {
+        name: props.props?.name || "",
+        loot: (props.props?.loot as LootTableProps["loot"]) || [],
+        custom: props.props?.custom || {},
+    },
+    criteria: {
+        weight: props.criteria?.weight || 0,
+        rolls: props.criteria?.rolls || {},
+    },
+});
 
 export const createItem = (props: RecursiveOptional<Item> = {}): Item => ({
     name: props.name || "",
@@ -36,67 +41,32 @@ export const createLootItem = (props: RecursiveOptional<LootItem> = {}): LootIte
     },
 });
 
-export const createLootTable = (props: RecursiveOptional<LootTable> = {}): LootTable => ({
-    type: "table",
-    key: props.key || uuid(),
-    props: {
-        name: props.props?.name || "",
-        loot: (props.props?.loot as LootTableProps["loot"]) || [],
-        custom: props.props?.custom || {},
-    },
-    criteria: {
-        weight: props.criteria?.weight || 0,
-        rolls: props.criteria?.rolls || {},
-    },
-});
+const populateTable = (active: LootTable, tables: LootTables, items: Items) => {
+    const search = (currentTable: LootTable) => {
+        const mutableTable = currentTable;
+        const entryCount = currentTable.props.loot.length;
 
-export const createLootPresetFromEntry = (
-    props: RecursiveOptional<LootItem | LootTable> = {},
-): LootPreset => ({
-    type: "preset",
-    key: uuid(),
-    id: props.key || uuid(),
-    criteria: {
-        weight: props.criteria?.weight || 0,
-        rolls: props.criteria?.rolls || {},
-    },
-});
-
-const substituteEntries = (lootTable: LootTable, items: Items, presets: Preset[]) => {
-    const presetsMap = new Map(presets.map((preset) => [preset.key, preset]));
-
-    const search = (table: LootTable) => {
-        const mutableTable = table;
-        const entryCount = table.props.loot.length;
         for (let i = entryCount - 1; i >= 0; i--) {
-            const entry = table.props.loot[i];
+            const entry = currentTable.props.loot[i];
+
             if (entry.type === "item") {
-                const item = entry.id !== null ? items.get(entry.id) : null;
+                const item = items.get(entry.id || "");
                 if (!item) mutableTable.props.loot.splice(i, 1);
             }
-            if (entry.type === "preset") {
-                const preset = presetsMap.get(entry.id);
-                if (!preset) {
-                    mutableTable.props.loot.splice(i, 1);
-                } else if (preset.type === "table") {
-                    mutableTable.props.loot[i] = createLootTable({
-                        ...mutableTable.props.loot[i],
-                        props: structuredClone(preset.props),
-                    } as unknown as LootTable);
-                    search(mutableTable.props.loot[i] as LootTable);
-                } else mutableTable.props.loot.splice(i, 1);
+
+            if (entry.type === "table") {
+                search(mutableTable.props.loot[i] as LootTable);
             }
-            if (entry.type === "table") search(entry as LootTable);
         }
     };
 
-    search(lootTable);
+    search(active);
 };
 
 type SummedTable = LootTable & { totalWeight: number };
 
-const sumWeights = <K extends LootTable>(lootTable: K): K & { totalWeight: number } => {
-    const mutableLootTable = { ...lootTable, totalWeight: 0 };
+const sumWeights = <K extends LootTable>(active: K): K & { totalWeight: number } => {
+    const mutableLootTable = { ...active, totalWeight: 0 };
     mutableLootTable.props.loot.forEach((entry, i) => {
         mutableLootTable.totalWeight += entry.criteria.weight;
         if (entry.type === "table") {
@@ -108,11 +78,7 @@ const sumWeights = <K extends LootTable>(lootTable: K): K & { totalWeight: numbe
     return mutableLootTable;
 };
 
-const rollTable = (
-    currentLoot: Loot,
-    items: Items,
-    workingTable: SummedTable,
-): [Loot, SummedTable] => {
+const rollTable = (currentLoot: Loot, workingTable: SummedTable): [Loot, SummedTable] => {
     let mutableLoot = new Map(currentLoot);
     const mutableSummedTable = { ...workingTable };
 
@@ -134,15 +100,13 @@ const rollTable = (
     if (rolledEntry.type === "table") {
         [mutableLoot, rolledEntry as SummedTable] = rollTable(
             mutableLoot,
-            items,
             rolledEntry as SummedTable,
         );
     }
 
     // Rolled entry is an item; append to current loot
-    if (rolledEntry.type === "item" && rolledEntry.id !== null) {
-        const item = items.get(rolledEntry.id);
-        if (item) {
+    if (rolledEntry.type === "item") {
+        if (rolledEntry.id) {
             // Create new entry
             if (!mutableLoot.has(rolledEntry.id)) mutableLoot.set(rolledEntry.id, 0);
             // Increment quantity of existing entry
@@ -156,20 +120,22 @@ const rollTable = (
 };
 
 export const generateLoot = (
-    lootTable: LootTable,
+    active: LootTable | null,
+    tables: LootTables,
     items: Items,
-    presets: Preset[],
     rolls: number = 1,
     appendToExisting: Loot = new Map(),
 ): Loot => {
     let loot = new Map(appendToExisting);
 
-    let workingTable = JSON.parse(JSON.stringify(lootTable));
-    substituteEntries(workingTable, items, presets);
+    if (!active || !tables || !items) return loot;
+
+    let workingTable = structuredClone(active);
+    populateTable(workingTable, tables, items);
     workingTable = sumWeights(workingTable);
 
     for (let i = 0; i < rolls; i++) {
-        [loot, workingTable] = rollTable(loot, items, workingTable as SummedTable);
+        [loot, workingTable] = rollTable(loot, workingTable as SummedTable);
     }
 
     return loot;

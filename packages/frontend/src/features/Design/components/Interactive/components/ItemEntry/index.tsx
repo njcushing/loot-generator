@@ -2,7 +2,6 @@ import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
 import { Item as ItemTypes, LootItem } from "@/utils/types";
-import { InteractiveContext } from "../..";
 import { SelectItem } from "../SelectItem";
 import { EntryFieldsToggleBar } from "../EntryFieldsToggleBar";
 import { Inputs } from "../../inputs";
@@ -11,40 +10,36 @@ import styles from "./index.module.css";
 export type TItemEntry = {
     entry: LootItem;
     isActive?: boolean;
-    isDescendantOfPresetEntry?: boolean;
+    isDescendantOfBaseTableEntry?: boolean;
 };
 
 export function ItemEntry({
     entry,
     isActive = false,
-    isDescendantOfPresetEntry = false,
+    isDescendantOfBaseTableEntry = false,
 }: TItemEntry) {
     const { lootGeneratorState, deleteEntry } = useContext(LootGeneratorContext);
-    const { menuType } = useContext(InteractiveContext);
 
     const { key, id, quantity, criteria } = entry;
     const { min, max } = quantity;
     const { weight } = criteria;
 
-    const disableItemSelection = isActive || isDescendantOfPresetEntry;
-    const disablePropsFields = isActive || isDescendantOfPresetEntry;
+    const disableItemSelection = isActive || isDescendantOfBaseTableEntry;
+    const disablePropsFields = isActive || isDescendantOfBaseTableEntry;
 
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
         if (!isActive) {
-            if (!isDescendantOfPresetEntry) {
+            if (!isDescendantOfBaseTableEntry) {
                 options.push({
                     symbol: "Delete",
-                    onClick: () => {
-                        if (menuType !== "active" && menuType !== "presets") return;
-                        deleteEntry(key, menuType);
-                    },
+                    onClick: () => deleteEntry(key),
                     colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
                 });
             }
         }
         return options;
-    }, [isActive, isDescendantOfPresetEntry, deleteEntry, menuType, key]);
+    }, [isActive, isDescendantOfBaseTableEntry, deleteEntry, key]);
 
     const item: ItemTypes | null = useMemo(() => {
         if (!entry.id) return null;

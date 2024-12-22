@@ -26,7 +26,7 @@ export type GenerationCriteria = {
 export type LootTableProps = {
     name?: string;
     // eslint-disable-next-line no-use-before-define
-    loot: (LootItem | LootTable | LootPreset)[];
+    loot: (LootItem | LootTable)[];
 } & CustomFields;
 
 export type LootItem = {
@@ -40,13 +40,8 @@ export type LootTable = {
     key: string;
     props: LootTableProps;
 } & GenerationCriteria;
-export type LootPreset = {
-    type: "preset";
-    key: string;
-    id: string;
-} & GenerationCriteria;
 
-export type Preset = LootTable;
+export type LootTables = Map<string, LootTable>;
 
 export type Loot = Map<string, number>;
 

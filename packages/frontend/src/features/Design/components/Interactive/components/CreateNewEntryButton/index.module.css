@@ -58,8 +58,7 @@
 }
 
 .create-new-table-button,
-.create-new-item-button,
-.add-preset-button {
+.create-new-item-button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -79,8 +78,7 @@
 
 @media (hover: hover) {
     .create-new-table-button:hover,
-    .create-new-item-button:hover,
-    .add-preset-button:hover {
+    .create-new-item-button:hover {
         cursor: pointer;
 
         background-color: rgba(255, 255, 255, 0.4);
@@ -88,8 +86,7 @@
 }
 
 .create-new-table-button:focus,
-.create-new-item-button:focus,
-.add-preset-button:focus {
+.create-new-item-button:focus {
     cursor: pointer;
 
     background-color: rgba(255, 255, 255, 0.3);

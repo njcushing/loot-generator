@@ -43,9 +43,7 @@ export function Numeric({
                     if (typeof max === "number") newValue = Math.min(max, newValue);
                     const fieldToUpdate = { path: fieldPath, newValue };
                     if (menuType === "items") updateItem(entryKey, [fieldToUpdate]);
-                    if (menuType === "active" || menuType === "presets") {
-                        updateEntry(entryKey, [fieldToUpdate], menuType);
-                    }
+                    if (menuType === "tables") updateEntry(entryKey, [fieldToUpdate]);
                 }}
                 disabled={disabled}
             ></input>

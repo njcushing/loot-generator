@@ -1,4 +1,4 @@
-.presets-tab {
+.tables-tab {
     display: grid;
     grid-template-rows: 1fr auto;
     grid-template-columns: minmax(0, 1fr);
@@ -10,7 +10,7 @@
     height: 100%;
 }
 
-.presets {
+.tables {
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -34,7 +34,7 @@
     margin: 8px 0px;
 }
 
-.create-new-preset-options {
+.create-new-table-options {
     display: flex;
     justify-content: center;
     align-items: center;
