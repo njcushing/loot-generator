@@ -1,0 +1,12 @@
+.table-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    pointer-events: all;
+
+    outline: 1px solid black;
+
+    width: 100%;
+    padding: 6px;
+}
