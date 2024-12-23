@@ -1,8 +1,8 @@
 import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
-import { LootTable } from "@/utils/types";
+import { LootTable, Table as TableTypes } from "@/utils/types";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
-import { ItemEntry } from "../ItemEntry";
+import { SelectTable } from "../SelectTable";
 import { EntryFieldsToggleBar } from "../EntryFieldsToggleBar";
 import { Inputs } from "../../inputs";
 import styles from "./index.module.css";
@@ -22,14 +22,13 @@ export function TableEntry({
     isBaseTableEntry = false,
     isDescendantOfBaseTableEntry = false,
 }: TTableEntry) {
-    const { deleteTable, deleteEntry } = useContext(LootGeneratorContext);
+    const { lootGeneratorState, deleteEntry } = useContext(LootGeneratorContext);
 
-    const { key, props, criteria } = entry;
-    const { name } = props;
+    const { key, id, criteria } = entry;
     const { weight } = criteria;
 
-    const disablePropsFields = isActive || isBaseTableEntry || isDescendantOfBaseTableEntry;
-    const disableOtherFields = isActive || isDescendantOfBaseTableEntry;
+    const disableTableSelection = isActive || isDescendantOfBaseTableEntry;
+    const disablePropsFields = isActive || isDescendantOfBaseTableEntry;
 
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
@@ -47,101 +46,51 @@ export function TableEntry({
             if (!isDescendantOfBaseTableEntry) {
                 options.push({
                     symbol: "Delete",
-                    onClick: () => {
-                        if (isBaseTable) {
-                            deleteTable(key);
-                        } else {
-                            deleteEntry(key);
-                        }
-                    },
+                    onClick: () => deleteEntry(key),
                     colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
                 });
             }
         }
         return options;
-    }, [
-        key,
-        isActive,
-        isBaseTable,
-        isBaseTableEntry,
-        isDescendantOfBaseTableEntry,
-        deleteTable,
-        deleteEntry,
-    ]);
+    }, [key, isActive, isBaseTable, isBaseTableEntry, isDescendantOfBaseTableEntry, deleteEntry]);
 
-    const toggleBarColours = {
-        normal: !isActive && isBaseTableEntry ? "rgb(241, 197, 114)" : "rgb(186, 240, 228)",
-        hover: !isActive && isBaseTableEntry ? "rgb(236, 185, 89)" : "rgb(157, 224, 210)",
-        focus: !isActive && isBaseTableEntry ? "rgb(226, 170, 66)" : "rgb(139, 206, 191)",
-    };
+    const table: TableTypes | null = useMemo(() => {
+        if (!id) return null;
+        return lootGeneratorState.tables.get(id) || null;
+    }, [id, lootGeneratorState.tables]);
+
+    const name = table && table.name ? table.name : "Unnamed Table";
+    const nameFontStyle = table && table.name ? "normal" : "italic";
 
     return (
         <li className={styles["table-entry"]} key={key}>
             <ToggleBar
-                name={name || "Unnamed Table"}
+                name={name}
                 options={toggleBarOptions}
                 style={{
-                    colours: toggleBarColours,
-                    nameFontStyle: name ? "normal" : "italic",
+                    colours: {
+                        normal: "rgb(186, 240, 228)",
+                        hover: "rgb(157, 224, 210)",
+                        focus: "rgb(139, 206, 191)",
+                    },
+                    nameFontStyle,
                 }}
             >
-                <>
-                    <div className={styles["table-entry-fields"]}>
-                        <EntryFieldsToggleBar
-                            name="Props"
-                            fields={
-                                <Inputs.Text
-                                    entryKey={key}
-                                    labelText="Name"
-                                    value={name || ""}
-                                    fieldPath={["props", "name"]}
-                                    disabled={disablePropsFields}
-                                />
-                            }
-                        />
-                        <EntryFieldsToggleBar
-                            name="Criteria"
-                            fields={
-                                <Inputs.Numeric
-                                    entryKey={key}
-                                    labelText="Weight"
-                                    value={typeof weight === "number" ? weight : 1}
-                                    fieldPath={["criteria", "weight"]}
-                                    disabled={disableOtherFields}
-                                />
-                            }
-                        />
-                    </div>
-                    <ul className={styles["table-entries"]}>
-                        {entry.props.loot.map((subEntry) => {
-                            if (subEntry.type === "item") {
-                                return (
-                                    <ItemEntry
-                                        entry={subEntry}
-                                        isActive={isActive}
-                                        isDescendantOfBaseTableEntry={
-                                            isBaseTableEntry || isDescendantOfBaseTableEntry
-                                        }
-                                        key={subEntry.key}
-                                    />
-                                );
-                            }
-                            if (subEntry.type === "table") {
-                                return (
-                                    <TableEntry
-                                        entry={subEntry}
-                                        isActive={isActive}
-                                        isDescendantOfBaseTableEntry={
-                                            isBaseTableEntry || isDescendantOfBaseTableEntry
-                                        }
-                                        key={subEntry.key}
-                                    />
-                                );
-                            }
-                            return null;
-                        })}
-                    </ul>
-                </>
+                <SelectTable entryKey={key} id={id} disabled={disableTableSelection} />
+                <div className={styles["table-entry-fields"]}>
+                    <EntryFieldsToggleBar
+                        name="Criteria"
+                        fields={
+                            <Inputs.Numeric
+                                entryKey={key}
+                                labelText="Weight"
+                                value={typeof weight === "number" ? weight : 1}
+                                fieldPath={["criteria", "weight"]}
+                                disabled={disablePropsFields}
+                            />
+                        }
+                    />
+                </div>
             </ToggleBar>
         </li>
     );

@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { Option } from "@/features/Design/components/Option";
-import { TableEntry } from "../TableEntry";
+import { Table } from "../Table";
 import styles from "./index.module.css";
 
 export function Tables() {
@@ -12,7 +12,7 @@ export function Tables() {
             <ul className={styles["tables"]}>
                 {[...lootGeneratorState.tables.keys()].map((key) => {
                     const table = lootGeneratorState.tables.get(key);
-                    return table && <TableEntry entry={table} isBaseTable key={key} />;
+                    return table && <Table id={key} key={key} />;
                 })}
             </ul>
             <div className={styles["create-new-table-options"]}>

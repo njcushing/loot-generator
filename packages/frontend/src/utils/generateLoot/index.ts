@@ -1,19 +1,21 @@
 import { v4 as uuid } from "uuid";
-import { Item, Items, LootItem, LootTable, LootTables, Loot, LootTableProps } from "../types";
+import { LootItem, LootTable, Item, Items, Table, Tables, Loot } from "../types";
 import { randomRange } from "../randomRange";
 
 type RecursiveOptional<T> = {
     [P in keyof T]?: T[P] extends object ? RecursiveOptional<T[P]> : T[P];
 };
 
+export const createTable = (props: RecursiveOptional<Table> = {}): Table => ({
+    name: props.name || "",
+    loot: (props.loot as Table["loot"]) || [],
+    custom: props.custom || {},
+});
+
 export const createLootTable = (props: RecursiveOptional<LootTable> = {}): LootTable => ({
     type: "table",
     key: props.key || uuid(),
-    props: {
-        name: props.props?.name || "",
-        loot: (props.props?.loot as LootTableProps["loot"]) || [],
-        custom: props.props?.custom || {},
-    },
+    id: props.id || null,
     criteria: {
         weight: props.criteria?.weight || 0,
         rolls: props.criteria?.rolls || {},
@@ -41,8 +43,41 @@ export const createLootItem = (props: RecursiveOptional<LootItem> = {}): LootIte
     },
 });
 
-const populateTable = (active: LootTable, tables: LootTables, items: Items) => {
-    const search = (currentTable: LootTable) => {
+type PopulatedTable = Omit<LootTable, "id"> & { props: Table };
+type PopulatedItem = Omit<LootItem, "id"> & { props: Item };
+
+const createPopulatedTable = (table: Table, lootTable: LootTable): PopulatedTable => {
+    return {
+        type: "table",
+        key: lootTable.key || uuid(),
+        props: createTable(table),
+        criteria: {
+            weight: lootTable.criteria?.weight || 0,
+            rolls: lootTable.criteria?.rolls || {},
+        },
+    };
+};
+
+const createPopulatedItem = (item: Item, lootItem: LootItem): PopulatedItem => {
+    return {
+        type: "item",
+        key: lootItem.key || uuid(),
+        props: createItem(item),
+        criteria: {
+            weight: lootItem.criteria?.weight || 0,
+            rolls: lootItem.criteria?.rolls || {},
+        },
+        quantity: {
+            min: lootItem.quantity?.min || 1,
+            max: lootItem.quantity?.max || 1,
+        },
+    };
+};
+
+const populateTable = (active: Table, tables: Tables, items: Items): PopulatedTable => {
+    const populatedTable: PopulatedTable = createPopulatedTable();
+
+    const search = (currentActive: Table, currentPopulated: PopulatedTable) => {
         const mutableTable = currentTable;
         const entryCount = currentTable.props.loot.length;
 
@@ -61,6 +96,8 @@ const populateTable = (active: LootTable, tables: LootTables, items: Items) => {
     };
 
     search(active);
+
+    return populatedTable;
 };
 
 type SummedTable = LootTable & { totalWeight: number };

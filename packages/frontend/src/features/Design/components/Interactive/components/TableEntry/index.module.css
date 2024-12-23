@@ -4,20 +4,6 @@
     gap: 1px;
 }
 
-.table-entry-bar {
-    display: grid;
-    grid-template-rows: minmax(0, 1fr);
-    grid-template-columns: 1fr repeat(3, auto);
-    align-content: end;
-    align-items: center;
-
-    pointer-events: none;
-
-    outline: 1px solid black;
-
-    min-height: 1.9rem;
-}
-
 .table-entry-fields {
     display: flex;
     flex-direction: column;
@@ -28,14 +14,4 @@
     outline: 1px solid black;
 
     width: 100%;
-}
-
-.table-entries {
-    align-self: end;
-
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-
-    width: calc(100% - 16px);
 }

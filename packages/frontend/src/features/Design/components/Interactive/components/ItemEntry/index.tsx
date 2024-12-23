@@ -42,9 +42,9 @@ export function ItemEntry({
     }, [isActive, isDescendantOfBaseTableEntry, deleteEntry, key]);
 
     const item: ItemTypes | null = useMemo(() => {
-        if (!entry.id) return null;
-        return lootGeneratorState.items.get(entry.id) || null;
-    }, [entry.id, lootGeneratorState.items]);
+        if (!id) return null;
+        return lootGeneratorState.items.get(id) || null;
+    }, [id, lootGeneratorState.items]);
 
     const name = item && item.name ? item.name : "Unnamed Item";
     const nameFontStyle = item && item.name ? "normal" : "italic";

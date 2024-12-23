@@ -1,12 +1,3 @@
-export type CustomFields = { custom: { [key: string]: unknown } };
-
-export type Item = {
-    name?: string;
-    sprite?: URL;
-    value: number;
-} & CustomFields;
-export type Items = Map<string, Item>;
-
 export type GenerationQuantity = {
     quantity: {
         min: number;
@@ -23,12 +14,6 @@ export type GenerationCriteria = {
     };
 };
 
-export type LootTableProps = {
-    name?: string;
-    // eslint-disable-next-line no-use-before-define
-    loot: (LootItem | LootTable)[];
-} & CustomFields;
-
 export type LootItem = {
     type: "item";
     key: string;
@@ -38,8 +23,23 @@ export type LootItem = {
 export type LootTable = {
     type: "table";
     key: string;
-    props: LootTableProps;
+    id: string | null;
 } & GenerationCriteria;
+
+export type CustomFields = { custom: { [key: string]: unknown } };
+
+export type Item = {
+    name?: string;
+    sprite?: URL;
+    value: number;
+} & CustomFields;
+export type Items = Map<string, Item>;
+
+export type Table = {
+    name?: string;
+    loot: (LootItem | LootTable)[];
+} & CustomFields;
+export type Tables = Map<string, Table>;
 
 export type LootTables = Map<string, LootTable>;
 

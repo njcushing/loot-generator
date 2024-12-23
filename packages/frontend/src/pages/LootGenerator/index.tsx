@@ -2,16 +2,8 @@ import { createContext, useState, useEffect, useRef, useMemo, useCallback } from
 import useResizeObserverElement from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
 import { Generate } from "@/features/Generate";
-import { createItem, createLootItem, createLootTable } from "@/utils/generateLoot";
-import {
-    Items,
-    LootTableProps,
-    LootItem,
-    LootTable,
-    LootTables,
-    Loot,
-    SortOptions,
-} from "@/utils/types";
+import { createItem, createLootItem, createTable, createLootTable } from "@/utils/generateLoot";
+import { LootItem, LootTable, Items, Table, Tables, Loot, SortOptions } from "@/utils/types";
 import { Design } from "@/features/Design";
 import { updateFieldsInObject, TFieldToUpdate } from "@/utils/mutateFieldsInObject";
 import { v4 as uuid } from "uuid";
@@ -21,8 +13,8 @@ import styles from "./index.module.css";
 
 export type LootGeneratorState = {
     loot: Loot;
-    active: LootTable | null;
-    tables: LootTables;
+    active: string;
+    tables: Tables;
     items: Items;
     quantitySelected: number;
     quantityOptionSelected: number;
@@ -32,7 +24,7 @@ export type LootGeneratorState = {
 
 const defaultLootGeneratorState: LootGeneratorState = {
     loot: new Map(),
-    active: structuredClone([...exampleLoot.tables.values()][0]),
+    active: [...exampleLoot.tables.keys()][0],
     tables: exampleLoot.tables,
     items: exampleLoot.items,
     quantitySelected: 1,
@@ -60,6 +52,7 @@ interface LootGeneratorContext {
     ) => { entry: LootTable | LootItem; path: LootTable[]; index: number } | null;
     updateEntry: (key: string, fieldsToMutate: TFieldToUpdate[]) => boolean;
     setItemOnEntry: (key: string, itemId: string) => boolean;
+    setTableOnEntry: (key: string, tableId: string) => boolean;
     deleteEntry: (key: string) => boolean;
     createSubEntry: (key: string, type: LootItem["type"] | LootTable["type"]) => boolean;
 }
@@ -78,6 +71,7 @@ const defaultLootGeneratorContext: LootGeneratorContext = {
     getEntry: () => null,
     updateEntry: () => false,
     setItemOnEntry: () => false,
+    setTableOnEntry: () => false,
     deleteEntry: () => false,
     createSubEntry: () => false,
 };
@@ -151,7 +145,7 @@ export function LootGenerator() {
 
     const addNewTable = useCallback(() => {
         const newTables = new Map(lootGeneratorState.tables);
-        newTables.set(uuid(), createLootTable());
+        newTables.set(uuid(), createTable());
         setLootGeneratorStateProperty("tables", newTables);
     }, [lootGeneratorState.tables, setLootGeneratorStateProperty]);
 
@@ -211,7 +205,7 @@ export function LootGenerator() {
             if (!copy) return null;
 
             const search = (
-                currentEntry: LootTableProps["loot"],
+                currentEntry: Table["loot"],
                 currentPath: LootTable[] = [],
             ): {
                 entry: LootTable | LootItem;
@@ -238,7 +232,7 @@ export function LootGenerator() {
                 return null;
             };
 
-            return search([...copy.values()] as unknown as LootTableProps["loot"], []);
+            return search([...copy.values()] as unknown as Table["loot"], []);
         },
         [getCopy],
     );
@@ -256,6 +250,24 @@ export function LootGenerator() {
             return true;
         },
         [saveCopy, getEntry],
+    );
+
+    const setTableOnEntry = useCallback(
+        (key: string, tableId: string) => {
+            if (!lootGeneratorState.tables.has(tableId)) return false;
+
+            const result = getEntry(key);
+            if (!result) return false;
+            const { entry, copy } = result;
+            if (entry.type !== "table") return false;
+
+            entry.id = tableId;
+
+            saveCopy("tables", copy);
+
+            return true;
+        },
+        [lootGeneratorState.tables, getEntry, saveCopy],
     );
 
     const setItemOnEntry = useCallback(
@@ -341,6 +353,7 @@ export function LootGenerator() {
                     getEntry,
                     updateEntry,
                     setItemOnEntry,
+                    setTableOnEntry,
                     deleteEntry,
                     createSubEntry,
                 }),
@@ -358,6 +371,7 @@ export function LootGenerator() {
                     getEntry,
                     updateEntry,
                     setItemOnEntry,
+                    setTableOnEntry,
                     deleteEntry,
                     createSubEntry,
                 ],

@@ -1,52 +1,84 @@
 import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
-import { v4 as uuid } from "uuid";
 import { Inputs } from "../../inputs";
-import { LootEntry } from "../LootEntry";
+import { TableEntry } from "../TableEntry";
+import { ItemEntry } from "../ItemEntry";
 import styles from "./index.module.css";
 
 export type TTable = {
     id: string;
-    onClick?: () => unknown;
+    isActive?: boolean;
+    isBaseTableEntry?: boolean;
+    isDescendantOfBaseTableEntry?: boolean;
+    displayMode?: "normal" | "entry" | "entryViewOnly" | "selection";
+    onClick?: (optionClicked: "toggle" | "delete" | "edit") => unknown;
 };
 
-export function Table({ id, onClick }: TTable) {
+export function Table({
+    id,
+    isActive = false,
+    isBaseTableEntry = false,
+    isDescendantOfBaseTableEntry = false,
+    displayMode = "normal",
+    onClick,
+}: TTable) {
     const { lootGeneratorState, deleteTable } = useContext(LootGeneratorContext);
 
     const table = useMemo(() => lootGeneratorState.tables.get(id), [id, lootGeneratorState.tables]);
 
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
-        options.push({
-            symbol: "Delete",
-            onClick: () => {
-                deleteTable(id);
-            },
-            colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
-        });
+        if (displayMode === "normal") {
+            options.push({
+                symbol: "Delete",
+                onClick: () => {
+                    deleteTable(id);
+                    if (onClick) onClick("delete");
+                },
+                colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
+            });
+        }
+        if (displayMode === "entry") {
+            options.push({
+                symbol: "Edit",
+                onClick: () => onClick && onClick("edit"),
+            });
+        }
         return options;
-    }, [id, deleteTable]);
+    }, [id, displayMode, onClick, deleteTable]);
 
     if (!table) return null;
 
     const { name } = table;
-    const displayName = name || "Unnamed Table";
+    let displayName = name || "Unnamed Table";
+    if (displayMode === "entry" || displayMode === "entryViewOnly") {
+        displayName = "Table Properties";
+    }
 
-    const colours = {
+    let colours = {
         normal: "rgb(186, 240, 228)",
         hover: "rgb(157, 224, 210)",
         focus: "rgb(139, 206, 191)",
     };
+    if (displayMode === "entry" || displayMode === "entryViewOnly") {
+        colours = {
+            normal: "rgb(181, 186, 255)",
+            hover: "rgb(164, 169, 252)",
+            focus: "rgb(155, 161, 252)",
+        };
+    }
 
     return (
         <ToggleBar
             name={displayName}
             options={toggleBarOptions}
-            onClick={() => onClick && onClick()}
+            onClick={() => onClick && onClick("toggle")}
             style={{
+                size: displayMode === "normal" ? "m" : "s",
                 colours,
-                nameFontStyle: name ? "normal" : "italic",
+                indicator: displayMode !== "selection" ? "signs" : "none",
+                nameFontStyle: name || displayMode !== "normal" ? "normal" : "italic",
             }}
             key={id}
         >
@@ -60,7 +92,31 @@ export function Table({ id, onClick }: TTable) {
             </div>
             <ul className={styles["table-entries"]}>
                 {table.loot.map((entry) => {
-                    return <LootEntry id={entry.id} key={entry.id || uuid()} />;
+                    if (entry.type === "item") {
+                        return (
+                            <ItemEntry
+                                entry={entry}
+                                isActive={isActive}
+                                isDescendantOfBaseTableEntry={
+                                    isBaseTableEntry || isDescendantOfBaseTableEntry
+                                }
+                                key={entry.key}
+                            />
+                        );
+                    }
+                    if (entry.type === "table") {
+                        return (
+                            <TableEntry
+                                entry={entry}
+                                isActive={isActive}
+                                isDescendantOfBaseTableEntry={
+                                    isBaseTableEntry || isDescendantOfBaseTableEntry
+                                }
+                                key={entry.key}
+                            />
+                        );
+                    }
+                    return null;
                 })}
             </ul>
         </ToggleBar>
