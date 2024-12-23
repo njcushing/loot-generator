@@ -55,6 +55,7 @@ export function ItemEntry({
                 name={name}
                 options={toggleBarOptions}
                 style={{
+                    size: "s",
                     colours: {
                         normal: "rgb(170, 238, 149)",
                         hover: "rgb(151, 226, 128)",

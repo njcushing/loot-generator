@@ -68,6 +68,7 @@ export function TableEntry({
                 name={name}
                 options={toggleBarOptions}
                 style={{
+                    size: "s",
                     colours: {
                         normal: "rgb(186, 240, 228)",
                         hover: "rgb(157, 224, 210)",
