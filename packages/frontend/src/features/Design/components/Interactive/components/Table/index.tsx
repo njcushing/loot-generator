@@ -1,7 +1,9 @@
 import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
+import { v4 as uuid } from "uuid";
 import { Inputs } from "../../inputs";
+import { LootEntry } from "../LootEntry";
 import styles from "./index.module.css";
 
 export type TTable = {
@@ -56,6 +58,11 @@ export function Table({ id, onClick }: TTable) {
                     fieldPath={["name"]}
                 />
             </div>
+            <ul className={styles["table-entries"]}>
+                {table.loot.map((entry) => {
+                    return <LootEntry id={entry.id} key={entry.id || uuid()} />;
+                })}
+            </ul>
         </ToggleBar>
     );
 }
