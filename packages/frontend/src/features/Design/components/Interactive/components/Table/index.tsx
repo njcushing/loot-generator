@@ -90,6 +90,7 @@ export function Table({
                     labelText="Name"
                     value={name || ""}
                     fieldPath={["name"]}
+                    disabled={displayMode !== "normal"}
                 />
             </div>
             <ul className={styles["table-entries"]}>
