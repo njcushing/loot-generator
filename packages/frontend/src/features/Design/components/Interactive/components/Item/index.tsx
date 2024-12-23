@@ -40,7 +40,11 @@ export function Item({ id, displayMode = "normal", onClick }: TItem) {
 
     const { name, value } = item;
     let displayName = name || "Unnamed Item";
-    if (displayMode === "entry" || displayMode === "entryViewOnly") displayName = "Item Properties";
+    let nameFontStyle = name ? "normal" : "italic";
+    if (displayMode === "entry" || displayMode === "entryViewOnly") {
+        displayName = "Item Properties";
+        nameFontStyle = "normal";
+    }
 
     let colours = {
         normal: "rgb(245, 158, 240)",
@@ -64,7 +68,7 @@ export function Item({ id, displayMode = "normal", onClick }: TItem) {
                 size: displayMode === "normal" ? "m" : "s",
                 colours,
                 indicator: displayMode !== "selection" ? "signs" : "none",
-                nameFontStyle: name ? "normal" : "italic",
+                nameFontStyle,
             }}
             key={id}
         >

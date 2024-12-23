@@ -52,8 +52,10 @@ export function Table({
 
     const { name } = table;
     let displayName = name || "Unnamed Table";
+    let nameFontStyle = name ? "normal" : "italic";
     if (displayMode === "entry" || displayMode === "entryViewOnly") {
         displayName = "Table Properties";
+        nameFontStyle = "normal";
     }
 
     let colours = {
@@ -78,7 +80,7 @@ export function Table({
                 size: displayMode === "normal" ? "m" : "s",
                 colours,
                 indicator: displayMode !== "selection" ? "signs" : "none",
-                nameFontStyle: name || displayMode !== "normal" ? "normal" : "italic",
+                nameFontStyle,
             }}
             key={id}
         >
