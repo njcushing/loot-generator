@@ -26,19 +26,12 @@ export function Table({
 
     const table = useMemo(() => lootGeneratorState.tables.get(id), [id, lootGeneratorState.tables]);
 
-    const isBaseTable: boolean = useMemo(() => {
-        if (!id) return false;
-        return lootGeneratorState.tables.has(id);
-    }, [id, lootGeneratorState.tables]);
-
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
-        if (!isBaseTableEntry && !isDescendantOfBaseTableEntry) {
+        if (displayMode === "normal") {
             options.push({
                 symbol: "Add_Circle",
             });
-        }
-        if (isBaseTable) {
             options.push({
                 symbol: "Upload",
                 onClick: () => {
@@ -46,8 +39,6 @@ export function Table({
                     if (onClick) onClick("upload");
                 },
             });
-        }
-        if (displayMode === "normal") {
             options.push({
                 symbol: "Delete",
                 onClick: () => {
@@ -64,16 +55,7 @@ export function Table({
             });
         }
         return options;
-    }, [
-        id,
-        isBaseTableEntry,
-        isDescendantOfBaseTableEntry,
-        displayMode,
-        onClick,
-        deleteTable,
-        uploadTableToActive,
-        isBaseTable,
-    ]);
+    }, [id, displayMode, onClick, deleteTable, uploadTableToActive]);
 
     if (!table) return null;
 
