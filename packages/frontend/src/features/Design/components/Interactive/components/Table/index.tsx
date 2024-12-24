@@ -11,7 +11,7 @@ export type TTable = {
     isBaseTableEntry?: boolean;
     isDescendantOfBaseTableEntry?: boolean;
     displayMode?: "normal" | "entry" | "entryViewOnly" | "selection";
-    onClick?: (optionClicked: "toggle" | "delete" | "edit") => unknown;
+    onClick?: (optionClicked: "toggle" | "delete" | "edit" | "upload") => unknown;
 };
 
 export function Table({
@@ -21,7 +21,8 @@ export function Table({
     displayMode = "normal",
     onClick,
 }: TTable) {
-    const { lootGeneratorState, deleteTable } = useContext(LootGeneratorContext);
+    const { lootGeneratorState, deleteTable, uploadTableToActive } =
+        useContext(LootGeneratorContext);
 
     const table = useMemo(() => lootGeneratorState.tables.get(id), [id, lootGeneratorState.tables]);
 
@@ -40,6 +41,10 @@ export function Table({
         if (isBaseTable) {
             options.push({
                 symbol: "Upload",
+                onClick: () => {
+                    uploadTableToActive(id);
+                    if (onClick) onClick("upload");
+                },
             });
         }
         if (displayMode === "normal") {
@@ -66,6 +71,7 @@ export function Table({
         displayMode,
         onClick,
         deleteTable,
+        uploadTableToActive,
         isBaseTable,
     ]);
 
