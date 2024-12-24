@@ -8,7 +8,6 @@ import styles from "./index.module.css";
 
 export type TTable = {
     id: string;
-    isActive?: boolean;
     isBaseTableEntry?: boolean;
     isDescendantOfBaseTableEntry?: boolean;
     displayMode?: "normal" | "entry" | "entryViewOnly" | "selection";
@@ -17,7 +16,6 @@ export type TTable = {
 
 export function Table({
     id,
-    isActive = false,
     isBaseTableEntry = false,
     isDescendantOfBaseTableEntry = false,
     displayMode = "normal",
@@ -99,7 +97,6 @@ export function Table({
                         return (
                             <ItemEntry
                                 entry={entry}
-                                isActive={isActive}
                                 isDescendantOfBaseTableEntry={
                                     isBaseTableEntry || isDescendantOfBaseTableEntry
                                 }
@@ -111,7 +108,6 @@ export function Table({
                         return (
                             <TableEntry
                                 entry={entry}
-                                isActive={isActive}
                                 isDescendantOfBaseTableEntry={
                                     isBaseTableEntry || isDescendantOfBaseTableEntry
                                 }

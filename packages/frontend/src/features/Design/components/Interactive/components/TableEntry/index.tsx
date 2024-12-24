@@ -2,6 +2,7 @@ import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootTable, Table as TableTypes } from "@/utils/types";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
+import { InteractiveContext } from "../..";
 import { SelectTable } from "../SelectTable";
 import { EntryFieldsToggleBar } from "../EntryFieldsToggleBar";
 import { Inputs } from "../../inputs";
@@ -9,7 +10,6 @@ import styles from "./index.module.css";
 
 export type TTableEntry = {
     entry: LootTable;
-    isActive?: boolean;
     isBaseTable?: boolean;
     isBaseTableEntry?: boolean;
     isDescendantOfBaseTableEntry?: boolean;
@@ -17,22 +17,22 @@ export type TTableEntry = {
 
 export function TableEntry({
     entry,
-    isActive = false,
     isBaseTable = false,
     isBaseTableEntry = false,
     isDescendantOfBaseTableEntry = false,
 }: TTableEntry) {
     const { lootGeneratorState, deleteEntry } = useContext(LootGeneratorContext);
+    const { menuType } = useContext(InteractiveContext);
 
     const { key, id, criteria } = entry;
     const { weight } = criteria;
 
-    const disableTableSelection = isActive || isDescendantOfBaseTableEntry;
-    const disablePropsFields = isActive || isDescendantOfBaseTableEntry;
+    const disableTableSelection = menuType === "active" || isDescendantOfBaseTableEntry;
+    const disablePropsFields = menuType === "active" || isDescendantOfBaseTableEntry;
 
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
-        if (!isActive) {
+        if (menuType !== "active") {
             if (!isBaseTableEntry && !isDescendantOfBaseTableEntry) {
                 options.push({
                     symbol: "Add_Circle",
@@ -52,7 +52,7 @@ export function TableEntry({
             }
         }
         return options;
-    }, [key, isActive, isBaseTable, isBaseTableEntry, isDescendantOfBaseTableEntry, deleteEntry]);
+    }, [isBaseTable, isBaseTableEntry, isDescendantOfBaseTableEntry, deleteEntry, menuType, key]);
 
     const table: TableTypes | null = useMemo(() => {
         if (!id) return null;
