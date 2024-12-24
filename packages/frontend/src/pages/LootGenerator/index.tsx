@@ -41,7 +41,8 @@ interface LootGeneratorContext {
     ) => void;
 
     addNewTable: () => void;
-    deleteTable: (key: string) => boolean;
+    deleteTable: (id: string) => boolean;
+    uploadTableToActive: (id: string) => void;
 
     addNewItem: () => void;
     updateItem: (key: string, fieldsToMutate: TFieldToUpdate[]) => boolean;
@@ -63,6 +64,7 @@ const defaultLootGeneratorContext: LootGeneratorContext = {
 
     addNewTable: () => {},
     deleteTable: () => false,
+    uploadTableToActive: () => {},
 
     addNewItem: () => {},
     updateItem: () => false,
@@ -150,12 +152,21 @@ export function LootGenerator() {
     }, [lootGeneratorState.tables, setLootGeneratorStateProperty]);
 
     const deleteTable = useCallback(
-        (key: string): boolean => {
-            if (!lootGeneratorState.tables.has(key)) return false;
+        (id: string): boolean => {
+            if (!lootGeneratorState.tables.has(id)) return false;
             const newTables = new Map(lootGeneratorState.tables);
-            newTables.delete(key);
+            newTables.delete(id);
             setLootGeneratorStateProperty("tables", newTables);
             return true;
+        },
+        [lootGeneratorState.tables, setLootGeneratorStateProperty],
+    );
+
+    const uploadTableToActive = useCallback(
+        (id: string) => {
+            const table = lootGeneratorState.tables.get(id);
+            if (!table) return;
+            setLootGeneratorStateProperty("active", id);
         },
         [lootGeneratorState.tables, setLootGeneratorStateProperty],
     );
@@ -345,6 +356,7 @@ export function LootGenerator() {
 
                     addNewTable,
                     deleteTable,
+                    uploadTableToActive,
 
                     addNewItem,
                     updateItem,
@@ -363,6 +375,7 @@ export function LootGenerator() {
 
                     addNewTable,
                     deleteTable,
+                    uploadTableToActive,
 
                     addNewItem,
                     updateItem,
