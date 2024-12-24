@@ -10,17 +10,10 @@ import styles from "./index.module.css";
 
 export type TTableEntry = {
     entry: LootTable;
-    isBaseTable?: boolean;
-    isBaseTableEntry?: boolean;
     isDescendantOfBaseTableEntry?: boolean;
 };
 
-export function TableEntry({
-    entry,
-    isBaseTable = false,
-    isBaseTableEntry = false,
-    isDescendantOfBaseTableEntry = false,
-}: TTableEntry) {
+export function TableEntry({ entry, isDescendantOfBaseTableEntry = false }: TTableEntry) {
     const { lootGeneratorState, deleteEntry } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
 
@@ -33,16 +26,6 @@ export function TableEntry({
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
         if (menuType !== "active") {
-            if (!isBaseTableEntry && !isDescendantOfBaseTableEntry) {
-                options.push({
-                    symbol: "Add_Circle",
-                });
-            }
-            if (isBaseTable) {
-                options.push({
-                    symbol: "Upload",
-                });
-            }
             if (!isDescendantOfBaseTableEntry) {
                 options.push({
                     symbol: "Delete",
@@ -52,7 +35,7 @@ export function TableEntry({
             }
         }
         return options;
-    }, [isBaseTable, isBaseTableEntry, isDescendantOfBaseTableEntry, deleteEntry, menuType, key]);
+    }, [isDescendantOfBaseTableEntry, deleteEntry, menuType, key]);
 
     const table: TableTypes | null = useMemo(() => {
         if (!id) return null;
