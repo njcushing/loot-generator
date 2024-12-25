@@ -18,19 +18,11 @@ export const TableContext = createContext<TableContext>(defaultTableContext);
 
 export type TTable = {
     id: string;
-    isBaseTableEntry?: boolean;
-    isDescendantOfBaseTableEntry?: boolean;
     displayMode?: "normal" | "entry" | "entryViewOnly" | "selection";
     onClick?: (optionClicked: "toggle" | "delete" | "edit" | "upload") => unknown;
 };
 
-export function Table({
-    id,
-    isBaseTableEntry = false,
-    isDescendantOfBaseTableEntry = false,
-    displayMode = "normal",
-    onClick,
-}: TTable) {
+export function Table({ id, displayMode = "normal", onClick }: TTable) {
     const { lootGeneratorState, deleteTable, uploadTableToActive } =
         useContext(LootGeneratorContext);
     const { pathToRoot } = useContext(TableContext);
@@ -129,26 +121,10 @@ export function Table({
                     {table &&
                         table.loot.map((entry) => {
                             if (entry.type === "item") {
-                                return (
-                                    <ItemEntry
-                                        entry={entry}
-                                        isDescendantOfBaseTableEntry={
-                                            isBaseTableEntry || isDescendantOfBaseTableEntry
-                                        }
-                                        key={entry.key}
-                                    />
-                                );
+                                return <ItemEntry entry={entry} key={entry.key} />;
                             }
                             if (entry.type === "table") {
-                                return (
-                                    <TableEntry
-                                        entry={entry}
-                                        isDescendantOfBaseTableEntry={
-                                            isBaseTableEntry || isDescendantOfBaseTableEntry
-                                        }
-                                        key={entry.key}
-                                    />
-                                );
+                                return <TableEntry entry={entry} key={entry.key} />;
                             }
                             return null;
                         })}
