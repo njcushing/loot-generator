@@ -4,11 +4,18 @@ import { Table } from "../Table";
 import styles from "./index.module.css";
 
 export function Active() {
-    const { lootGeneratorState } = useContext(LootGeneratorContext);
+    const { lootGeneratorState, deleteActive } = useContext(LootGeneratorContext);
 
     return (
         <ul className={styles["active"]}>
-            {lootGeneratorState.active && <Table id={lootGeneratorState.active} />}
+            {lootGeneratorState.active && (
+                <Table
+                    id={lootGeneratorState.active}
+                    onClick={(optionClicked) => {
+                        if (optionClicked === "delete") deleteActive();
+                    }}
+                />
+            )}
         </ul>
     );
 }
