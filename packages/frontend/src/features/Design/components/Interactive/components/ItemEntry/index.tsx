@@ -2,6 +2,7 @@ import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
 import { Item as ItemTypes, LootItem } from "@/utils/types";
+import { TableContext } from "../Table";
 import { InteractiveContext } from "../..";
 import { SelectItem } from "../SelectItem";
 import { EntryFieldsToggleBar } from "../EntryFieldsToggleBar";
@@ -10,33 +11,34 @@ import styles from "./index.module.css";
 
 export type TItemEntry = {
     entry: LootItem;
-    isDescendantOfBaseTableEntry?: boolean;
 };
 
-export function ItemEntry({ entry, isDescendantOfBaseTableEntry = false }: TItemEntry) {
+export function ItemEntry({ entry }: TItemEntry) {
     const { lootGeneratorState, deleteEntry } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
+    const { pathToRoot } = useContext(TableContext);
+
+    const isDescendantOfImportedTable =
+        pathToRoot.findIndex((pathStep) => pathStep.type === "imported") !== -1;
 
     const { key, id, quantity, criteria } = entry;
     const { min, max } = quantity;
     const { weight } = criteria;
 
-    const disableItemSelection = menuType === "active" || isDescendantOfBaseTableEntry;
-    const disablePropsFields = menuType === "active" || isDescendantOfBaseTableEntry;
+    const disableItemSelection = menuType === "active" || isDescendantOfImportedTable;
+    const disablePropsFields = menuType === "active" || isDescendantOfImportedTable;
 
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
-        if (menuType !== "active") {
-            if (!isDescendantOfBaseTableEntry) {
-                options.push({
-                    symbol: "Delete",
-                    onClick: () => deleteEntry(key),
-                    colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
-                });
-            }
+        if (menuType !== "active" && !isDescendantOfImportedTable) {
+            options.push({
+                symbol: "Delete",
+                onClick: () => deleteEntry(key),
+                colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
+            });
         }
         return options;
-    }, [isDescendantOfBaseTableEntry, deleteEntry, menuType, key]);
+    }, [deleteEntry, menuType, isDescendantOfImportedTable, key]);
 
     const item: ItemTypes | null = useMemo(() => {
         if (!id) return null;
