@@ -1,10 +1,20 @@
-import { useContext, useMemo } from "react";
+import { createContext, useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
 import { Inputs } from "../../inputs";
 import { TableEntry } from "../TableEntry";
 import { ItemEntry } from "../ItemEntry";
 import styles from "./index.module.css";
+
+interface TableContext {
+    pathToRoot: { type: "base" | "imported"; id: string | null }[];
+}
+
+const defaultTableContext: TableContext = {
+    pathToRoot: [],
+};
+
+export const TableContext = createContext<TableContext>(defaultTableContext);
 
 export type TTable = {
     id: string;
@@ -23,6 +33,13 @@ export function Table({
 }: TTable) {
     const { lootGeneratorState, deleteTable, uploadTableToActive } =
         useContext(LootGeneratorContext);
+    const { pathToRoot } = useContext(TableContext);
+
+    const updatedPathToRoot = Array.from(pathToRoot);
+    updatedPathToRoot.push({
+        type: displayMode === "normal" ? "base" : "imported",
+        id,
+    });
 
     const table = useMemo(() => lootGeneratorState.tables.get(id), [id, lootGeneratorState.tables]);
 
@@ -57,9 +74,7 @@ export function Table({
         return options;
     }, [id, displayMode, onClick, deleteTable, uploadTableToActive]);
 
-    if (!table) return null;
-
-    const { name } = table;
+    const name = table?.name;
     let displayName = name || "Unnamed Table";
     let nameFontStyle = name ? "normal" : "italic";
     if (displayMode === "entry" || displayMode === "entryViewOnly") {
@@ -81,54 +96,64 @@ export function Table({
     }
 
     return (
-        <ToggleBar
-            name={displayName}
-            options={toggleBarOptions}
-            onClick={() => onClick && onClick("toggle")}
-            style={{
-                size: displayMode === "normal" ? "m" : "s",
-                colours,
-                indicator: displayMode !== "selection" ? "signs" : "none",
-                nameFontStyle,
-            }}
-            key={id}
+        <TableContext.Provider
+            value={useMemo(
+                () => ({
+                    pathToRoot: updatedPathToRoot,
+                }),
+                [updatedPathToRoot],
+            )}
         >
-            <div className={styles["table-fields"]}>
-                <Inputs.Text
-                    entryKey={id}
-                    labelText="Name"
-                    value={name || ""}
-                    fieldPath={["name"]}
-                    disabled={displayMode !== "normal"}
-                />
-            </div>
-            <ul className={styles["table-entries"]}>
-                {table.loot.map((entry) => {
-                    if (entry.type === "item") {
-                        return (
-                            <ItemEntry
-                                entry={entry}
-                                isDescendantOfBaseTableEntry={
-                                    isBaseTableEntry || isDescendantOfBaseTableEntry
-                                }
-                                key={entry.key}
-                            />
-                        );
-                    }
-                    if (entry.type === "table") {
-                        return (
-                            <TableEntry
-                                entry={entry}
-                                isDescendantOfBaseTableEntry={
-                                    isBaseTableEntry || isDescendantOfBaseTableEntry
-                                }
-                                key={entry.key}
-                            />
-                        );
-                    }
-                    return null;
-                })}
-            </ul>
-        </ToggleBar>
+            <ToggleBar
+                name={displayName}
+                options={toggleBarOptions}
+                onClick={() => onClick && onClick("toggle")}
+                style={{
+                    size: displayMode === "normal" ? "m" : "s",
+                    colours,
+                    indicator: displayMode !== "selection" ? "signs" : "none",
+                    nameFontStyle,
+                }}
+                key={id}
+            >
+                <div className={styles["table-fields"]}>
+                    <Inputs.Text
+                        entryKey={id}
+                        labelText="Name"
+                        value={name || ""}
+                        fieldPath={["name"]}
+                        disabled={displayMode !== "normal"}
+                    />
+                </div>
+                <ul className={styles["table-entries"]}>
+                    {table &&
+                        table.loot.map((entry) => {
+                            if (entry.type === "item") {
+                                return (
+                                    <ItemEntry
+                                        entry={entry}
+                                        isDescendantOfBaseTableEntry={
+                                            isBaseTableEntry || isDescendantOfBaseTableEntry
+                                        }
+                                        key={entry.key}
+                                    />
+                                );
+                            }
+                            if (entry.type === "table") {
+                                return (
+                                    <TableEntry
+                                        entry={entry}
+                                        isDescendantOfBaseTableEntry={
+                                            isBaseTableEntry || isDescendantOfBaseTableEntry
+                                        }
+                                        key={entry.key}
+                                    />
+                                );
+                            }
+                            return null;
+                        })}
+                </ul>
+            </ToggleBar>
+        </TableContext.Provider>
     );
 }
