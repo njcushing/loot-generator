@@ -2,6 +2,7 @@ import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
 import { Item as ItemTypes, LootItem } from "@/utils/types";
+import { InteractiveContext } from "../..";
 import { SelectItem } from "../SelectItem";
 import { EntryFieldsToggleBar } from "../EntryFieldsToggleBar";
 import { Inputs } from "../../inputs";
@@ -9,27 +10,23 @@ import styles from "./index.module.css";
 
 export type TItemEntry = {
     entry: LootItem;
-    isActive?: boolean;
     isDescendantOfBaseTableEntry?: boolean;
 };
 
-export function ItemEntry({
-    entry,
-    isActive = false,
-    isDescendantOfBaseTableEntry = false,
-}: TItemEntry) {
+export function ItemEntry({ entry, isDescendantOfBaseTableEntry = false }: TItemEntry) {
     const { lootGeneratorState, deleteEntry } = useContext(LootGeneratorContext);
+    const { menuType } = useContext(InteractiveContext);
 
     const { key, id, quantity, criteria } = entry;
     const { min, max } = quantity;
     const { weight } = criteria;
 
-    const disableItemSelection = isActive || isDescendantOfBaseTableEntry;
-    const disablePropsFields = isActive || isDescendantOfBaseTableEntry;
+    const disableItemSelection = menuType === "active" || isDescendantOfBaseTableEntry;
+    const disablePropsFields = menuType === "active" || isDescendantOfBaseTableEntry;
 
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
-        if (!isActive) {
+        if (menuType !== "active") {
             if (!isDescendantOfBaseTableEntry) {
                 options.push({
                     symbol: "Delete",
@@ -39,7 +36,7 @@ export function ItemEntry({
             }
         }
         return options;
-    }, [isActive, isDescendantOfBaseTableEntry, deleteEntry, key]);
+    }, [isDescendantOfBaseTableEntry, deleteEntry, menuType, key]);
 
     const item: ItemTypes | null = useMemo(() => {
         if (!id) return null;
