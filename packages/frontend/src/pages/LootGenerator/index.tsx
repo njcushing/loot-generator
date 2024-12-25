@@ -13,7 +13,7 @@ import styles from "./index.module.css";
 
 export type LootGeneratorState = {
     loot: Loot;
-    active: string;
+    active: string | null;
     tables: Tables;
     items: Items;
     quantitySelected: number;
@@ -40,6 +40,8 @@ interface LootGeneratorContext {
         value: LootGeneratorState[K],
     ) => void;
 
+    deleteActive: () => void;
+
     addNewTable: () => void;
     deleteTable: (id: string) => boolean;
     uploadTableToActive: (id: string) => void;
@@ -61,6 +63,8 @@ interface LootGeneratorContext {
 const defaultLootGeneratorContext: LootGeneratorContext = {
     lootGeneratorState: defaultLootGeneratorState,
     setLootGeneratorStateProperty: () => {},
+
+    deleteActive: () => {},
 
     addNewTable: () => {},
     deleteTable: () => false,
@@ -98,7 +102,7 @@ export function LootGenerator() {
     const setLootGeneratorStateProperty = useCallback(
         <K extends keyof LootGeneratorState>(property: K, value: LootGeneratorState[K]) => {
             setLootGeneratorState((current) => {
-                const mutableState = { ...current };
+                const mutableState = structuredClone(current);
                 mutableState[property] = value;
                 return mutableState;
             });
@@ -144,6 +148,10 @@ export function LootGenerator() {
         },
         [setLootGeneratorStateProperty],
     );
+
+    const deleteActive = useCallback(() => {
+        setLootGeneratorState({ ...structuredClone(lootGeneratorState), active: null });
+    }, [lootGeneratorState]);
 
     const addNewTable = useCallback(() => {
         const newTables = new Map(lootGeneratorState.tables);
@@ -344,7 +352,7 @@ export function LootGenerator() {
     );
 
     useEffect(() => {
-        setLootGeneratorState((current) => ({ ...current, loot: new Map() }));
+        setLootGeneratorState((current) => ({ ...structuredClone(current), loot: new Map() }));
     }, [lootGeneratorState.active]);
 
     return (
@@ -353,6 +361,8 @@ export function LootGenerator() {
                 () => ({
                     lootGeneratorState,
                     setLootGeneratorStateProperty,
+
+                    deleteActive,
 
                     addNewTable,
                     deleteTable,
@@ -372,6 +382,8 @@ export function LootGenerator() {
                 [
                     lootGeneratorState,
                     setLootGeneratorStateProperty,
+
+                    deleteActive,
 
                     addNewTable,
                     deleteTable,
