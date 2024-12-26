@@ -8,13 +8,17 @@ export function Active() {
 
     return (
         <ul className={styles["active"]}>
-            {lootGeneratorState.active && (
+            {lootGeneratorState.active ? (
                 <Table
                     id={lootGeneratorState.active}
                     onClick={(optionClicked) => {
                         if (optionClicked === "delete") deleteActive();
                     }}
                 />
+            ) : (
+                <p
+                    className={styles["help-message"]}
+                >{`Please upload a table from the 'Tables' tab to start generating`}</p>
             )}
         </ul>
     );
