@@ -2,7 +2,12 @@ import { createContext, useState, useEffect, useRef, useMemo, useCallback } from
 import useResizeObserverElement from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
 import { Generate } from "@/features/Generate";
-import { createItem, createLootItem, createTable, createLootTable } from "@/utils/generateLoot";
+import {
+    createItem as newItem,
+    createLootItem,
+    createTable as newTable,
+    createLootTable,
+} from "@/utils/generateLoot";
 import { LootItem, LootTable, Items, Table, Tables, Loot, SortOptions } from "@/utils/types";
 import { Design } from "@/features/Design";
 import { updateFieldsInObject, TFieldToUpdate } from "@/utils/mutateFieldsInObject";
@@ -42,11 +47,11 @@ interface LootGeneratorContext {
 
     deleteActive: () => void;
 
-    addNewTable: () => void;
+    createTable: () => void;
     deleteTable: (id: string) => boolean;
     uploadTableToActive: (id: string) => void;
 
-    addNewItem: () => void;
+    createItem: () => void;
     updateItem: (key: string, fieldsToMutate: TFieldToUpdate[]) => boolean;
     deleteItem: (key: string) => boolean;
 
@@ -66,11 +71,11 @@ const defaultLootGeneratorContext: LootGeneratorContext = {
 
     deleteActive: () => {},
 
-    addNewTable: () => {},
+    createTable: () => {},
     deleteTable: () => false,
     uploadTableToActive: () => {},
 
-    addNewItem: () => {},
+    createItem: () => {},
     updateItem: () => false,
     deleteItem: () => false,
 
@@ -153,9 +158,9 @@ export function LootGenerator() {
         setLootGeneratorState({ ...structuredClone(lootGeneratorState), active: null });
     }, [lootGeneratorState]);
 
-    const addNewTable = useCallback(() => {
+    const createTable = useCallback(() => {
         const newTables = new Map(lootGeneratorState.tables);
-        newTables.set(uuid(), createTable());
+        newTables.set(uuid(), newTable());
         setLootGeneratorStateProperty("tables", newTables);
     }, [lootGeneratorState.tables, setLootGeneratorStateProperty]);
 
@@ -179,9 +184,9 @@ export function LootGenerator() {
         [lootGeneratorState.tables, setLootGeneratorStateProperty],
     );
 
-    const addNewItem = useCallback(() => {
+    const createItem = useCallback(() => {
         const newItems = new Map(lootGeneratorState.items);
-        newItems.set(uuid(), createItem());
+        newItems.set(uuid(), newItem());
         setLootGeneratorStateProperty("items", newItems);
     }, [lootGeneratorState.items, setLootGeneratorStateProperty]);
 
@@ -364,11 +369,11 @@ export function LootGenerator() {
 
                     deleteActive,
 
-                    addNewTable,
+                    createTable,
                     deleteTable,
                     uploadTableToActive,
 
-                    addNewItem,
+                    createItem,
                     updateItem,
                     deleteItem,
 
@@ -385,11 +390,11 @@ export function LootGenerator() {
 
                     deleteActive,
 
-                    addNewTable,
+                    createTable,
                     deleteTable,
                     uploadTableToActive,
 
-                    addNewItem,
+                    createItem,
                     updateItem,
                     deleteItem,
 

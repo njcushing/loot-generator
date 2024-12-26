@@ -6,7 +6,7 @@ import { Item } from "../Item";
 import styles from "./index.module.css";
 
 export function Items() {
-    const { lootGeneratorState, addNewItem } = useContext(LootGeneratorContext);
+    const { lootGeneratorState, createItem } = useContext(LootGeneratorContext);
 
     const [currentSearch, setCurrentSearch] = useState<string>("");
     const filterRegex = new RegExp(`${currentSearch}`, "i");
@@ -42,7 +42,7 @@ export function Items() {
                 )}
             </ul>
             <div className={styles["create-new-item-options"]}>
-                <Option symbol="Add" onClick={() => addNewItem()} style={{ width: "100%" }} />
+                <Option symbol="Add" onClick={() => createItem()} style={{ width: "100%" }} />
             </div>
         </div>
     );

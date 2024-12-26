@@ -6,7 +6,7 @@ import { Table } from "../Table";
 import styles from "./index.module.css";
 
 export function Tables() {
-    const { lootGeneratorState, addNewTable } = useContext(LootGeneratorContext);
+    const { lootGeneratorState, createTable } = useContext(LootGeneratorContext);
 
     const [currentSearch, setCurrentSearch] = useState<string>("");
     const filterRegex = new RegExp(`${currentSearch}`, "i");
@@ -42,7 +42,7 @@ export function Tables() {
                 )}
             </ul>
             <div className={styles["create-new-table-options"]}>
-                <Option symbol="Add" onClick={() => addNewTable()} style={{ width: "100%" }} />
+                <Option symbol="Add" onClick={() => createTable()} style={{ width: "100%" }} />
             </div>
         </div>
     );
