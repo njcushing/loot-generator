@@ -1,6 +1,6 @@
 .tables-tab {
     display: grid;
-    grid-template-rows: 1fr auto;
+    grid-template-rows: auto 1fr auto;
     grid-template-columns: minmax(0, 1fr);
     gap: 8px;
 
@@ -8,6 +8,16 @@
 
     width: 100%;
     height: 100%;
+}
+
+.tables-tab-options {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-columns: 1fr;
+    justify-content: end;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .tables {
