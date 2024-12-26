@@ -37,6 +37,20 @@
     padding: 8px;
 }
 
+.help-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: rgba(0, 0, 0, 0.8);
+    font-style: italic;
+    font-size: 0.9rem;
+    text-align: center;
+    vertical-align: middle;
+
+    height: 100%;
+}
+
 .create-new-item-options {
     display: flex;
     justify-content: center;

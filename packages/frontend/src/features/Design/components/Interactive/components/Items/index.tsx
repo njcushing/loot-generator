@@ -1,4 +1,4 @@
-import { useContext, useState, useCallback } from "react";
+import { useContext, useState, useCallback, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { Option } from "@/features/Design/components/Option";
 import { Inputs } from "@/components/inputs";
@@ -19,6 +19,10 @@ export function Items() {
         // Temporarily removed functionality
     }, []);
 
+    const itemKeys = useMemo(() => {
+        return [...lootGeneratorState.items.keys()];
+    }, [lootGeneratorState.items]);
+
     return (
         <div className={styles["items-tab"]}>
             <div className={styles["items-tab-options"]}>
@@ -30,16 +34,22 @@ export function Items() {
                 <Option symbol="Collapse_Content" onClick={() => collapseItems()} />
             </div>
             <ul className={styles["items"]}>
-                {[...lootGeneratorState.items.keys()]
-                    .filter((key) => {
-                        const item = lootGeneratorState.items.get(key);
-                        if (!item) return false;
-                        return filterRegex.test(item.name || "");
-                    })
-                    .map((key) => {
-                        const item = lootGeneratorState.items.get(key);
-                        return item && <Item id={key} key={key} />;
-                    })}
+                {itemKeys.length > 0 ? (
+                    itemKeys
+                        .filter((key) => {
+                            const item = lootGeneratorState.items.get(key);
+                            if (!item) return false;
+                            return filterRegex.test(item.name || "");
+                        })
+                        .map((key) => {
+                            const item = lootGeneratorState.items.get(key);
+                            return item && <Item id={key} key={key} />;
+                        })
+                ) : (
+                    <p
+                        className={styles["help-message"]}
+                    >{`Please click the '+' button below to create a new item`}</p>
+                )}
             </ul>
             <div className={styles["create-new-item-options"]}>
                 <Option symbol="Add" onClick={() => addNewItem()} style={{ width: "100%" }} />
