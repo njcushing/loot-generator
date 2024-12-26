@@ -1,4 +1,4 @@
-import { useContext, useState, useCallback, useMemo } from "react";
+import { useContext, useState, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { Option } from "@/features/Design/components/Option";
 import { Inputs } from "@/components/inputs";
@@ -11,14 +11,6 @@ export function Items() {
     const [currentSearch, setCurrentSearch] = useState<string>("");
     const filterRegex = new RegExp(`${currentSearch}`, "i");
 
-    const expandItems = useCallback(() => {
-        // Temporarily removed functionality
-    }, []);
-
-    const collapseItems = useCallback(() => {
-        // Temporarily removed functionality
-    }, []);
-
     const itemKeys = useMemo(() => {
         return [...lootGeneratorState.items.keys()];
     }, [lootGeneratorState.items]);
@@ -30,8 +22,6 @@ export function Items() {
                     value={currentSearch}
                     onChange={(value) => setCurrentSearch(value)}
                 />
-                <Option symbol="Expand_Content" onClick={() => expandItems()} />
-                <Option symbol="Collapse_Content" onClick={() => collapseItems()} />
             </div>
             <ul className={styles["items"]}>
                 {itemKeys.length > 0 ? (

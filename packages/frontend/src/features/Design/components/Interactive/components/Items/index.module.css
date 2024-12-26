@@ -13,7 +13,7 @@
 .items-tab-options {
     display: grid;
     grid-template-rows: minmax(0, 1fr);
-    grid-template-columns: 1fr repeat(2, auto);
+    grid-template-columns: 1fr;
     justify-content: end;
     align-items: center;
     flex-wrap: wrap;
