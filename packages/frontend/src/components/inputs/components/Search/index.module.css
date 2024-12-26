@@ -3,11 +3,15 @@
     font-family: Roboto;
     font-size: 0.9rem;
 
-    border: none;
-    outline: 1px solid black;
+    border: 1px solid black;
+    outline: none;
 
     width: 100%;
     padding: 3px;
+}
+
+.search-input:focus {
+    outline: 1px solid black;
 }
 
 .search-input:disabled {
