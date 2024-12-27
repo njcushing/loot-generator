@@ -1,6 +1,7 @@
 import { useCallback, useContext, useState, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { v4 as uuid } from "uuid";
+import { Table } from "@/utils/types";
 import { Option } from "../Option";
 import styles from "./index.module.css";
 
@@ -14,6 +15,45 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
     const [tableIsPopulated, setTableIsPopulated] = useState<boolean>(false);
     const [showingHiddenFields, setShowingHiddenFields] = useState<boolean>(false);
 
+    const activeTable = useMemo((): object | null => {
+        const activeTableCopy = structuredClone(
+            lootGeneratorState.tables.get(lootGeneratorState.active || ""),
+        );
+        if (!activeTableCopy) return null;
+        if (!tableIsPopulated) return activeTableCopy;
+
+        const populate = (loot: Table["loot"]) => {
+            const entryCount = loot.length;
+            const mutableLoot = loot;
+
+            for (let i = 0; i < entryCount; i++) {
+                const entry = loot[i];
+
+                if (entry.type === "item") {
+                    const item = structuredClone(lootGeneratorState.items.get(entry.id || ""));
+                    if (item) {
+                        mutableLoot[i] = { ...entry, ...item };
+                    }
+                }
+
+                if (entry.type === "table") {
+                    const table = structuredClone(lootGeneratorState.tables.get(entry.id || ""));
+                    if (table) {
+                        mutableLoot[i] = { ...entry, ...table };
+                        populate(table.loot);
+                    }
+                }
+            }
+        };
+
+        populate(activeTableCopy.loot);
+        return activeTableCopy;
+    }, [
+        lootGeneratorState.active,
+        lootGeneratorState.tables,
+        lootGeneratorState.items,
+        tableIsPopulated,
+    ]);
     const hideFieldsSet: Set<string> = useMemo(() => new Set(hideFields), [hideFields]);
 
     const displayJSONLine = useCallback(
@@ -89,9 +129,8 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
     );
 
     const copyJSON = useCallback(() => {
-        const { active, tables } = lootGeneratorState;
-        const activeTableCopy = structuredClone(tables.get(active || ""));
-        if (!activeTableCopy) return;
+        if (!activeTable) return;
+        const activeTableCopy = structuredClone(activeTable);
 
         const deleteHiddenFields = (entry: object) => {
             const mutableEntry = entry;
@@ -106,7 +145,7 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
 
         if (showingHiddenFields) deleteHiddenFields(activeTableCopy);
         navigator.clipboard.writeText(JSON.stringify(activeTableCopy));
-    }, [lootGeneratorState, showingHiddenFields, hideFieldsSet]);
+    }, [showingHiddenFields, activeTable, hideFieldsSet]);
 
     return (
         <div className={styles["json-display"]}>
@@ -123,8 +162,6 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
             </div>
             <div className={styles["json-text"]}>
                 {(() => {
-                    const { active, tables } = lootGeneratorState;
-                    const activeTable = tables.get(active || "");
                     if (!activeTable) return null;
                     return displayJSONLine(activeTable, 0);
                 })()}
