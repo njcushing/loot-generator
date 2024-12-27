@@ -1,7 +1,6 @@
 import { useCallback, useContext, useState, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { v4 as uuid } from "uuid";
-import { LootItem, LootPreset, LootTable } from "@/utils/types";
 import { Option } from "../Option";
 import styles from "./index.module.css";
 
@@ -89,25 +88,24 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
     );
 
     const copyJSON = useCallback(() => {
-        const lootTableCopy = structuredClone(lootGeneratorState.lootTable);
+        const { active, tables } = lootGeneratorState;
+        const activeTableCopy = structuredClone(tables.get(active || ""));
+        if (!activeTableCopy) return;
 
-        const deleteHiddenFields = (entry: LootItem | LootTable | LootPreset) => {
+        const deleteHiddenFields = (entry: object) => {
             const mutableEntry = entry;
             const keys = Object.keys(entry);
 
             for (let i = keys.length - 1; i >= 0; i--) {
                 const key = keys[i] as keyof typeof entry;
                 if (hideFieldsSet.has(keys[i])) delete mutableEntry[key];
-            }
-
-            if (entry.type === "table") {
-                entry.props.loot.forEach((subEntry) => deleteHiddenFields(subEntry));
+                if (typeof entry[key] === "object") deleteHiddenFields(entry[key]);
             }
         };
 
-        if (showingHiddenFields) deleteHiddenFields(lootTableCopy);
-        navigator.clipboard.writeText(JSON.stringify(lootTableCopy));
-    }, [lootGeneratorState.lootTable, showingHiddenFields, hideFieldsSet]);
+        if (showingHiddenFields) deleteHiddenFields(activeTableCopy);
+        navigator.clipboard.writeText(JSON.stringify(activeTableCopy));
+    }, [lootGeneratorState, showingHiddenFields, hideFieldsSet]);
 
     return (
         <div className={styles["json-display"]}>
@@ -119,7 +117,12 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
                 <Option symbol="Content_Copy" onClick={() => copyJSON()} />
             </div>
             <div className={styles["json-text"]}>
-                {displayJSONLine(lootGeneratorState.lootTable, 0)}
+                {(() => {
+                    const { active, tables } = lootGeneratorState;
+                    const activeTable = tables.get(active || "");
+                    if (!activeTable) return null;
+                    return displayJSONLine(activeTable, 0);
+                })()}
             </div>
         </div>
     );
