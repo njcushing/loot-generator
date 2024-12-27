@@ -32,12 +32,12 @@ export function TableEntry({ entry }: TTableEntry) {
         if (menuType !== "active" && !isDescendantOfImportedTable) {
             options.push({
                 symbol: "Delete",
-                onClick: () => deleteEntry(key),
+                onClick: () => pathToRoot[0].id && deleteEntry(pathToRoot[0].id, key),
                 colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
             });
         }
         return options;
-    }, [deleteEntry, menuType, isDescendantOfImportedTable, key]);
+    }, [deleteEntry, menuType, pathToRoot, isDescendantOfImportedTable, key]);
 
     const table: TableTypes | null = useMemo(() => {
         if (!id) return null;

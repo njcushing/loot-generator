@@ -2,6 +2,7 @@ import { useContext, useState, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
 import { Item as ItemTypes } from "@/utils/types";
+import { TableContext } from "../Table";
 import { Item } from "../Item";
 import styles from "./index.module.css";
 
@@ -13,6 +14,7 @@ export type TSelectItem = {
 
 export function SelectItem({ entryKey, id, disabled }: TSelectItem) {
     const { lootGeneratorState, setItemOnEntry } = useContext(LootGeneratorContext);
+    const { pathToRoot } = useContext(TableContext);
 
     const [selectingItem, setSelectingItem] = useState<boolean>(false);
 
@@ -71,7 +73,9 @@ export function SelectItem({ entryKey, id, disabled }: TSelectItem) {
                                     id={itemId}
                                     displayMode="selection"
                                     onClick={() => {
-                                        const success = setItemOnEntry(entryKey, itemId);
+                                        const success =
+                                            pathToRoot[0].id &&
+                                            setItemOnEntry(pathToRoot[0].id, entryKey, itemId);
                                         if (success) setSelectingItem(false);
                                     }}
                                     key={itemId}

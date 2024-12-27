@@ -2,7 +2,7 @@ import { useContext, useState, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
 import { Table as TableTypes } from "@/utils/types";
-import { Table } from "../Table";
+import { TableContext, Table } from "../Table";
 import styles from "./index.module.css";
 
 export type TSelectTable = {
@@ -13,6 +13,7 @@ export type TSelectTable = {
 
 export function SelectTable({ entryKey, id, disabled }: TSelectTable) {
     const { lootGeneratorState, setTableOnEntry } = useContext(LootGeneratorContext);
+    const { pathToRoot } = useContext(TableContext);
 
     const [selectingTable, setSelectingTable] = useState<boolean>(false);
 
@@ -71,7 +72,9 @@ export function SelectTable({ entryKey, id, disabled }: TSelectTable) {
                                     id={tableId}
                                     displayMode="selection"
                                     onClick={() => {
-                                        const success = setTableOnEntry(entryKey, tableId);
+                                        const success =
+                                            pathToRoot[0].id &&
+                                            setTableOnEntry(pathToRoot[0].id, entryKey, tableId);
                                         if (success) setSelectingTable(false);
                                     }}
                                     key={tableId}

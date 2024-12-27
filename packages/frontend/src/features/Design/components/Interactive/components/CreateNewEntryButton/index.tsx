@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootTable } from "@/utils/types";
+import { TableContext } from "../Table";
 import styles from "./index.module.css";
 
 export type TCreateNewEntryButton = {
@@ -9,6 +10,7 @@ export type TCreateNewEntryButton = {
 
 export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
     const { createSubEntry } = useContext(LootGeneratorContext);
+    const { pathToRoot } = useContext(TableContext);
 
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
@@ -33,7 +35,7 @@ export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
                         type="button"
                         className={styles["create-new-table-button"]}
                         onClick={(e) => {
-                            createSubEntry(entry.key, "table");
+                            if (pathToRoot[0].id) createSubEntry(pathToRoot[0].id, "table");
                             setMenuOpen(!menuOpen);
                             e.currentTarget.blur();
                         }}
@@ -47,7 +49,7 @@ export function CreateNewEntryButton({ entry }: TCreateNewEntryButton) {
                         type="button"
                         className={styles["create-new-item-button"]}
                         onClick={(e) => {
-                            createSubEntry(entry.key, "item");
+                            if (pathToRoot[0].id) createSubEntry(pathToRoot[0].id, "item");
                             setMenuOpen(!menuOpen);
                             e.currentTarget.blur();
                         }}

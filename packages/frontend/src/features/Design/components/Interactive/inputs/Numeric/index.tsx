@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { LootItem, LootTable } from "@/utils/types";
+import { TableContext } from "../../components/Table";
 import { InteractiveContext } from "../..";
 import styles from "./index.module.css";
 
@@ -25,6 +26,7 @@ export function Numeric({
 }: TNumeric) {
     const { updateItem, updateEntry } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
+    const { pathToRoot } = useContext(TableContext);
 
     return (
         <label
@@ -43,7 +45,9 @@ export function Numeric({
                     if (typeof max === "number") newValue = Math.min(max, newValue);
                     const fieldToUpdate = { path: fieldPath, newValue };
                     if (menuType === "items") updateItem(entryKey, [fieldToUpdate]);
-                    if (menuType === "tables") updateEntry(entryKey, [fieldToUpdate]);
+                    if (menuType === "tables" && pathToRoot[0].id) {
+                        updateEntry(pathToRoot[0].id, entryKey, [fieldToUpdate]);
+                    }
                 }}
                 disabled={disabled}
             ></input>

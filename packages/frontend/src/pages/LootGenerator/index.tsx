@@ -56,13 +56,14 @@ interface LootGeneratorContext {
     deleteItem: (key: string) => boolean;
 
     getEntry: (
-        key: string,
+        tableId: string,
+        entryKey: string,
     ) => { entry: LootTable | LootItem; path: LootTable[]; index: number } | null;
-    updateEntry: (key: string, fieldsToMutate: TFieldToUpdate[]) => boolean;
-    setItemOnEntry: (key: string, itemId: string) => boolean;
-    setTableOnEntry: (key: string, tableId: string) => boolean;
-    deleteEntry: (key: string) => boolean;
-    createSubEntry: (key: string, type: LootItem["type"] | LootTable["type"]) => boolean;
+    updateEntry: (tableId: string, entryKey: string, fieldsToMutate: TFieldToUpdate[]) => boolean;
+    setItemOnEntry: (tableId: string, entryKey: string, setItemId: string) => boolean;
+    setTableOnEntry: (tableId: string, entryKey: string, setTableId: string) => boolean;
+    deleteEntry: (tableId: string, entryKey: string) => boolean;
+    createSubEntry: (tableId: string, type: LootItem["type"] | LootTable["type"]) => boolean;
 }
 
 const defaultLootGeneratorContext: LootGeneratorContext = {
@@ -218,7 +219,8 @@ export function LootGenerator() {
 
     const getEntry = useCallback(
         (
-            key: string,
+            tableId: string,
+            entryKey: string,
         ): {
             entry: LootTable | LootItem;
             path: LootTable[];
@@ -227,6 +229,9 @@ export function LootGenerator() {
         } | null => {
             const copy = getCopy("tables") as LootGeneratorState["tables"];
             if (!copy) return null;
+
+            const table = copy.get(tableId);
+            if (!table) return null;
 
             const search = (
                 currentEntry: Table["loot"],
@@ -239,7 +244,7 @@ export function LootGenerator() {
             } | null => {
                 for (let i = 0; i < currentEntry.length; i++) {
                     const subEntry = currentEntry[i];
-                    if (subEntry.key === key) {
+                    if (subEntry.key === entryKey) {
                         return {
                             entry: subEntry,
                             path: currentPath,
@@ -247,23 +252,18 @@ export function LootGenerator() {
                             copy,
                         };
                     }
-                    if (subEntry.type === "table") {
-                        currentPath.push(subEntry);
-                        const nestedEntry = search(subEntry.props.loot, currentPath);
-                        if (nestedEntry) return nestedEntry;
-                    }
                 }
                 return null;
             };
 
-            return search([...copy.values()] as unknown as Table["loot"], []);
+            return search(table.loot as unknown as Table["loot"], []);
         },
         [getCopy],
     );
 
     const updateEntry = useCallback(
-        (key: string, fieldsToUpdate: TFieldToUpdate[]): boolean => {
-            const result = getEntry(key);
+        (tableId: string, entryKey: string, fieldsToUpdate: TFieldToUpdate[]): boolean => {
+            const result = getEntry(tableId, entryKey);
             if (!result) return false;
             const { entry, copy } = result;
 
@@ -277,15 +277,15 @@ export function LootGenerator() {
     );
 
     const setTableOnEntry = useCallback(
-        (key: string, tableId: string) => {
-            if (!lootGeneratorState.tables.has(tableId)) return false;
+        (tableId: string, entryKey: string, setTableId: string): boolean => {
+            if (!lootGeneratorState.tables.has(setTableId)) return false;
 
-            const result = getEntry(key);
+            const result = getEntry(tableId, entryKey);
             if (!result) return false;
             const { entry, copy } = result;
             if (entry.type !== "table") return false;
 
-            entry.id = tableId;
+            entry.id = setTableId;
 
             saveCopy("tables", copy);
 
@@ -295,15 +295,15 @@ export function LootGenerator() {
     );
 
     const setItemOnEntry = useCallback(
-        (key: string, itemId: string) => {
-            if (!lootGeneratorState.items.has(itemId)) return false;
+        (tableId: string, entryKey: string, setItemId: string) => {
+            if (!lootGeneratorState.items.has(setItemId)) return false;
 
-            const result = getEntry(key);
+            const result = getEntry(tableId, entryKey);
             if (!result) return false;
             const { entry, copy } = result;
             if (entry.type !== "item") return false;
 
-            entry.id = itemId;
+            entry.id = setItemId;
 
             saveCopy("tables", copy);
 
@@ -313,47 +313,50 @@ export function LootGenerator() {
     );
 
     const deleteEntry = useCallback(
-        (key: string): boolean => {
-            const result = getEntry(key);
-            if (!result) return false;
-            const { path, copy } = result;
-            if (path.length === 0) return false;
-            const entryParentLoot = path[path.length - 1].props.loot;
+        (tableId: string, entryKey: string): boolean => {
+            const copy = getCopy("tables") as LootGeneratorState["tables"];
+            if (!copy) return false;
 
-            let deleted = false;
-            for (let i = 0; i < entryParentLoot.length; i++) {
-                const entry = entryParentLoot[i];
-                if (entry.key === key) {
-                    entryParentLoot.splice(i, 1);
-                    deleted = true;
+            const table = copy.get(tableId);
+            if (!table) return false;
+
+            const search = (currentEntry: Table["loot"]): boolean => {
+                for (let i = 0; i < currentEntry.length; i++) {
+                    const subEntry = currentEntry[i];
+                    if (subEntry.key === entryKey) {
+                        currentEntry.splice(i, 1);
+                        return true;
+                    }
                 }
-            }
+                return false;
+            };
 
-            saveCopy("tables", copy);
+            if (search(table.loot)) saveCopy("tables", copy);
 
-            return deleted;
+            return true;
         },
-        [saveCopy, getEntry],
+        [getCopy, saveCopy],
     );
 
     const createSubEntry = useCallback(
-        (key: string, type: LootItem["type"] | LootTable["type"]): boolean => {
-            const result = getEntry(key);
-            if (!result) return false;
-            const { entry, copy } = result;
-            if (!entry || entry.type !== "table") return false;
+        (tableId: string, type: LootItem["type"] | LootTable["type"]): boolean => {
+            const copy = getCopy("tables") as LootGeneratorState["tables"];
+            if (!copy) return false;
+
+            const table = copy.get(tableId);
+            if (!table) return false;
 
             let newSubEntry = null;
             if (type === "table") newSubEntry = createLootTable();
             if (type === "item") newSubEntry = createLootItem();
             if (!newSubEntry) return false;
-            entry.props.loot.push(newSubEntry);
+            table.loot.push(newSubEntry);
 
             saveCopy("tables", copy);
 
             return true;
         },
-        [saveCopy, getEntry],
+        [getCopy, saveCopy],
     );
 
     useEffect(() => {
