@@ -1,6 +1,7 @@
 import { createContext, useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
+import { InteractiveContext } from "../..";
 import { Inputs } from "../../inputs";
 import { TableEntry } from "../TableEntry";
 import { ItemEntry } from "../ItemEntry";
@@ -25,6 +26,7 @@ export type TTable = {
 export function Table({ id, displayMode = "normal", onClick }: TTable) {
     const { lootGeneratorState, deleteTable, uploadTableToActive } =
         useContext(LootGeneratorContext);
+    const { menuType } = useContext(InteractiveContext);
     const { pathToRoot } = useContext(TableContext);
 
     const updatedPathToRoot = Array.from(pathToRoot);
@@ -37,34 +39,36 @@ export function Table({ id, displayMode = "normal", onClick }: TTable) {
 
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
-        if (displayMode === "normal") {
-            options.push({
-                symbol: "Add_Circle",
-            });
-            options.push({
-                symbol: "Upload",
-                onClick: () => {
-                    uploadTableToActive(id);
-                    if (onClick) onClick("upload");
-                },
-            });
-            options.push({
-                symbol: "Delete",
-                onClick: () => {
-                    deleteTable(id);
-                    if (onClick) onClick("delete");
-                },
-                colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
-            });
-        }
-        if (displayMode === "entry") {
-            options.push({
-                symbol: "Edit",
-                onClick: () => onClick && onClick("edit"),
-            });
+        if (menuType !== "active") {
+            if (displayMode === "normal") {
+                options.push({
+                    symbol: "Add_Circle",
+                });
+                options.push({
+                    symbol: "Upload",
+                    onClick: () => {
+                        uploadTableToActive(id);
+                        if (onClick) onClick("upload");
+                    },
+                });
+                options.push({
+                    symbol: "Delete",
+                    onClick: () => {
+                        deleteTable(id);
+                        if (onClick) onClick("delete");
+                    },
+                    colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
+                });
+            }
+            if (displayMode === "entry") {
+                options.push({
+                    symbol: "Edit",
+                    onClick: () => onClick && onClick("edit"),
+                });
+            }
         }
         return options;
-    }, [id, displayMode, onClick, deleteTable, uploadTableToActive]);
+    }, [id, displayMode, onClick, deleteTable, uploadTableToActive, menuType]);
 
     const name = table?.name;
     let displayName = name || "Unnamed Table";
