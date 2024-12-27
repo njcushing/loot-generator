@@ -72,7 +72,8 @@ export function ItemEntry({ entry }: TItemEntry) {
                         fields={
                             <>
                                 <Inputs.Numeric
-                                    entryKey={key}
+                                    idOrKey={key}
+                                    type="entry"
                                     labelText="Min"
                                     value={typeof min === "number" ? min : 1}
                                     min={0}
@@ -80,7 +81,8 @@ export function ItemEntry({ entry }: TItemEntry) {
                                     disabled={disablePropsFields}
                                 />
                                 <Inputs.Numeric
-                                    entryKey={key}
+                                    idOrKey={key}
+                                    type="entry"
                                     labelText="Max"
                                     value={typeof max === "number" ? max : 1}
                                     min={0}
@@ -94,7 +96,8 @@ export function ItemEntry({ entry }: TItemEntry) {
                         name="Criteria"
                         fields={
                             <Inputs.Numeric
-                                entryKey={key}
+                                idOrKey={key}
+                                type="entry"
                                 labelText="Weight"
                                 value={typeof weight === "number" ? weight : 1}
                                 fieldPath={["criteria", "weight"]}

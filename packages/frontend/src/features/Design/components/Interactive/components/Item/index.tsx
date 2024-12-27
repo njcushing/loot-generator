@@ -74,14 +74,16 @@ export function Item({ id, displayMode = "normal", onClick }: TItem) {
         >
             <div className={styles["item-fields"]}>
                 <Inputs.Text
-                    entryKey={id}
+                    idOrKey={id}
+                    type="item"
                     labelText="Name"
                     value={name || ""}
                     fieldPath={["name"]}
                     disabled={displayMode !== "normal"}
                 />
                 <Inputs.Numeric
-                    entryKey={id}
+                    idOrKey={id}
+                    type="item"
                     labelText="Value"
                     value={typeof value === "number" ? value : 1}
                     min={0}

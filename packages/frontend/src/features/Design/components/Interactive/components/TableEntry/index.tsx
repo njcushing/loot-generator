@@ -68,7 +68,8 @@ export function TableEntry({ entry }: TTableEntry) {
                         name="Criteria"
                         fields={
                             <Inputs.Numeric
-                                entryKey={key}
+                                idOrKey={key}
+                                type="entry"
                                 labelText="Weight"
                                 value={typeof weight === "number" ? weight : 1}
                                 fieldPath={["criteria", "weight"]}

@@ -114,7 +114,8 @@ export function Table({ id, displayMode = "normal", onClick }: TTable) {
             >
                 <div className={styles["table-fields"]}>
                     <Inputs.Text
-                        entryKey={id}
+                        idOrKey={id}
+                        type="table"
                         labelText="Name"
                         value={name || ""}
                         fieldPath={["name"]}
