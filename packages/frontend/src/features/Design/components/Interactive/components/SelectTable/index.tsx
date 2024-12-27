@@ -64,24 +64,32 @@ export function SelectTable({ entryKey, id, disabled }: TSelectTable) {
             )}
             {!disabled && selectingTable && (
                 <ul className={styles["selection-list"]}>
-                    {[...lootGeneratorState.tables.keys()].map((tableId) => {
-                        const selectionTable = lootGeneratorState.tables.get(tableId);
-                        return (
-                            selectionTable && (
-                                <Table
-                                    id={tableId}
-                                    displayMode="selection"
-                                    onClick={() => {
-                                        const success =
-                                            pathToRoot[0].id &&
-                                            setTableOnEntry(pathToRoot[0].id, entryKey, tableId);
-                                        if (success) setSelectingTable(false);
-                                    }}
-                                    key={tableId}
-                                />
-                            )
-                        );
-                    })}
+                    {[...lootGeneratorState.tables.keys()]
+                        .filter(
+                            (tableId) => pathToRoot.findIndex((step) => step.id === tableId) === -1,
+                        )
+                        .map((tableId) => {
+                            const selectionTable = lootGeneratorState.tables.get(tableId);
+                            return (
+                                selectionTable && (
+                                    <Table
+                                        id={tableId}
+                                        displayMode="selection"
+                                        onClick={() => {
+                                            const success =
+                                                pathToRoot[0].id &&
+                                                setTableOnEntry(
+                                                    pathToRoot[0].id,
+                                                    entryKey,
+                                                    tableId,
+                                                );
+                                            if (success) setSelectingTable(false);
+                                        }}
+                                        key={tableId}
+                                    />
+                                )
+                            );
+                        })}
                 </ul>
             )}
         </div>
