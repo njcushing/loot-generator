@@ -48,12 +48,13 @@ interface LootGeneratorContext {
     deleteActive: () => void;
 
     createTable: () => void;
+    updateTable: (id: string, fieldsToMutate: TFieldToUpdate[]) => boolean;
     deleteTable: (id: string) => boolean;
     uploadTableToActive: (id: string) => void;
 
     createItem: () => void;
-    updateItem: (key: string, fieldsToMutate: TFieldToUpdate[]) => boolean;
-    deleteItem: (key: string) => boolean;
+    updateItem: (id: string, fieldsToMutate: TFieldToUpdate[]) => boolean;
+    deleteItem: (id: string) => boolean;
 
     getEntry: (
         tableId: string,
@@ -73,6 +74,7 @@ const defaultLootGeneratorContext: LootGeneratorContext = {
     deleteActive: () => {},
 
     createTable: () => {},
+    updateTable: () => false,
     deleteTable: () => false,
     uploadTableToActive: () => {},
 
@@ -165,6 +167,21 @@ export function LootGenerator() {
         setLootGeneratorStateProperty("tables", newTables);
     }, [lootGeneratorState.tables, setLootGeneratorStateProperty]);
 
+    const updateTable = useCallback(
+        (id: string, fieldsToUpdate: TFieldToUpdate[]): boolean => {
+            const tablesCopy = structuredClone(lootGeneratorState.tables);
+            const table = tablesCopy.get(id);
+            if (!table) return false;
+
+            updateFieldsInObject(table, fieldsToUpdate);
+
+            saveCopy("tables", tablesCopy);
+
+            return true;
+        },
+        [lootGeneratorState.tables, saveCopy],
+    );
+
     const deleteTable = useCallback(
         (id: string): boolean => {
             if (!lootGeneratorState.tables.has(id)) return false;
@@ -207,10 +224,10 @@ export function LootGenerator() {
     );
 
     const deleteItem = useCallback(
-        (key: string): boolean => {
-            if (!lootGeneratorState.items.has(key)) return false;
+        (id: string): boolean => {
+            if (!lootGeneratorState.items.has(id)) return false;
             const newItems = new Map(lootGeneratorState.items);
-            newItems.delete(key);
+            newItems.delete(id);
             setLootGeneratorStateProperty("items", newItems);
             return true;
         },
@@ -373,6 +390,7 @@ export function LootGenerator() {
                     deleteActive,
 
                     createTable,
+                    updateTable,
                     deleteTable,
                     uploadTableToActive,
 
@@ -394,6 +412,7 @@ export function LootGenerator() {
                     deleteActive,
 
                     createTable,
+                    updateTable,
                     deleteTable,
                     uploadTableToActive,
 
