@@ -11,6 +11,7 @@ export type TJSONDisplay = {
 export function JSONDisplay({ hideFields }: TJSONDisplay) {
     const { lootGeneratorState } = useContext(LootGeneratorContext);
 
+    const [tableIsPopulated, setTableIsPopulated] = useState<boolean>(false);
     const [showingHiddenFields, setShowingHiddenFields] = useState<boolean>(false);
 
     const hideFieldsSet: Set<string> = useMemo(() => new Set(hideFields), [hideFields]);
@@ -110,6 +111,10 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
     return (
         <div className={styles["json-display"]}>
             <div className={styles["json-display-options"]}>
+                <Option
+                    symbol={tableIsPopulated ? "Table_Eye" : "Table"}
+                    onClick={() => setTableIsPopulated(!tableIsPopulated)}
+                />
                 <Option
                     symbol={showingHiddenFields ? "Visibility" : "Visibility_Off"}
                     onClick={() => setShowingHiddenFields(!showingHiddenFields)}
