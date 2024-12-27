@@ -3,3 +3,52 @@
     flex-direction: column;
     gap: 1px;
 }
+
+.entry-options {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+
+    outline: 1px solid black;
+
+    width: 100%;
+    padding: 4px;
+}
+
+.entry-option {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+
+    pointer-events: all;
+
+    color: black;
+    font-family: Roboto;
+    font-size: 0.9rem;
+    text-wrap: nowrap;
+
+    border: 1px solid black;
+    background-color: rgba(0, 0, 0, 0);
+
+    padding: 4px;
+}
+
+@media (hover: hover) {
+    .entry-option:hover {
+        cursor: pointer;
+
+        outline: 1px solid black;
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+}
+
+.entry-option:focus {
+    cursor: pointer;
+
+    outline: 1px solid black;
+    background-color: rgba(0, 0, 0, 0.2);
+}
