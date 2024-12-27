@@ -3,9 +3,9 @@ import { createItem, createLootItem, createTable, createLootTable } from "@/util
 import { v4 as uuid } from "uuid";
 
 const tableIds: Map<string, string> = new Map([
-    ["Example Table 1", uuid()],
-    ["Example Table 2", uuid()],
-    ["Example Table 3", uuid()],
+    ["Fruits", uuid()],
+    ["Vegetables", uuid()],
+    ["Dairy", uuid()],
 ]);
 
 const itemIds: Map<string, string> = new Map([
@@ -14,12 +14,12 @@ const itemIds: Map<string, string> = new Map([
     ["Orange", uuid()],
     ["Peach", uuid()],
     ["Cherry", uuid()],
-    ["Pineapple", uuid()],
-    ["Kiwi", uuid()],
-    ["Watermelon", uuid()],
-    ["Lemon", uuid()],
-    ["Lime", uuid()],
-    ["Passionfruit", uuid()],
+    ["Broccoli", uuid()],
+    ["Carrot", uuid()],
+    ["Potato", uuid()],
+    ["Milk", uuid()],
+    ["Yoghurt", uuid()],
+    ["Cheese", uuid()],
 ]);
 
 export const items: Items = new Map([
@@ -28,18 +28,19 @@ export const items: Items = new Map([
     [itemIds.get("Orange")!, createItem({ name: "Orange" })],
     [itemIds.get("Peach")!, createItem({ name: "Peach" })],
     [itemIds.get("Cherry")!, createItem({ name: "Cherry" })],
-    [itemIds.get("Pineapple")!, createItem({ name: "Pineapple" })],
-    [itemIds.get("Kiwi")!, createItem({ name: "Kiwi" })],
-    [itemIds.get("Watermelon")!, createItem({ name: "Watermelon" })],
-    [itemIds.get("Lemon")!, createItem({ name: "Lemon" })],
-    [itemIds.get("Lime")!, createItem({ name: "Lime" })],
-    [itemIds.get("Passionfruit")!, createItem({ name: "Passionfruit" })],
+    [itemIds.get("Broccoli")!, createItem({ name: "Broccoli" })],
+    [itemIds.get("Carrot")!, createItem({ name: "Carrot" })],
+    [itemIds.get("Potato")!, createItem({ name: "Potato" })],
+    [itemIds.get("Milk")!, createItem({ name: "Milk" })],
+    [itemIds.get("Yoghurt")!, createItem({ name: "Yoghurt" })],
+    [itemIds.get("Cheese")!, createItem({ name: "Cheese" })],
 ]);
 
 export const tables: Tables = new Map([
     [
-        tableIds.get("Example Table 1")!,
+        tableIds.get("Fruits")!,
         createTable({
+            name: "Fruits",
             loot: [
                 createLootItem({ id: itemIds.get("Apple"), criteria: { weight: 10 } }),
                 createLootItem({ id: itemIds.get("Banana"), criteria: { weight: 10 } }),
@@ -47,7 +48,7 @@ export const tables: Tables = new Map([
                 createLootItem({ id: itemIds.get("Peach"), criteria: { weight: 10 } }),
                 createLootItem({ id: itemIds.get("Cherry"), criteria: { weight: 10 } }),
                 createLootTable({
-                    id: tableIds.get("Example Table 2"),
+                    id: tableIds.get("Vegetables"),
                     criteria: {
                         weight: 100,
                     },
@@ -56,14 +57,15 @@ export const tables: Tables = new Map([
         }),
     ],
     [
-        tableIds.get("Example Table 2")!,
+        tableIds.get("Vegetables")!,
         createTable({
+            name: "Vegetables",
             loot: [
-                createLootItem({ id: itemIds.get("Pineapple"), criteria: { weight: 10 } }),
-                createLootItem({ id: itemIds.get("Kiwi"), criteria: { weight: 10 } }),
-                createLootItem({ id: itemIds.get("Watermelon"), criteria: { weight: 10 } }),
+                createLootItem({ id: itemIds.get("Broccoli"), criteria: { weight: 10 } }),
+                createLootItem({ id: itemIds.get("Carrot"), criteria: { weight: 10 } }),
+                createLootItem({ id: itemIds.get("Potato"), criteria: { weight: 10 } }),
                 createLootTable({
-                    id: tableIds.get("Example Table 3"),
+                    id: tableIds.get("Dairy"),
                     criteria: {
                         weight: 100,
                     },
@@ -72,12 +74,13 @@ export const tables: Tables = new Map([
         }),
     ],
     [
-        tableIds.get("Example Table 3")!,
+        tableIds.get("Dairy")!,
         createTable({
+            name: "Dairy",
             loot: [
-                createLootItem({ id: itemIds.get("Lemon"), criteria: { weight: 10 } }),
-                createLootItem({ id: itemIds.get("Lime"), criteria: { weight: 10 } }),
-                createLootItem({ id: itemIds.get("Passionfruit"), criteria: { weight: 10 } }),
+                createLootItem({ id: itemIds.get("Milk"), criteria: { weight: 10 } }),
+                createLootItem({ id: itemIds.get("Yoghurt"), criteria: { weight: 10 } }),
+                createLootItem({ id: itemIds.get("Cheese"), criteria: { weight: 10 } }),
             ],
         }),
     ],
