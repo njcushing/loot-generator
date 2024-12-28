@@ -3,7 +3,7 @@ import styles from "./index.module.css";
 
 type Tab = {
     name?: string;
-    content: JSX.Element | JSX.Element[];
+    content: JSX.Element | null | (JSX.Element | null)[];
     position?: "left" | "right";
 };
 
