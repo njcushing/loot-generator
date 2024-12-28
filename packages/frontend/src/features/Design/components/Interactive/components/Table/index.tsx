@@ -137,7 +137,7 @@ export function Table({ id, displayMode = "normal", onClick }: TTable) {
                                 return <TableEntry entry={entry} key={entry.key} />;
                             }
                             if (entry.type === "entry") {
-                                return <Entry key={entry.key} />;
+                                return <Entry entry={entry} key={entry.key} />;
                             }
                             return null;
                         })}

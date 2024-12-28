@@ -1,9 +1,27 @@
+import { useContext } from "react";
 import { ToggleBar } from "@/components/buttons/components/ToggleBar";
 import { v4 as uuid } from "uuid";
-import { Option } from "../../../Option";
+import { LootEntry } from "@/utils/types";
+import { TableContext } from "../Table";
+import { InteractiveContext } from "../..";
+import { SelectEntry } from "../SelectEntry";
 import styles from "./index.module.css";
 
-export function Entry() {
+export type TEntry = {
+    entry: LootEntry;
+};
+
+export function Entry({ entry }: TEntry) {
+    const { menuType } = useContext(InteractiveContext);
+    const { pathToRoot } = useContext(TableContext);
+
+    const isDescendantOfImportedTable =
+        pathToRoot.findIndex((pathStep) => pathStep.type === "imported") !== -1;
+
+    const { key } = entry;
+
+    const disableItemSelection = menuType === "active" || isDescendantOfImportedTable;
+
     return (
         <li className={styles["entry"]} key={uuid()}>
             <ToggleBar
@@ -18,6 +36,7 @@ export function Entry() {
                     nameFontStyle: "italic",
                 }}
             >
+                <SelectEntry entryKey={key} id={null} disabled={disableItemSelection} />
                 <div className={styles["entry-options"]}>
                     <button
                         type="button"
@@ -31,7 +50,7 @@ export function Entry() {
                     >
                         <p
                             className={`${styles["symbol"]} material-symbols-sharp`}
-                            style={{ fontSize: "1.4rem" }}
+                            style={{ fontSize: "1.2rem" }}
                         >
                             Table
                         </p>
@@ -49,7 +68,7 @@ export function Entry() {
                     >
                         <p
                             className={`${styles["symbol"]} material-symbols-sharp`}
-                            style={{ fontSize: "1.4rem" }}
+                            style={{ fontSize: "1.2rem" }}
                         >
                             Nutrition
                         </p>
