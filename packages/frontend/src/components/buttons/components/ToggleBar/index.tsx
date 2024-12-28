@@ -15,7 +15,7 @@ export type TToggleBar = {
     options?: TToggleBarButton[];
     onClick?: () => unknown;
     disabled?: boolean;
-    children?: JSX.Element | JSX.Element[];
+    children?: JSX.Element | null | (JSX.Element | null)[];
     style?: {
         size?: "m" | "s";
         colours?: {
