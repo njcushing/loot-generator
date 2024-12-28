@@ -20,13 +20,25 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
             lootGeneratorState.tables.get(lootGeneratorState.active || ""),
         );
         if (!activeTableCopy) return null;
-        if (!tableIsPopulated) return activeTableCopy;
 
-        const populate = (loot: Table["loot"]) => {
+        const removeEmptyEntries = (loot: Table["loot"]) => {
             const entryCount = loot.length;
             const mutableLoot = loot;
 
-            for (let i = 0; i < entryCount; i++) {
+            for (let i = entryCount - 1; i >= 0; i--) {
+                const entry = loot[i];
+                if (entry.type === "entry") mutableLoot.splice(i, 1);
+            }
+        };
+
+        removeEmptyEntries(activeTableCopy.loot);
+
+        if (!tableIsPopulated) return activeTableCopy;
+
+        const populate = (loot: Table["loot"]) => {
+            const mutableLoot = loot;
+
+            for (let i = 0; i < loot.length; i++) {
                 const entry = loot[i];
 
                 if (entry.type === "item") {
