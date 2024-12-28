@@ -5,6 +5,7 @@ import { InteractiveContext } from "../..";
 import { Inputs } from "../../inputs";
 import { TableEntry } from "../TableEntry";
 import { ItemEntry } from "../ItemEntry";
+import { Entry } from "../Entry";
 import styles from "./index.module.css";
 
 interface TableContext {
@@ -20,11 +21,11 @@ export const TableContext = createContext<TableContext>(defaultTableContext);
 export type TTable = {
     id: string;
     displayMode?: "normal" | "entry" | "entryViewOnly" | "selection";
-    onClick?: (optionClicked: "toggle" | "delete" | "edit" | "upload") => unknown;
+    onClick?: (optionClicked: "toggle" | "delete" | "edit" | "upload" | "add") => unknown;
 };
 
 export function Table({ id, displayMode = "normal", onClick }: TTable) {
-    const { lootGeneratorState, deleteTable, uploadTableToActive } =
+    const { lootGeneratorState, deleteTable, uploadTableToActive, createSubEntry } =
         useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
     const { pathToRoot } = useContext(TableContext);
@@ -43,6 +44,10 @@ export function Table({ id, displayMode = "normal", onClick }: TTable) {
             if (displayMode === "normal") {
                 options.push({
                     symbol: "Add_Circle",
+                    onClick: () => {
+                        createSubEntry(id);
+                        if (onClick) onClick("add");
+                    },
                 });
                 options.push({
                     symbol: "Upload",
@@ -68,7 +73,7 @@ export function Table({ id, displayMode = "normal", onClick }: TTable) {
             }
         }
         return options;
-    }, [id, displayMode, onClick, deleteTable, uploadTableToActive, menuType]);
+    }, [id, displayMode, onClick, deleteTable, uploadTableToActive, createSubEntry, menuType]);
 
     const name = table?.name;
     let displayName = name || "Unnamed Table";
@@ -130,6 +135,9 @@ export function Table({ id, displayMode = "normal", onClick }: TTable) {
                             }
                             if (entry.type === "table") {
                                 return <TableEntry entry={entry} key={entry.key} />;
+                            }
+                            if (entry.type === "entry") {
+                                return <Entry key={entry.key} />;
                             }
                             return null;
                         })}
