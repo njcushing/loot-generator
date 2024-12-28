@@ -3,12 +3,13 @@ import useResizeObserverElement from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
 import { Generate } from "@/features/Generate";
 import {
+    createLootEntry,
     createItem as newItem,
     createLootItem,
     createTable as newTable,
     createLootTable,
 } from "@/utils/generateLoot";
-import { LootItem, LootTable, Items, Table, Tables, Loot, SortOptions } from "@/utils/types";
+import { LootTable, Items, Table, Tables, Loot, SortOptions } from "@/utils/types";
 import { Design } from "@/features/Design";
 import { updateFieldsInObject, TFieldToUpdate } from "@/utils/mutateFieldsInObject";
 import { v4 as uuid } from "uuid";
@@ -59,12 +60,12 @@ interface LootGeneratorContext {
     getEntry: (
         tableId: string,
         entryKey: string,
-    ) => { entry: LootTable | LootItem; path: LootTable[]; index: number } | null;
+    ) => { entry: Table["loot"][number]; path: LootTable[]; index: number } | null;
     updateEntry: (tableId: string, entryKey: string, fieldsToMutate: TFieldToUpdate[]) => boolean;
     setItemOnEntry: (tableId: string, entryKey: string, setItemId: string) => boolean;
     setTableOnEntry: (tableId: string, entryKey: string, setTableId: string) => boolean;
     deleteEntry: (tableId: string, entryKey: string) => boolean;
-    createSubEntry: (tableId: string, type: LootItem["type"] | LootTable["type"]) => boolean;
+    createSubEntry: (tableId: string) => boolean;
 }
 
 const defaultLootGeneratorContext: LootGeneratorContext = {
@@ -239,7 +240,7 @@ export function LootGenerator() {
             tableId: string,
             entryKey: string,
         ): {
-            entry: LootTable | LootItem;
+            entry: Table["loot"][number];
             path: LootTable[];
             index: number;
             copy: LootGeneratorState["tables"];
@@ -254,7 +255,7 @@ export function LootGenerator() {
                 currentEntry: Table["loot"],
                 currentPath: LootTable[] = [],
             ): {
-                entry: LootTable | LootItem;
+                entry: Table["loot"][number];
                 path: LootTable[];
                 index: number;
                 copy: LootGeneratorState["tables"];
@@ -364,7 +365,7 @@ export function LootGenerator() {
     );
 
     const createSubEntry = useCallback(
-        (tableId: string, type: LootItem["type"] | LootTable["type"]): boolean => {
+        (tableId: string): boolean => {
             const copy = getCopy("tables") as LootGeneratorState["tables"];
             if (!copy) return false;
 
@@ -372,8 +373,7 @@ export function LootGenerator() {
             if (!table) return false;
 
             let newSubEntry = null;
-            if (type === "table") newSubEntry = createLootTable();
-            if (type === "item") newSubEntry = createLootItem();
+            newSubEntry = createLootEntry();
             if (!newSubEntry) return false;
             table.loot.push(newSubEntry);
 

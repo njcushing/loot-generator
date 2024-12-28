@@ -14,6 +14,10 @@ export type GenerationCriteria = {
     };
 };
 
+export type LootEntry = {
+    type: "entry";
+    key: string;
+};
 export type LootItem = {
     type: "item";
     key: string;
@@ -37,7 +41,7 @@ export type Items = Map<string, Item>;
 
 export type Table = {
     name?: string;
-    loot: (LootItem | LootTable)[];
+    loot: (LootEntry | LootItem | LootTable)[];
 } & CustomFields;
 export type Tables = Map<string, Table>;
 
