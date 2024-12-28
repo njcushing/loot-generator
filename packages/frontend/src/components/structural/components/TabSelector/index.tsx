@@ -1,4 +1,5 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useMemo } from "react";
+import _ from "lodash";
 import styles from "./index.module.css";
 
 type Tab = {
@@ -14,9 +15,21 @@ type Tabs = {
 export type TTabSelector = {
     tabs: Tabs;
     selectedTabName?: keyof Tabs;
+    style?: {
+        size?: "m" | "s";
+    };
 };
 
-export function TabSelector({ tabs, selectedTabName }: TTabSelector) {
+const defaultStyles: Required<TTabSelector["style"]> = {
+    size: "m",
+};
+
+export function TabSelector({ tabs, selectedTabName, style }: TTabSelector) {
+    const concatenatedStyles = useMemo(
+        () => _.merge(structuredClone(defaultStyles), style || {}),
+        [style],
+    );
+
     const [selectedTab, setSelectedTab] = useState<keyof Tabs>(
         selectedTabName || Object.keys(tabs)[0],
     );
@@ -47,7 +60,7 @@ export function TabSelector({ tabs, selectedTabName }: TTabSelector) {
     );
 
     return (
-        <div className={styles["tab-selector"]}>
+        <div className={`${styles["tab-selector"]} ${styles[concatenatedStyles.size]}`}>
             <div className={styles["tabs"]}>
                 <ul className={styles["left"]}>
                     {Object.keys(tabs).map((key) => {
