@@ -4,7 +4,7 @@ import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar
 import { Item as ItemTypes, LootItem } from "@/utils/types";
 import { TableContext } from "../Table";
 import { InteractiveContext } from "../..";
-import { SelectItem } from "../SelectItem";
+import { SelectEntry } from "../SelectEntry";
 import { EntryFieldsToggleBar } from "../EntryFieldsToggleBar";
 import { Inputs } from "../../inputs";
 import styles from "./index.module.css";
@@ -65,7 +65,7 @@ export function ItemEntry({ entry }: TItemEntry) {
                     nameFontStyle,
                 }}
             >
-                <SelectItem entryKey={key} id={id} disabled={disableItemSelection} />
+                <SelectEntry entryKey={key} id={id} disabled={disableItemSelection} />
                 <div className={styles["item-entry-fields"]}>
                     <EntryFieldsToggleBar
                         name="Quantity"

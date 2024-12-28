@@ -4,7 +4,7 @@ import { LootTable, Table as TableTypes } from "@/utils/types";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
 import { TableContext } from "../Table";
 import { InteractiveContext } from "../..";
-import { SelectTable } from "../SelectTable";
+import { SelectEntry } from "../SelectEntry";
 import { EntryFieldsToggleBar } from "../EntryFieldsToggleBar";
 import { Inputs } from "../../inputs";
 import styles from "./index.module.css";
@@ -62,7 +62,7 @@ export function TableEntry({ entry }: TTableEntry) {
                     nameFontStyle,
                 }}
             >
-                <SelectTable entryKey={key} id={id} disabled={disableTableSelection} />
+                <SelectEntry entryKey={key} id={id} disabled={disableTableSelection} />
                 <div className={styles["table-entry-fields"]}>
                     <EntryFieldsToggleBar
                         name="Criteria"
