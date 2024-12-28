@@ -37,44 +37,46 @@ export function Entry({ entry }: TEntry) {
                 }}
             >
                 <SelectEntry entryKey={key} id={null} disabled={disableItemSelection} />
-                <div className={styles["entry-options"]}>
-                    <button
-                        type="button"
-                        className={styles["entry-option"]}
-                        onClick={(e) => {
-                            e.currentTarget.blur();
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.blur();
-                        }}
-                    >
-                        <p
-                            className={`${styles["symbol"]} material-symbols-sharp`}
-                            style={{ fontSize: "1.2rem" }}
+                {!disableItemSelection ? (
+                    <div className={styles["entry-options"]}>
+                        <button
+                            type="button"
+                            className={styles["entry-option"]}
+                            onClick={(e) => {
+                                e.currentTarget.blur();
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.blur();
+                            }}
                         >
-                            Table
-                        </p>
-                        <p className="truncate-ellipsis">Table</p>
-                    </button>
-                    <button
-                        type="button"
-                        className={styles["entry-option"]}
-                        onClick={(e) => {
-                            e.currentTarget.blur();
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.blur();
-                        }}
-                    >
-                        <p
-                            className={`${styles["symbol"]} material-symbols-sharp`}
-                            style={{ fontSize: "1.2rem" }}
+                            <p
+                                className={`${styles["symbol"]} material-symbols-sharp`}
+                                style={{ fontSize: "1.2rem" }}
+                            >
+                                Table
+                            </p>
+                            <p className="truncate-ellipsis">Table</p>
+                        </button>
+                        <button
+                            type="button"
+                            className={styles["entry-option"]}
+                            onClick={(e) => {
+                                e.currentTarget.blur();
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.blur();
+                            }}
                         >
-                            Nutrition
-                        </p>
-                        <p className="truncate-ellipsis">Item</p>
-                    </button>
-                </div>
+                            <p
+                                className={`${styles["symbol"]} material-symbols-sharp`}
+                                style={{ fontSize: "1.2rem" }}
+                            >
+                                Nutrition
+                            </p>
+                            <p className="truncate-ellipsis">Item</p>
+                        </button>
+                    </div>
+                ) : null}
             </ToggleBar>
         </li>
     );
