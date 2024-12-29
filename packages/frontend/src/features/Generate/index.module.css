@@ -1,6 +1,6 @@
 .results {
     display: grid;
-    grid-template-rows: 1fr auto auto;
+    grid-template-rows: auto 1fr auto auto;
     gap: 12px;
 
     width: 100%;

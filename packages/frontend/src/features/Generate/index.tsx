@@ -38,6 +38,7 @@ export function Generate() {
                     name: "Results",
                     content: (
                         <div className={styles["results"]}>
+                            <SortOptions />
                             <Loot />
                             <QuantityOptions />
                             <div className={styles["generate-and-reset-buttons"]}>
@@ -69,7 +70,6 @@ export function Generate() {
                     ),
                     position: "left",
                 },
-                sort: { name: "Sort", content: <SortOptions />, position: "left" },
             }}
         />
     );
