@@ -457,8 +457,6 @@ export function LootGenerator() {
                     <Structural.TabSelector
                         tabs={{
                             generate: { name: "Generate", content: <Generate />, position: "left" },
-                            code: { name: "Code", content: <p>Code</p>, position: "left" },
-                            data: { name: "Data", content: <p>Data</p>, position: "left" },
                         }}
                     />
                 </div>
