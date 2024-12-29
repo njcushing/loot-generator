@@ -1,5 +1,6 @@
-import { useContext } from "react";
-import { ToggleBar } from "@/components/buttons/components/ToggleBar";
+import { useContext, useMemo } from "react";
+import { LootGeneratorContext } from "@/pages/LootGenerator";
+import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
 import { v4 as uuid } from "uuid";
 import { LootEntry } from "@/utils/types";
 import { TableContext } from "../Table";
@@ -12,6 +13,7 @@ export type TEntry = {
 };
 
 export function Entry({ entry }: TEntry) {
+    const { deleteEntry } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
     const { pathToRoot } = useContext(TableContext);
 
@@ -22,10 +24,25 @@ export function Entry({ entry }: TEntry) {
 
     const disableItemSelection = menuType === "active" || isDescendantOfImportedTable;
 
+    const toggleBarOptions = useMemo((): TToggleBar["options"] => {
+        const options: TToggleBar["options"] = [];
+        if (menuType !== "active" && !isDescendantOfImportedTable) {
+            options.push({
+                symbol: "Delete",
+                onClick: () => {
+                    if (pathToRoot[0].id) deleteEntry(pathToRoot[0].id, key);
+                },
+                colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
+            });
+        }
+        return options;
+    }, [deleteEntry, menuType, pathToRoot, isDescendantOfImportedTable, key]);
+
     return (
         <li className={styles["entry"]} key={uuid()}>
             <ToggleBar
                 name="New Entry"
+                options={toggleBarOptions}
                 style={{
                     size: "s",
                     colours: {
