@@ -14,6 +14,7 @@ import { Design } from "@/features/Design";
 import { updateFieldsInObject, TFieldToUpdate } from "@/utils/mutateFieldsInObject";
 import { v4 as uuid } from "uuid";
 import * as exampleLoot from "./utils/exampleLoot";
+import { sortOptions } from "./utils/sortOptions";
 import { version } from "../../../package.json";
 import styles from "./index.module.css";
 
@@ -25,7 +26,7 @@ export type LootGeneratorState = {
     quantitySelected: number;
     quantityOptionSelected: number;
     customQuantity: number;
-    sortOptions: SortOptions;
+    sortOptions: { selected: string; options: SortOptions };
 };
 
 const defaultLootGeneratorState: LootGeneratorState = {
@@ -36,7 +37,10 @@ const defaultLootGeneratorState: LootGeneratorState = {
     quantitySelected: 1,
     quantityOptionSelected: 0,
     customQuantity: 50,
-    sortOptions: new Map([["quantity", "descending"]]),
+    sortOptions: {
+        selected: "quantity",
+        options: structuredClone(sortOptions),
+    },
 };
 
 interface LootGeneratorContext {

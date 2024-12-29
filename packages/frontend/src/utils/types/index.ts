@@ -49,6 +49,5 @@ export type LootTables = Map<string, LootTable>;
 
 export type Loot = Map<string, number>;
 
-export type SortCriteria = "name" | "quantity" | "value";
-export type SortOrder = "ascending" | "descending";
-export type SortOptions = Map<SortCriteria, SortOrder>;
+export type SortCriterion = Map<string, { selected: string; values: string[] }>;
+export type SortOptions = Map<string, SortCriterion>;
