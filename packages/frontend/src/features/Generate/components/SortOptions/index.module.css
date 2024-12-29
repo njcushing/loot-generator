@@ -1,38 +1,15 @@
 .sort-options {
     display: flex;
-    flex-direction: column;
     justify-content: start;
-    gap: 4px;
-
-    overflow-y: auto;
-
-    border: 1px solid #000;
-
-    width: 100%;
-    height: 100%;
-    padding: 12px;
-}
-
-.sort-options-fieldset {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-}
-
-.sort-option-label {
-    display: grid;
-    grid-template-rows: minmax(0, 1fr);
-    grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
-    gap: 4px;
+    gap: 8px;
 
     width: 100%;
 }
 
-.sort-option-label-name {
+.sort-options-title {
     color: black;
-    font-size: 1rem;
-    text-transform: capitalize;
+    font-size: 0.9rem;
 }
 
 .sort-option-input {
@@ -49,9 +26,9 @@
     text-transform: capitalize;
     text-align: center;
 
-    border: none;
+    border: 1px solid black;
     border-radius: 2px;
-    outline: 1px solid black;
+    outline: none;
 
     width: min-content;
     height: min-content;
@@ -76,4 +53,10 @@
 
 .sort-option-select-option:nth-child(2n) {
     background-color: rgba(0, 0, 0, 0.16);
+}
+
+.sort-option-criteria {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
 }

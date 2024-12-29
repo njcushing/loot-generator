@@ -1,6 +1,5 @@
-import { useContext, useState, useEffect, useCallback } from "react";
+import { useContext, useState, useEffect, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
-import { SortCriterion } from "@/utils/types";
 import styles from "./index.module.css";
 
 export function SortOptions() {
@@ -14,72 +13,78 @@ export function SortOptions() {
         setLootGeneratorStateProperty("sortOptions", sortOptions);
     }, [setLootGeneratorStateProperty, sortOptions]);
 
-    const createSortOptionField = useCallback(
-        (entry: [string, SortCriterion]) => {
-            const [name, criteria] = entry;
-            return (
-                <fieldset className={styles["sort-options-fieldset"]} key={`sort-${name}`}>
-                    <label className={styles["sort-option-label"]} htmlFor={`sort-${name}`}>
-                        <input
-                            className={styles["sort-option-input"]}
-                            type="checkbox"
-                            id={`sort-${name}`}
-                            checked={lootGeneratorState.sortOptions.selected === name}
-                            onChange={() => {
-                                setSortOptions((current) => ({ ...current, selected: name }));
-                            }}
-                        />
-                        <p className={`${styles["sort-option-label-name"]} truncate-ellipsis`}>
-                            {name}
-                        </p>
-                    </label>
-                    {lootGeneratorState.sortOptions.selected === name &&
-                        [...criteria.entries()].map((criterion) => {
-                            const [criterionName, criterionInformation] = criterion;
-                            const { selected, values } = criterionInformation;
-                            return (
-                                <select
-                                    className={styles["sort-option-select"]}
-                                    id={`sort-${name}-${criterionName}`}
-                                    name={`sort-${name}-${criterionName}`}
-                                    defaultValue={selected}
-                                    onChange={(e) => {
-                                        setSortOptions((current) => {
-                                            const options = new Map(current.options);
-                                            if (!options.has(name)) return current;
-                                            if (!options.get(name)!.has(criterionName)) {
-                                                return current;
-                                            }
-                                            options.get(name)!.get(criterionName)!.selected =
-                                                e.target.value;
-                                            return { ...current, options };
-                                        });
-                                    }}
-                                    key={`sort-option-${name}-${criterionName}`}
-                                >
-                                    {values.map((value) => {
-                                        return (
-                                            <option
-                                                className={styles["sort-option-select-option"]}
-                                                value={value}
-                                                key={`sort-option-${name}-${criterionName}-${value}`}
-                                            >
-                                                {value}
-                                            </option>
-                                        );
-                                    })}
-                                </select>
-                            );
-                        })}
-                </fieldset>
-            );
-        },
-        [lootGeneratorState.sortOptions],
-    );
+    const inputs = useMemo(() => {
+        const { selected, options } = sortOptions;
+        const optionSelected = options.get(selected);
+        if (!optionSelected) return null;
+        const criteria = [...optionSelected.entries()];
+        return (
+            <>
+                <p className={styles["sort-options-title"]}>Sort By:</p>
+                <select
+                    className={styles["sort-option-select"]}
+                    id="sort-options"
+                    name="sort-options"
+                    defaultValue={sortOptions.selected}
+                    onChange={(e) => {
+                        setSortOptions((current) => ({ ...current, selected: e.target.value }));
+                    }}
+                    key="sort-options"
+                >
+                    {[...options.keys()].map((optionName) => {
+                        return (
+                            <option
+                                className={styles["sort-option-select-option"]}
+                                value={optionName}
+                                key={`sort-option-${optionName}`}
+                            >
+                                {optionName}
+                            </option>
+                        );
+                    })}
+                </select>
+                <div className={styles["sort-option-criteria"]}>
+                    {criteria.map((criterion) => {
+                        const [criterionName, criterionInformation] = criterion;
+                        const { selected: selectedCriterion, values } = criterionInformation;
+                        return (
+                            <select
+                                className={styles["sort-option-select"]}
+                                id={`sort-option-${selected}-${criterionName}`}
+                                name={`sort-option-${selected}-${criterionName}`}
+                                defaultValue={selectedCriterion}
+                                onChange={(e) => {
+                                    setSortOptions((current) => {
+                                        const newOptions = new Map(current.options);
+                                        if (!newOptions.has(selected)) return current;
+                                        if (!newOptions.get(selected)!.has(criterionName)) {
+                                            return current;
+                                        }
+                                        newOptions.get(selected)!.get(criterionName)!.selected =
+                                            e.target.value;
+                                        return { ...current, options: newOptions };
+                                    });
+                                }}
+                                key={`sort-option-${selected}-${criterionName}`}
+                            >
+                                {values.map((value) => {
+                                    return (
+                                        <option
+                                            className={styles["sort-option-select-option"]}
+                                            value={value}
+                                            key={`sort-option-${selected}-${criterionName}-${value}`}
+                                        >
+                                            {value}
+                                        </option>
+                                    );
+                                })}
+                            </select>
+                        );
+                    })}
+                </div>
+            </>
+        );
+    }, [sortOptions]);
 
-    return (
-        <form className={styles["sort-options"]}>
-            {[...sortOptions.options.entries()].map((entry) => createSortOptionField(entry))}
-        </form>
-    );
+    return <form className={styles["sort-options"]}>{inputs}</form>;
 }
