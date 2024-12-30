@@ -45,8 +45,6 @@ export type Table = {
 } & CustomFields;
 export type Tables = Map<string, Table>;
 
-export type LootTables = Map<string, LootTable>;
-
 export type Loot = Map<string, number>;
 
 export type SortCriteria = Map<string, { selected: string; values: string[] }>;
