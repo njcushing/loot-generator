@@ -65,7 +65,7 @@ export function ItemEntry({ entry }: TItemEntry) {
                     nameFontStyle,
                 }}
             >
-                <SelectEntry entryKey={key} id={id} disabled={disableItemSelection} />
+                <SelectEntry entryKey={key} id={id || ""} disabled={disableItemSelection} />
                 <div className={styles["item-entry-fields"]}>
                     <EntryFieldsToggleBar
                         name="Quantity"

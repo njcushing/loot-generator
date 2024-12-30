@@ -62,7 +62,7 @@ export function TableEntry({ entry }: TTableEntry) {
                     nameFontStyle,
                 }}
             >
-                <SelectEntry entryKey={key} id={id} disabled={disableTableSelection} />
+                <SelectEntry entryKey={key} id={id || ""} disabled={disableTableSelection} />
                 <div className={styles["table-entry-fields"]}>
                     <EntryFieldsToggleBar
                         name="Criteria"
