@@ -104,7 +104,7 @@ export function SelectEntry({ entryKey, id, disabled }: TSelectEntry) {
                 properties
             ) : (
                 <ToggleBar
-                    name={!disabled ? "Please select an entry" : "Cannot select entry"}
+                    name={!disabled ? "Select an entry" : "Cannot select entry"}
                     defaultState={false}
                     options={toggleBarOptions}
                     onClick={() => setSelectingEntry(!selectingEntry)}
