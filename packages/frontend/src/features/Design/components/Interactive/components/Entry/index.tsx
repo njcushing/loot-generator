@@ -1,7 +1,6 @@
 import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
-import { v4 as uuid } from "uuid";
 import { LootEntry } from "@/utils/types";
 import { TableContext } from "../Table";
 import { InteractiveContext } from "../..";
@@ -39,7 +38,7 @@ export function Entry({ entry }: TEntry) {
     }, [deleteEntry, menuType, pathToRoot, isDescendantOfImportedTable, key]);
 
     return (
-        <li className={styles["entry"]} key={uuid()}>
+        <li className={styles["entry"]} key={key}>
             <ToggleBar
                 name="New Entry"
                 options={toggleBarOptions}
