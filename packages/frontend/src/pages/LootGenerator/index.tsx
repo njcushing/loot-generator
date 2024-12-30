@@ -306,9 +306,13 @@ export function LootGenerator() {
             if (!result) return false;
             const { entry, copy } = result;
 
-            if (entry.type === "table") entry.id = setTableId;
-            if (entry.type === "entry" || entry.type === "item") {
-                const table = createLootTable({ ...entry, type: "table", id: setTableId });
+            if (entry.type === "table_id") entry.id = setTableId;
+            if (entry.type === "entry" || entry.type === "item_id") {
+                const table = createLootTable("table_id", {
+                    ...entry,
+                    type: "table_id",
+                    id: setTableId,
+                });
                 Object.keys(entry).forEach((key) => delete entry[key as keyof typeof entry]);
                 Object.assign(entry, table);
             }
@@ -328,9 +332,13 @@ export function LootGenerator() {
             if (!result) return false;
             const { entry, copy } = result;
 
-            if (entry.type === "item") entry.id = setItemId;
-            if (entry.type === "entry" || entry.type === "table") {
-                const item = createLootItem({ ...entry, type: "item", id: setItemId });
+            if (entry.type === "item_id") entry.id = setItemId;
+            if (entry.type === "entry" || entry.type === "table_id") {
+                const item = createLootItem("item_id", {
+                    ...entry,
+                    type: "item_id",
+                    id: setItemId,
+                });
                 Object.keys(entry).forEach((key) => delete entry[key as keyof typeof entry]);
                 Object.assign(entry, item);
             }

@@ -1,3 +1,5 @@
+/* eslint-disable no-use-before-define */
+
 export type GenerationQuantity = {
     quantity: {
         min: number;
@@ -19,16 +21,14 @@ export type LootEntry = {
     key: string;
 };
 export type LootItem = {
-    type: "item";
     key: string;
-    id: string | null;
 } & GenerationQuantity &
-    GenerationCriteria;
+    GenerationCriteria &
+    ({ type: "item_id"; id: string | null } | ({ type: "item_noid"; id?: never } & Item));
 export type LootTable = {
-    type: "table";
     key: string;
-    id: string | null;
-} & GenerationCriteria;
+} & GenerationCriteria &
+    ({ type: "table_id"; id: string | null } | ({ type: "table_noid"; id?: never } & Table));
 
 export type CustomFields = { custom: { [key: string]: unknown } };
 
@@ -49,3 +49,5 @@ export type Loot = Map<string, number>;
 
 export type SortCriteria = Map<string, { selected: string; values: string[] }>;
 export type SortOptions = Map<string, SortCriteria>;
+
+/* eslint-enable no-use-before-define */

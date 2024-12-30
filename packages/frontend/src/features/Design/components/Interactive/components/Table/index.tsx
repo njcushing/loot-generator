@@ -132,10 +132,10 @@ export function Table({ id, displayMode = "normal", onClick }: TTable) {
                 <ul className={styles["table-entries"]}>
                     {table &&
                         table.loot.map((entry) => {
-                            if (entry.type === "item") {
+                            if (entry.type === "item_id") {
                                 return <ItemEntry entry={entry} key={entry.key} />;
                             }
-                            if (entry.type === "table") {
+                            if (entry.type === "table_id") {
                                 return <TableEntry entry={entry} key={entry.key} />;
                             }
                             if (entry.type === "entry") {

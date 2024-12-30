@@ -41,14 +41,14 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
             for (let i = 0; i < loot.length; i++) {
                 const entry = loot[i];
 
-                if (entry.type === "item") {
+                if (entry.type === "item_id") {
                     const item = structuredClone(lootGeneratorState.items.get(entry.id || ""));
                     if (item) {
                         mutableLoot[i] = { ...entry, ...item };
                     }
                 }
 
-                if (entry.type === "table") {
+                if (entry.type === "table_id") {
                     const table = structuredClone(lootGeneratorState.tables.get(entry.id || ""));
                     if (table) {
                         mutableLoot[i] = { ...entry, ...table };

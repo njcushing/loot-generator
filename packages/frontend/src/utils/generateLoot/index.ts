@@ -17,15 +17,31 @@ export const createTable = (props: RecursiveOptional<Table> = {}): Table => ({
     custom: props.custom || {},
 });
 
-export const createLootTable = (props: RecursiveOptional<LootTable> = {}): LootTable => ({
-    type: "table",
-    key: props.key || uuid(),
-    id: props.id || null,
-    criteria: {
-        weight: props.criteria?.weight || 0,
-        rolls: props.criteria?.rolls || {},
-    },
-});
+export const createLootTable = (
+    type: LootTable["type"],
+    props: RecursiveOptional<LootTable> = {},
+): LootTable => {
+    if (type === "table_id") {
+        return {
+            type: "table_id",
+            key: props.key || uuid(),
+            id: props.id || null,
+            criteria: {
+                weight: props.criteria?.weight || 0,
+                rolls: props.criteria?.rolls || {},
+            },
+        };
+    }
+    return {
+        type: "table_noid",
+        key: props.key || uuid(),
+        criteria: {
+            weight: props.criteria?.weight || 0,
+            rolls: props.criteria?.rolls || {},
+        },
+        ...createTable(props as Table),
+    };
+};
 
 export const createItem = (props: RecursiveOptional<Item> = {}): Item => ({
     name: props.name || "",
@@ -34,19 +50,39 @@ export const createItem = (props: RecursiveOptional<Item> = {}): Item => ({
     custom: props.custom || {},
 });
 
-export const createLootItem = (props: RecursiveOptional<LootItem> = {}): LootItem => ({
-    type: "item",
-    key: props.key || uuid(),
-    id: props.id || null,
-    criteria: {
-        weight: props.criteria?.weight || 0,
-        rolls: props.criteria?.rolls || {},
-    },
-    quantity: {
-        min: props.quantity?.min || 1,
-        max: props.quantity?.max || 1,
-    },
-});
+export const createLootItem = (
+    type: LootItem["type"],
+    props: RecursiveOptional<LootItem> = {},
+): LootItem => {
+    if (type === "item_id") {
+        return {
+            type: "item_id",
+            key: props.key || uuid(),
+            id: props.id || null,
+            criteria: {
+                weight: props.criteria?.weight || 0,
+                rolls: props.criteria?.rolls || {},
+            },
+            quantity: {
+                min: props.quantity?.min || 1,
+                max: props.quantity?.max || 1,
+            },
+        };
+    }
+    return {
+        type: "item_noid",
+        key: props.key || uuid(),
+        criteria: {
+            weight: props.criteria?.weight || 0,
+            rolls: props.criteria?.rolls || {},
+        },
+        quantity: {
+            min: props.quantity?.min || 1,
+            max: props.quantity?.max || 1,
+        },
+        ...createItem(props as Item),
+    };
+};
 
 type PopulatedLootItem = LootItem & Item;
 type PopulatedLootTable = LootTable &
@@ -64,21 +100,35 @@ const populateTable = (active: Table, tables: Tables, items: Items): PopulatedTa
 
             const { loot } = populating;
 
-            if (entry.type === "item") {
-                const item = structuredClone(items.get(entry.id || ""));
-                if (item) {
-                    const popItem: PopulatedLootItem = { ...entry, ...item };
-                    loot.push(popItem);
+            switch (entry.type) {
+                case "item_id": {
+                    const item = structuredClone(items.get(entry.id || ""));
+                    if (item) {
+                        const popItem: PopulatedLootItem = { ...entry, ...item };
+                        loot.push(popItem);
+                    }
+                    break;
                 }
-            }
-
-            if (entry.type === "table") {
-                const table = structuredClone(tables.get(entry.id || ""));
-                if (table) {
-                    const popTable: PopulatedLootTable = { ...entry, ...table, loot: [] };
+                case "item_noid": {
+                    loot.push(entry as PopulatedLootItem);
+                    break;
+                }
+                case "table_id": {
+                    const table = structuredClone(tables.get(entry.id || ""));
+                    if (table) {
+                        const popTable: PopulatedLootTable = { ...entry, ...table, loot: [] };
+                        loot.push(popTable);
+                        populate(table, popTable);
+                    }
+                    break;
+                }
+                case "table_noid": {
+                    const popTable: PopulatedLootTable = { ...entry, loot: [] };
                     loot.push(popTable);
-                    populate(table, popTable);
+                    populate(entry, popTable);
+                    break;
                 }
+                default:
             }
         }
     };
@@ -103,7 +153,7 @@ const sumWeights = (populatedTable: PopulatedTable): SummedTable => {
         const mutableSumming = summing;
         searching.loot.forEach((entry) => {
             mutableSumming.totalLootWeight += entry.criteria.weight;
-            if (entry.type === "table") {
+            if (entry.type === "table_id" || entry.type === "table_noid") {
                 const summedSubTable: SummedLootTable = { ...entry, totalLootWeight: 0, loot: [] };
                 sum(entry, summedSubTable);
                 mutableSumming.loot.push(summedSubTable);
@@ -137,7 +187,7 @@ const rollTable = (currentLoot: Loot, summedTable: SummedTable): [Loot, SummedTa
     if (rolledEntry === null) return [mutableLoot, mutableSummedTable];
 
     // Rolled entry is another loot table; roll it instead
-    if (rolledEntry.type === "table") {
+    if (rolledEntry.type === "table_id" || rolledEntry.type === "table_noid") {
         [mutableLoot, rolledEntry as SummedTable] = rollTable(
             mutableLoot,
             rolledEntry as SummedTable,
@@ -145,7 +195,7 @@ const rollTable = (currentLoot: Loot, summedTable: SummedTable): [Loot, SummedTa
     }
 
     // Rolled entry is an item; append to current loot
-    if (rolledEntry.type === "item") {
+    if (rolledEntry.type === "item_id" || rolledEntry.type === "item_noid") {
         if (rolledEntry.id) {
             // Create new entry
             if (!mutableLoot.has(rolledEntry.id)) mutableLoot.set(rolledEntry.id, 0);

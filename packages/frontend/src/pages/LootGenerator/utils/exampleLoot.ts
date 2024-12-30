@@ -42,12 +42,12 @@ export const tables: Tables = new Map([
         createTable({
             name: "Fruits",
             loot: [
-                createLootItem({ id: itemIds.get("Apple"), criteria: { weight: 10 } }),
-                createLootItem({ id: itemIds.get("Banana"), criteria: { weight: 10 } }),
-                createLootItem({ id: itemIds.get("Orange"), criteria: { weight: 10 } }),
-                createLootItem({ id: itemIds.get("Peach"), criteria: { weight: 10 } }),
-                createLootItem({ id: itemIds.get("Cherry"), criteria: { weight: 10 } }),
-                createLootTable({
+                createLootItem("item_id", { id: itemIds.get("Apple"), criteria: { weight: 10 } }),
+                createLootItem("item_id", { id: itemIds.get("Banana"), criteria: { weight: 10 } }),
+                createLootItem("item_id", { id: itemIds.get("Orange"), criteria: { weight: 10 } }),
+                createLootItem("item_id", { id: itemIds.get("Peach"), criteria: { weight: 10 } }),
+                createLootItem("item_id", { id: itemIds.get("Cherry"), criteria: { weight: 10 } }),
+                createLootTable("table_id", {
                     id: tableIds.get("Vegetables"),
                     criteria: {
                         weight: 100,
@@ -61,10 +61,13 @@ export const tables: Tables = new Map([
         createTable({
             name: "Vegetables",
             loot: [
-                createLootItem({ id: itemIds.get("Broccoli"), criteria: { weight: 10 } }),
-                createLootItem({ id: itemIds.get("Carrot"), criteria: { weight: 10 } }),
-                createLootItem({ id: itemIds.get("Potato"), criteria: { weight: 10 } }),
-                createLootTable({
+                createLootItem("item_id", {
+                    id: itemIds.get("Broccoli"),
+                    criteria: { weight: 10 },
+                }),
+                createLootItem("item_id", { id: itemIds.get("Carrot"), criteria: { weight: 10 } }),
+                createLootItem("item_id", { id: itemIds.get("Potato"), criteria: { weight: 10 } }),
+                createLootTable("table_id", {
                     id: tableIds.get("Dairy"),
                     criteria: {
                         weight: 100,
@@ -78,9 +81,9 @@ export const tables: Tables = new Map([
         createTable({
             name: "Dairy",
             loot: [
-                createLootItem({ id: itemIds.get("Milk"), criteria: { weight: 10 } }),
-                createLootItem({ id: itemIds.get("Yoghurt"), criteria: { weight: 10 } }),
-                createLootItem({ id: itemIds.get("Cheese"), criteria: { weight: 10 } }),
+                createLootItem("item_id", { id: itemIds.get("Milk"), criteria: { weight: 10 } }),
+                createLootItem("item_id", { id: itemIds.get("Yoghurt"), criteria: { weight: 10 } }),
+                createLootItem("item_id", { id: itemIds.get("Cheese"), criteria: { weight: 10 } }),
             ],
         }),
     ],
