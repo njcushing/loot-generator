@@ -7,7 +7,7 @@ import styles from "./index.module.css";
 export type TItem = {
     id: string;
     displayMode?: "normal" | "entry" | "entryViewOnly" | "selection";
-    onClick?: (optionClicked: "toggle" | "delete" | "edit") => unknown;
+    onClick?: (optionClicked: "toggle" | "delete" | "edit" | "remove_selection") => unknown;
 };
 
 export function Item({ id, displayMode = "normal", onClick }: TItem) {
@@ -28,6 +28,10 @@ export function Item({ id, displayMode = "normal", onClick }: TItem) {
             });
         }
         if (displayMode === "entry") {
+            options.push({
+                symbol: "Remove_Selection",
+                onClick: () => onClick && onClick("remove_selection"),
+            });
             options.push({
                 symbol: "Edit",
                 onClick: () => onClick && onClick("edit"),

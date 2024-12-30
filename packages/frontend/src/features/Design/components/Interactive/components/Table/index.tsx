@@ -21,7 +21,9 @@ export const TableContext = createContext<TableContext>(defaultTableContext);
 export type TTable = {
     id: string;
     displayMode?: "normal" | "entry" | "entryViewOnly" | "selection";
-    onClick?: (optionClicked: "toggle" | "delete" | "edit" | "upload" | "add") => unknown;
+    onClick?: (
+        optionClicked: "toggle" | "delete" | "edit" | "upload" | "add" | "remove_selection",
+    ) => unknown;
 };
 
 export function Table({ id, displayMode = "normal", onClick }: TTable) {
@@ -68,6 +70,10 @@ export function Table({ id, displayMode = "normal", onClick }: TTable) {
                 });
             }
             if (displayMode === "entry") {
+                options.push({
+                    symbol: "Remove_Selection",
+                    onClick: () => onClick && onClick("remove_selection"),
+                });
                 options.push({
                     symbol: "Edit",
                     onClick: () => onClick && onClick("edit"),
