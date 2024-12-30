@@ -66,8 +66,7 @@ interface LootGeneratorContext {
         entryKey: string,
     ) => { entry: Table["loot"][number]; path: LootTable[]; index: number } | null;
     updateEntry: (tableId: string, entryKey: string, fieldsToMutate: TFieldToUpdate[]) => boolean;
-    setItemOnEntry: (tableId: string, entryKey: string, setItemId: string) => boolean;
-    setTableOnEntry: (tableId: string, entryKey: string, setTableId: string) => boolean;
+    setIdOnEntry: (tableId: string, entryKey: string, setId: string) => boolean;
     deleteEntry: (tableId: string, entryKey: string) => boolean;
     createSubEntry: (tableId: string) => boolean;
 }
@@ -89,8 +88,7 @@ const defaultLootGeneratorContext: LootGeneratorContext = {
 
     getEntry: () => null,
     updateEntry: () => false,
-    setItemOnEntry: () => false,
-    setTableOnEntry: () => false,
+    setIdOnEntry: () => false,
     deleteEntry: () => false,
     createSubEntry: () => false,
 };
@@ -298,50 +296,41 @@ export function LootGenerator() {
         [saveCopy, getEntry],
     );
 
-    const setTableOnEntry = useCallback(
-        (tableId: string, entryKey: string, setTableId: string): boolean => {
-            if (!lootGeneratorState.tables.has(setTableId)) return false;
+    const setIdOnEntry = useCallback(
+        (tableId: string, entryKey: string, setId: string): boolean => {
+            let type: "table" | "item" | null = null;
+            if (lootGeneratorState.tables.has(setId)) type = "table";
+            if (lootGeneratorState.items.has(setId)) type = "item";
+            if (!type) return false;
 
             const result = getEntry(tableId, entryKey);
             if (!result) return false;
             const { entry, copy } = result;
 
-            const table = createLootTable("table_id", {
-                ...entry,
-                type: "table_id",
-                id: setTableId,
-            });
+            let newEntry;
+            if (type === "table") {
+                newEntry = createLootTable("table_id", {
+                    ...entry,
+                    type: "table_id",
+                    id: setId,
+                });
+            }
+            if (type === "item") {
+                newEntry = createLootItem("item_id", {
+                    ...entry,
+                    type: "item_id",
+                    id: setId,
+                });
+            }
+
             Object.keys(entry).forEach((key) => delete entry[key as keyof typeof entry]);
-            Object.assign(entry, table);
+            Object.assign(entry, newEntry);
 
             saveCopy("tables", copy);
 
             return true;
         },
-        [lootGeneratorState.tables, getEntry, saveCopy],
-    );
-
-    const setItemOnEntry = useCallback(
-        (tableId: string, entryKey: string, setItemId: string) => {
-            if (!lootGeneratorState.items.has(setItemId)) return false;
-
-            const result = getEntry(tableId, entryKey);
-            if (!result) return false;
-            const { entry, copy } = result;
-
-            const item = createLootItem("item_id", {
-                ...entry,
-                type: "item_id",
-                id: setItemId,
-            });
-            Object.keys(entry).forEach((key) => delete entry[key as keyof typeof entry]);
-            Object.assign(entry, item);
-
-            saveCopy("tables", copy);
-
-            return true;
-        },
-        [lootGeneratorState.items, getEntry, saveCopy],
+        [lootGeneratorState.tables, lootGeneratorState.items, getEntry, saveCopy],
     );
 
     const deleteEntry = useCallback(
@@ -414,8 +403,7 @@ export function LootGenerator() {
 
                     getEntry,
                     updateEntry,
-                    setItemOnEntry,
-                    setTableOnEntry,
+                    setIdOnEntry,
                     deleteEntry,
                     createSubEntry,
                 }),
@@ -436,8 +424,7 @@ export function LootGenerator() {
 
                     getEntry,
                     updateEntry,
-                    setItemOnEntry,
-                    setTableOnEntry,
+                    setIdOnEntry,
                     deleteEntry,
                     createSubEntry,
                 ],

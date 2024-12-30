@@ -14,8 +14,7 @@ export type TSelectEntry = {
 };
 
 export function SelectEntry({ entryKey, id, disabled }: TSelectEntry) {
-    const { lootGeneratorState, setTableOnEntry, setItemOnEntry } =
-        useContext(LootGeneratorContext);
+    const { lootGeneratorState, setIdOnEntry } = useContext(LootGeneratorContext);
     const { pathToRoot } = useContext(TableContext);
 
     const [selectingEntry, setSelectingEntry] = useState<boolean>(false);
@@ -72,14 +71,14 @@ export function SelectEntry({ entryKey, id, disabled }: TSelectEntry) {
                         onClick={() => {
                             const success =
                                 pathToRoot[0].id &&
-                                setTableOnEntry(pathToRoot[0].id, entryKey, tableId);
+                                setIdOnEntry(pathToRoot[0].id, entryKey, tableId);
                             if (success) setSelectingEntry(false);
                         }}
                         key={tableId}
                     />
                 ) : null;
             });
-    }, [entryKey, lootGeneratorState.tables, setTableOnEntry, pathToRoot]);
+    }, [entryKey, lootGeneratorState.tables, setIdOnEntry, pathToRoot]);
 
     const itemList = useMemo(() => {
         return [...lootGeneratorState.items.keys()].map((itemId) => {
@@ -90,14 +89,14 @@ export function SelectEntry({ entryKey, id, disabled }: TSelectEntry) {
                     displayMode="selection"
                     onClick={() => {
                         const success =
-                            pathToRoot[0].id && setItemOnEntry(pathToRoot[0].id, entryKey, itemId);
+                            pathToRoot[0].id && setIdOnEntry(pathToRoot[0].id, entryKey, itemId);
                         if (success) setSelectingEntry(false);
                     }}
                     key={itemId}
                 />
             ) : null;
         });
-    }, [entryKey, lootGeneratorState.items, setItemOnEntry, pathToRoot]);
+    }, [entryKey, lootGeneratorState.items, setIdOnEntry, pathToRoot]);
 
     return (
         <div className={styles["select-entry"]}>
