@@ -137,18 +137,20 @@ export function Table({ id, displayMode = "normal", onClick }: TTable) {
                 </div>
                 <ul className={styles["table-entries"]}>
                     {table &&
-                        table.loot.map((entry) => {
-                            if (entry.type === "item_id" || entry.type === "item_noid") {
-                                return <ItemEntry entry={entry} key={entry.key} />;
-                            }
-                            if (entry.type === "table_id" || entry.type === "table_noid") {
-                                return <TableEntry entry={entry} key={entry.key} />;
-                            }
-                            if (entry.type === "entry") {
-                                return <Entry entry={entry} key={entry.key} />;
-                            }
-                            return null;
-                        })}
+                        table.loot
+                            .sort((a, b) => a.type.localeCompare(b.type))
+                            .map((entry) => {
+                                if (entry.type === "item_id" || entry.type === "item_noid") {
+                                    return <ItemEntry entry={entry} key={entry.key} />;
+                                }
+                                if (entry.type === "table_id" || entry.type === "table_noid") {
+                                    return <TableEntry entry={entry} key={entry.key} />;
+                                }
+                                if (entry.type === "entry") {
+                                    return <Entry entry={entry} key={entry.key} />;
+                                }
+                                return null;
+                            })}
                 </ul>
             </ToggleBar>
         </TableContext.Provider>
