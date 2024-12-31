@@ -66,6 +66,7 @@ interface LootGeneratorContext {
         entryKey: string,
     ) => { entry: Table["loot"][number]; path: LootTable[]; index: number } | null;
     updateEntry: (tableId: string, entryKey: string, fieldsToMutate: TFieldToUpdate[]) => boolean;
+    setTypeOnEntry: (tableId: string, entryKey: string, type: "table" | "item") => boolean;
     setIdOnEntry: (tableId: string, entryKey: string, setId: string) => boolean;
     removeIdFromEntry: (tableId: string, entryKey: string) => boolean;
     deleteEntry: (tableId: string, entryKey: string) => boolean;
@@ -89,6 +90,7 @@ const defaultLootGeneratorContext: LootGeneratorContext = {
 
     getEntry: () => null,
     updateEntry: () => false,
+    setTypeOnEntry: () => false,
     setIdOnEntry: () => false,
     removeIdFromEntry: () => false,
     deleteEntry: () => false,
@@ -298,6 +300,38 @@ export function LootGenerator() {
         [saveCopy, getEntry],
     );
 
+    const setTypeOnEntry = useCallback(
+        (tableId: string, entryKey: string, type: "table" | "item"): boolean => {
+            const result = getEntry(tableId, entryKey);
+            if (!result) return false;
+            const { entry, copy } = result;
+
+            let newEntry;
+            if (type === "table") {
+                newEntry = createLootTable("table_noid", {
+                    ...entry,
+                    id: undefined,
+                    type: "table_noid",
+                });
+            }
+            if (type === "item") {
+                newEntry = createLootItem("item_noid", {
+                    ...entry,
+                    id: undefined,
+                    type: "item_noid",
+                });
+            }
+
+            Object.keys(entry).forEach((key) => delete entry[key as keyof typeof entry]);
+            Object.assign(entry, newEntry);
+
+            saveCopy("tables", copy);
+
+            return true;
+        },
+        [saveCopy, getEntry],
+    );
+
     const setIdOnEntry = useCallback(
         (tableId: string, entryKey: string, setId: string): boolean => {
             let type: "table" | "item" | null = null;
@@ -439,6 +473,7 @@ export function LootGenerator() {
 
                     getEntry,
                     updateEntry,
+                    setTypeOnEntry,
                     setIdOnEntry,
                     removeIdFromEntry,
                     deleteEntry,
@@ -461,6 +496,7 @@ export function LootGenerator() {
 
                     getEntry,
                     updateEntry,
+                    setTypeOnEntry,
                     setIdOnEntry,
                     removeIdFromEntry,
                     deleteEntry,
