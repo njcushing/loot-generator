@@ -14,7 +14,7 @@ export type TTableEntry = {
 };
 
 export function TableEntry({ entry }: TTableEntry) {
-    const { lootGeneratorState, deleteEntry } = useContext(LootGeneratorContext);
+    const { lootGeneratorState, setTypeOnEntry, deleteEntry } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
     const { pathToRoot } = useContext(TableContext);
 
@@ -31,13 +31,19 @@ export function TableEntry({ entry }: TTableEntry) {
         const options: TToggleBar["options"] = [];
         if (menuType !== "active" && !isDescendantOfImportedTable) {
             options.push({
+                symbol: "Swap_Horiz",
+                onClick: () => {
+                    if (pathToRoot[0].id) setTypeOnEntry(pathToRoot[0].id, key, "item");
+                },
+            });
+            options.push({
                 symbol: "Delete",
                 onClick: () => pathToRoot[0].id && deleteEntry(pathToRoot[0].id, key),
                 colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
             });
         }
         return options;
-    }, [deleteEntry, menuType, pathToRoot, isDescendantOfImportedTable, key]);
+    }, [setTypeOnEntry, deleteEntry, menuType, pathToRoot, isDescendantOfImportedTable, key]);
 
     const table: TableTypes | null = useMemo(() => {
         if (!id) return null;
