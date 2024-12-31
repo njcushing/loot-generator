@@ -12,7 +12,7 @@ export type TEntry = {
 };
 
 export function Entry({ entry }: TEntry) {
-    const { deleteEntry } = useContext(LootGeneratorContext);
+    const { setTypeOnEntry, deleteEntry } = useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
     const { pathToRoot } = useContext(TableContext);
 
@@ -59,6 +59,8 @@ export function Entry({ entry }: TEntry) {
                             type="button"
                             className={styles["entry-option"]}
                             onClick={(e) => {
+                                if (!pathToRoot[0].id) return;
+                                setTypeOnEntry(pathToRoot[0].id, key, "table");
                                 e.currentTarget.blur();
                             }}
                             onMouseLeave={(e) => {
@@ -77,6 +79,8 @@ export function Entry({ entry }: TEntry) {
                             type="button"
                             className={styles["entry-option"]}
                             onClick={(e) => {
+                                if (!pathToRoot[0].id) return;
+                                setTypeOnEntry(pathToRoot[0].id, key, "item");
                                 e.currentTarget.blur();
                             }}
                             onMouseLeave={(e) => {
