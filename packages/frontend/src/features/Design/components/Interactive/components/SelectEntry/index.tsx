@@ -14,7 +14,8 @@ export type TSelectEntry = {
 };
 
 export function SelectEntry({ entryKey, id, disabled }: TSelectEntry) {
-    const { lootGeneratorState, setIdOnEntry } = useContext(LootGeneratorContext);
+    const { lootGeneratorState, setIdOnEntry, removeIdFromEntry } =
+        useContext(LootGeneratorContext);
     const { pathToRoot } = useContext(TableContext);
 
     const [selectingEntry, setSelectingEntry] = useState<boolean>(false);
@@ -43,7 +44,13 @@ export function SelectEntry({ entryKey, id, disabled }: TSelectEntry) {
                 <Item
                     id={id!}
                     displayMode={!disabled ? "entry" : "entryViewOnly"}
-                    onClick={(optionClicked) => optionClicked === "edit" && setSelectingEntry(true)}
+                    onClick={(optionClicked) => {
+                        if (optionClicked === "remove_selection") {
+                            if (pathToRoot[0].id === null) return;
+                            removeIdFromEntry(pathToRoot[0].id, entryKey);
+                        }
+                        if (optionClicked === "edit") setSelectingEntry(true);
+                    }}
                 />
             );
         }
@@ -52,12 +59,18 @@ export function SelectEntry({ entryKey, id, disabled }: TSelectEntry) {
                 <Table
                     id={id!}
                     displayMode={!disabled ? "entry" : "entryViewOnly"}
-                    onClick={(optionClicked) => optionClicked === "edit" && setSelectingEntry(true)}
+                    onClick={(optionClicked) => {
+                        if (optionClicked === "remove_selection") {
+                            if (pathToRoot[0].id === null) return;
+                            removeIdFromEntry(pathToRoot[0].id, entryKey);
+                        }
+                        if (optionClicked === "edit") setSelectingEntry(true);
+                    }}
                 />
             );
         }
         return null;
-    }, [id, disabled, type]);
+    }, [entryKey, id, disabled, removeIdFromEntry, pathToRoot, type]);
 
     const tableList = useMemo(() => {
         return [...lootGeneratorState.tables.keys()]
