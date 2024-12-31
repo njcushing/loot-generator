@@ -67,6 +67,7 @@ interface LootGeneratorContext {
     ) => { entry: Table["loot"][number]; path: LootTable[]; index: number } | null;
     updateEntry: (tableId: string, entryKey: string, fieldsToMutate: TFieldToUpdate[]) => boolean;
     setIdOnEntry: (tableId: string, entryKey: string, setId: string) => boolean;
+    removeIdFromEntry: (tableId: string, entryKey: string) => boolean;
     deleteEntry: (tableId: string, entryKey: string) => boolean;
     createSubEntry: (tableId: string) => boolean;
 }
@@ -89,6 +90,7 @@ const defaultLootGeneratorContext: LootGeneratorContext = {
     getEntry: () => null,
     updateEntry: () => false,
     setIdOnEntry: () => false,
+    removeIdFromEntry: () => false,
     deleteEntry: () => false,
     createSubEntry: () => false,
 };
@@ -330,7 +332,41 @@ export function LootGenerator() {
 
             return true;
         },
-        [lootGeneratorState.tables, lootGeneratorState.items, getEntry, saveCopy],
+        [lootGeneratorState.tables, lootGeneratorState.items, saveCopy, getEntry],
+    );
+
+    const removeIdFromEntry = useCallback(
+        (tableId: string, entryKey: string): boolean => {
+            const result = getEntry(tableId, entryKey);
+            if (!result) return false;
+            const { entry, copy } = result;
+
+            if (entry.type !== "table_id" && entry.type !== "item_id") return false;
+
+            let newEntry;
+            if (entry.type === "table_id") {
+                newEntry = createLootTable("table_noid", {
+                    ...entry,
+                    id: undefined,
+                    type: "table_noid",
+                });
+            }
+            if (entry.type === "item_id") {
+                newEntry = createLootItem("item_noid", {
+                    ...entry,
+                    id: undefined,
+                    type: "item_noid",
+                });
+            }
+
+            Object.keys(entry).forEach((key) => delete entry[key as keyof typeof entry]);
+            Object.assign(entry, newEntry);
+
+            saveCopy("tables", copy);
+
+            return true;
+        },
+        [saveCopy, getEntry],
     );
 
     const deleteEntry = useCallback(
@@ -404,6 +440,7 @@ export function LootGenerator() {
                     getEntry,
                     updateEntry,
                     setIdOnEntry,
+                    removeIdFromEntry,
                     deleteEntry,
                     createSubEntry,
                 }),
@@ -425,6 +462,7 @@ export function LootGenerator() {
                     getEntry,
                     updateEntry,
                     setIdOnEntry,
+                    removeIdFromEntry,
                     deleteEntry,
                     createSubEntry,
                 ],
