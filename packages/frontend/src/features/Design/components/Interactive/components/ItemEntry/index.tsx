@@ -21,7 +21,7 @@ export function ItemEntry({ entry }: TItemEntry) {
     const isDescendantOfImportedTable =
         pathToRoot.findIndex((pathStep) => pathStep.type === "imported") !== -1;
 
-    const { key, id, quantity, criteria } = entry;
+    const { type, key, id, quantity, criteria } = entry;
     const { min, max } = quantity;
     const { weight } = criteria;
 
@@ -67,6 +67,32 @@ export function ItemEntry({ entry }: TItemEntry) {
             >
                 <SelectEntry entryKey={key} id={id || ""} disabled={disableItemSelection} />
                 <div className={styles["item-entry-fields"]}>
+                    {type === "item_noid" && (
+                        <EntryFieldsToggleBar
+                            name="Item Properties"
+                            fields={
+                                <>
+                                    <Inputs.Text
+                                        idOrKey={key}
+                                        type="item"
+                                        labelText="Name"
+                                        value={entry.name || ""}
+                                        fieldPath={["name"]}
+                                        disabled={disablePropsFields}
+                                    />
+                                    <Inputs.Numeric
+                                        idOrKey={key}
+                                        type="item"
+                                        labelText="Value"
+                                        value={typeof entry.value === "number" ? entry.value : 1}
+                                        min={0}
+                                        fieldPath={["value"]}
+                                        disabled={disablePropsFields}
+                                    />
+                                </>
+                            }
+                        />
+                    )}
                     <EntryFieldsToggleBar
                         name="Quantity"
                         fields={
