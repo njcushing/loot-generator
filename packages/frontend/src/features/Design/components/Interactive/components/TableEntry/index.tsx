@@ -21,7 +21,7 @@ export function TableEntry({ entry }: TTableEntry) {
     const isDescendantOfImportedTable =
         pathToRoot.findIndex((pathStep) => pathStep.type === "imported") !== -1;
 
-    const { key, id, criteria } = entry;
+    const { type, key, id, criteria } = entry;
     const { weight } = criteria;
 
     const disableTableSelection = menuType === "active" || isDescendantOfImportedTable;
@@ -64,6 +64,21 @@ export function TableEntry({ entry }: TTableEntry) {
             >
                 <SelectEntry entryKey={key} id={id || ""} disabled={disableTableSelection} />
                 <div className={styles["table-entry-fields"]}>
+                    {type === "table_noid" && (
+                        <EntryFieldsToggleBar
+                            name="Table Properties"
+                            fields={
+                                <Inputs.Text
+                                    idOrKey={key}
+                                    type="table"
+                                    labelText="Name"
+                                    value={entry.name || ""}
+                                    fieldPath={["name"]}
+                                    disabled={disablePropsFields}
+                                />
+                            }
+                        />
+                    )}
                     <EntryFieldsToggleBar
                         name="Criteria"
                         fields={
