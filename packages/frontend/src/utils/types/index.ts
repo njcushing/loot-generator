@@ -1,3 +1,5 @@
+import { PopulatedLootItem } from "../generateLoot";
+
 /* eslint-disable no-use-before-define */
 
 export type GenerationQuantity = {
@@ -45,7 +47,7 @@ export type Table = {
 } & CustomFields;
 export type Tables = Map<string, Table>;
 
-export type Loot = Map<string, number>;
+export type Loot = Map<string, { props: PopulatedLootItem; quantity: number }>;
 
 export type SortCriteria = Map<string, { selected: string; values: string[] }>;
 export type SortOptions = Map<string, SortCriteria>;

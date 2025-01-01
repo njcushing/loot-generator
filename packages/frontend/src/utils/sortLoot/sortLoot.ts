@@ -1,11 +1,7 @@
 import { LootGeneratorState } from "@/pages/LootGenerator";
-import { Items, Loot } from "../types";
+import { Loot } from "../types";
 
-export const sortLoot = (
-    loot: Loot,
-    items: Items,
-    sortOptions: LootGeneratorState["sortOptions"],
-): Loot => {
+export const sortLoot = (loot: Loot, sortOptions: LootGeneratorState["sortOptions"]): Loot => {
     const { selected, options } = sortOptions;
     const criterion = options.get(selected);
     if (!criterion) return loot;
@@ -19,11 +15,11 @@ export const sortLoot = (
             // Sort by 'name' as a priority, and fall back on key in its absence
             mutableLoot = new Map(
                 [...mutableLoot.entries()].sort((a, b) => {
-                    const [keyA] = a;
-                    const [keyB] = b;
+                    const [keyA, itemA] = a;
+                    const [keyB, itemB] = b;
 
-                    const nameA = items.get(keyA)?.name || keyA;
-                    const nameB = items.get(keyB)?.name || keyB;
+                    const nameA = itemA.props.name || keyA;
+                    const nameB = itemB.props.name || keyB;
 
                     let result;
 
@@ -42,10 +38,10 @@ export const sortLoot = (
             const order = criterion.get("order")!.selected;
             mutableLoot = new Map(
                 [...mutableLoot.entries()].sort((a, b) => {
-                    const [, quantityA] = a;
-                    const [, quantityB] = b;
+                    const [, itemA] = a;
+                    const [, itemB] = b;
 
-                    return (quantityA - quantityB) * (order === "descending" ? -1 : 1);
+                    return (itemA.quantity - itemB.quantity) * (order === "descending" ? -1 : 1);
                 }),
             );
             break;
@@ -57,15 +53,15 @@ export const sortLoot = (
             const summation = criterion.get("summation")!.selected;
             mutableLoot = new Map(
                 [...mutableLoot.entries()].sort((a, b) => {
-                    const [keyA, quantityA] = a;
-                    const [keyB, quantityB] = b;
+                    const [, itemA] = a;
+                    const [, itemB] = b;
 
-                    let valueA = items.get(keyA)?.value || 1;
-                    let valueB = items.get(keyB)?.value || 1;
+                    let valueA = itemA.props.value || 1;
+                    let valueB = itemB.props.value || 1;
 
                     if (summation === "total") {
-                        valueA *= quantityA;
-                        valueB *= quantityB;
+                        valueA *= itemA.quantity;
+                        valueB *= itemB.quantity;
                     }
 
                     return (valueA - valueB) * (order === "descending" ? -1 : 1);

@@ -84,7 +84,7 @@ export const createLootItem = (
     };
 };
 
-type PopulatedLootItem = LootItem & Item;
+export type PopulatedLootItem = LootItem & Item;
 type PopulatedLootTable = LootTable &
     Omit<Table, "loot"> & { loot: (PopulatedLootTable | PopulatedLootItem)[] };
 type PopulatedTable = Omit<Table, "loot"> & { loot: (PopulatedLootTable | PopulatedLootItem)[] };
@@ -168,7 +168,11 @@ const sumWeights = (populatedTable: PopulatedTable): SummedTable => {
     return summedTable;
 };
 
-const rollTable = (currentLoot: Loot, summedTable: SummedTable): [Loot, SummedTable] => {
+const rollTable = (
+    currentLoot: Loot,
+    summedTable: SummedTable,
+    items: Items,
+): [Loot, SummedTable] => {
     let mutableLoot = new Map(currentLoot);
     const mutableSummedTable = { ...summedTable };
 
@@ -191,18 +195,32 @@ const rollTable = (currentLoot: Loot, summedTable: SummedTable): [Loot, SummedTa
         [mutableLoot, rolledEntry as SummedTable] = rollTable(
             mutableLoot,
             rolledEntry as SummedTable,
+            items,
         );
     }
 
     // Rolled entry is an item; append to current loot
-    if (rolledEntry.type === "item_id" || rolledEntry.type === "item_noid") {
+    if (rolledEntry.type === "item_id") {
         if (rolledEntry.id) {
             // Create new entry
-            if (!mutableLoot.has(rolledEntry.id)) mutableLoot.set(rolledEntry.id, 0);
+            if (!mutableLoot.has(rolledEntry.id)) {
+                mutableLoot.set(rolledEntry.id, {
+                    props: structuredClone(rolledEntry),
+                    quantity: 0,
+                });
+            }
             // Increment quantity of existing entry
             const { min, max } = rolledEntry.quantity;
-            const currentQuantity = mutableLoot.get(rolledEntry.id)!;
-            mutableLoot.set(rolledEntry.id, currentQuantity + randomRange(min, max, true));
+            mutableLoot.get(rolledEntry.id)!.quantity += randomRange(min, max, true);
+        }
+    }
+    if (rolledEntry.type === "item_noid") {
+        if (rolledEntry.key) {
+            const { min, max } = rolledEntry.quantity;
+            mutableLoot.set(rolledEntry.key, {
+                props: structuredClone(rolledEntry),
+                quantity: randomRange(min, max, true),
+            });
         }
     }
 
@@ -227,7 +245,7 @@ export const generateLoot = (
     let summedTable = sumWeights(populatedTable) as SummedTable;
 
     for (let i = 0; i < rolls; i++) {
-        [loot, summedTable] = rollTable(loot, summedTable);
+        [loot, summedTable] = rollTable(loot, summedTable, items);
     }
 
     return loot;
