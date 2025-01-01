@@ -56,6 +56,7 @@ interface LootGeneratorContext {
     updateTable: (id: string, fieldsToMutate: TFieldToUpdate[]) => boolean;
     deleteTable: (id: string) => boolean;
     uploadTableToActive: (id: string) => void;
+    createEntry: (tableId: string) => boolean;
 
     createItem: () => void;
     updateItem: (id: string, fieldsToMutate: TFieldToUpdate[]) => boolean;
@@ -64,13 +65,13 @@ interface LootGeneratorContext {
     getEntry: (
         tableId: string,
         entryKey: string,
-    ) => { entry: Table["loot"][number]; path: LootTable[]; index: number } | null;
+    ) => { entry: Table["loot"][number]; path: (Table | LootTable)[]; index: number } | null;
     updateEntry: (tableId: string, entryKey: string, fieldsToMutate: TFieldToUpdate[]) => boolean;
     setTypeOnEntry: (tableId: string, entryKey: string, type: "table" | "item") => boolean;
     setIdOnEntry: (tableId: string, entryKey: string, setId: string) => boolean;
     removeIdFromEntry: (tableId: string, entryKey: string) => boolean;
     deleteEntry: (tableId: string, entryKey: string) => boolean;
-    createSubEntry: (tableId: string) => boolean;
+    createSubEntry: (tableId: string, entryKey: string) => boolean;
 }
 
 const defaultLootGeneratorContext: LootGeneratorContext = {
@@ -83,6 +84,7 @@ const defaultLootGeneratorContext: LootGeneratorContext = {
     updateTable: () => false,
     deleteTable: () => false,
     uploadTableToActive: () => {},
+    createEntry: () => false,
 
     createItem: () => {},
     updateItem: () => false,
@@ -209,6 +211,26 @@ export function LootGenerator() {
         [lootGeneratorState.tables, setLootGeneratorStateProperty],
     );
 
+    const createEntry = useCallback(
+        (tableId: string): boolean => {
+            const copy = getCopy("tables") as LootGeneratorState["tables"];
+            if (!copy) return false;
+
+            const table = copy.get(tableId);
+            if (!table) return false;
+
+            let newSubEntry = null;
+            newSubEntry = createLootEntry();
+            if (!newSubEntry) return false;
+            table.loot.push(newSubEntry);
+
+            saveCopy("tables", copy);
+
+            return true;
+        },
+        [getCopy, saveCopy],
+    );
+
     const createItem = useCallback(() => {
         const newItems = new Map(lootGeneratorState.items);
         newItems.set(uuid(), newItem());
@@ -247,7 +269,7 @@ export function LootGenerator() {
             entryKey: string,
         ): {
             entry: Table["loot"][number];
-            path: LootTable[];
+            path: (Table | LootTable)[];
             index: number;
             copy: LootGeneratorState["tables"];
         } | null => {
@@ -259,10 +281,10 @@ export function LootGenerator() {
 
             const search = (
                 currentEntry: Table["loot"],
-                currentPath: LootTable[] = [],
+                currentPath: (Table | LootTable)[] = [],
             ): {
                 entry: Table["loot"][number];
-                path: LootTable[];
+                path: (Table | LootTable)[];
                 index: number;
                 copy: LootGeneratorState["tables"];
             } | null => {
@@ -276,11 +298,14 @@ export function LootGenerator() {
                             copy,
                         };
                     }
+                    if (subEntry.type === "table_noid") {
+                        search(subEntry.loot, [...currentPath, subEntry]);
+                    }
                 }
                 return null;
             };
 
-            return search(table.loot as unknown as Table["loot"], []);
+            return search(table.loot as unknown as Table["loot"], [table]);
         },
         [getCopy],
     );
@@ -430,23 +455,23 @@ export function LootGenerator() {
     );
 
     const createSubEntry = useCallback(
-        (tableId: string): boolean => {
-            const copy = getCopy("tables") as LootGeneratorState["tables"];
-            if (!copy) return false;
+        (tableId: string, entryKey: string): boolean => {
+            const result = getEntry(tableId, entryKey);
+            if (!result) return false;
+            const { entry, copy } = result;
 
-            const table = copy.get(tableId);
-            if (!table) return false;
+            if (entry.type !== "table_noid") return false;
 
             let newSubEntry = null;
             newSubEntry = createLootEntry();
             if (!newSubEntry) return false;
-            table.loot.push(newSubEntry);
+            entry.loot.push(newSubEntry);
 
             saveCopy("tables", copy);
 
             return true;
         },
-        [getCopy, saveCopy],
+        [saveCopy, getEntry],
     );
 
     useEffect(() => {
@@ -466,6 +491,7 @@ export function LootGenerator() {
                     updateTable,
                     deleteTable,
                     uploadTableToActive,
+                    createEntry,
 
                     createItem,
                     updateItem,
@@ -489,6 +515,7 @@ export function LootGenerator() {
                     updateTable,
                     deleteTable,
                     uploadTableToActive,
+                    createEntry,
 
                     createItem,
                     updateItem,
