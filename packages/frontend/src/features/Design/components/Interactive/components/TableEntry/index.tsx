@@ -72,9 +72,15 @@ export function TableEntry({ entry }: TTableEntry) {
     }, [id, lootGeneratorState.tables]);
 
     let name = "Unnamed Table";
-    if (type === "table_id" && table?.name) name = table.name;
-    if (type === "table_noid" && entry.name) name = entry.name;
-    const nameFontStyle = table && table.name ? "normal" : "italic";
+    let nameFontStyle = "italic";
+    if (type === "table_id" && table?.name) {
+        name = table.name;
+        nameFontStyle = "normal";
+    }
+    if (type === "table_noid" && entry.name) {
+        name = entry.name;
+        nameFontStyle = "normal";
+    }
 
     return (
         <li className={styles["table-entry"]} key={key}>

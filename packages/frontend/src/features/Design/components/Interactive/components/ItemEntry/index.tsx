@@ -54,9 +54,15 @@ export function ItemEntry({ entry }: TItemEntry) {
     }, [id, lootGeneratorState.items]);
 
     let name = "Unnamed Item";
-    if (type === "item_id" && item?.name) name = item.name;
-    if (type === "item_noid" && entry.name) name = entry.name;
-    const nameFontStyle = item && item.name ? "normal" : "italic";
+    let nameFontStyle = "italic";
+    if (type === "item_id" && item?.name) {
+        name = item.name;
+        nameFontStyle = "normal";
+    }
+    if (type === "item_noid" && entry.name) {
+        name = entry.name;
+        nameFontStyle = "normal";
+    }
 
     return (
         <li className={styles["item-entry"]} key={key}>
