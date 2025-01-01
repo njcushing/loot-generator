@@ -7,6 +7,8 @@ import { InteractiveContext } from "../..";
 import { SelectEntry } from "../SelectEntry";
 import { EntryFieldsToggleBar } from "../EntryFieldsToggleBar";
 import { Inputs } from "../../inputs";
+import { Entry } from "../Entry";
+import { ItemEntry } from "../ItemEntry";
 import styles from "./index.module.css";
 
 export type TTableEntry = {
@@ -14,10 +16,12 @@ export type TTableEntry = {
 };
 
 export function TableEntry({ entry }: TTableEntry) {
-    const { lootGeneratorState, setTypeOnEntry, deleteEntry } = useContext(LootGeneratorContext);
+    const { lootGeneratorState, setTypeOnEntry, deleteEntry, createSubEntry } =
+        useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
     const { pathToRoot } = useContext(TableContext);
 
+    const isImportedTable = lootGeneratorState.tables.has(entry.id || "");
     const isDescendantOfImportedTable =
         pathToRoot.findIndex((pathStep) => pathStep.type === "imported") !== -1;
 
@@ -30,6 +34,14 @@ export function TableEntry({ entry }: TTableEntry) {
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
         if (menuType !== "active" && !isDescendantOfImportedTable) {
+            if (!isImportedTable) {
+                options.push({
+                    symbol: "Add_Circle",
+                    onClick: () => {
+                        if (pathToRoot[0].id) createSubEntry(pathToRoot[0].id, key);
+                    },
+                });
+            }
             options.push({
                 symbol: "Swap_Horiz",
                 onClick: () => {
@@ -43,7 +55,16 @@ export function TableEntry({ entry }: TTableEntry) {
             });
         }
         return options;
-    }, [setTypeOnEntry, deleteEntry, menuType, pathToRoot, isDescendantOfImportedTable, key]);
+    }, [
+        setTypeOnEntry,
+        deleteEntry,
+        createSubEntry,
+        menuType,
+        pathToRoot,
+        isImportedTable,
+        isDescendantOfImportedTable,
+        key,
+    ]);
 
     const table: TableTypes | null = useMemo(() => {
         if (!id) return null;
@@ -99,6 +120,24 @@ export function TableEntry({ entry }: TTableEntry) {
                         }
                     />
                 </div>
+                {type === "table_noid" && entry.loot.length > 0 ? (
+                    <ul className={styles["table-entries"]}>
+                        {entry.loot
+                            .sort((a, b) => a.type.localeCompare(b.type))
+                            .map((ent) => {
+                                if (ent.type === "item_id" || ent.type === "item_noid") {
+                                    return <ItemEntry entry={ent} key={ent.key} />;
+                                }
+                                if (ent.type === "table_id" || ent.type === "table_noid") {
+                                    return <TableEntry entry={ent} key={ent.key} />;
+                                }
+                                if (ent.type === "entry") {
+                                    return <Entry entry={ent} key={ent.key} />;
+                                }
+                                return null;
+                            })}
+                    </ul>
+                ) : null}
             </ToggleBar>
         </li>
     );

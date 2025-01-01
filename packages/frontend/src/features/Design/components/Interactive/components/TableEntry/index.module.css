@@ -15,3 +15,13 @@
 
     width: 100%;
 }
+
+.table-entries {
+    align-self: end;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+
+    width: calc(100% - 16px);
+}
