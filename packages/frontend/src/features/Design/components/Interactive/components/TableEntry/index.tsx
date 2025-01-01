@@ -97,7 +97,7 @@ export function TableEntry({ entry }: TTableEntry) {
                             fields={
                                 <Inputs.Text
                                     idOrKey={key}
-                                    type="table"
+                                    type="entry"
                                     labelText="Name"
                                     value={entry.name || ""}
                                     fieldPath={["name"]}

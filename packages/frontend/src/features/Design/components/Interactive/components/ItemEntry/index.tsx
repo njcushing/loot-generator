@@ -80,7 +80,7 @@ export function ItemEntry({ entry }: TItemEntry) {
                                 <>
                                     <Inputs.Text
                                         idOrKey={key}
-                                        type="item"
+                                        type="entry"
                                         labelText="Name"
                                         value={entry.name || ""}
                                         fieldPath={["name"]}
@@ -88,7 +88,7 @@ export function ItemEntry({ entry }: TItemEntry) {
                                     />
                                     <Inputs.Numeric
                                         idOrKey={key}
-                                        type="item"
+                                        type="entry"
                                         labelText="Value"
                                         value={typeof entry.value === "number" ? entry.value : 1}
                                         min={0}
