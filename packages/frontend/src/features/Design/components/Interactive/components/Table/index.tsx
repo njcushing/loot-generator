@@ -27,7 +27,7 @@ export type TTable = {
 };
 
 export function Table({ id, displayMode = "normal", onClick }: TTable) {
-    const { lootGeneratorState, deleteTable, uploadTableToActive, createSubEntry } =
+    const { lootGeneratorState, deleteTable, uploadTableToActive, createEntry } =
         useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
     const { pathToRoot } = useContext(TableContext);
@@ -49,7 +49,7 @@ export function Table({ id, displayMode = "normal", onClick }: TTable) {
                 options.push({
                     symbol: "Add_Circle",
                     onClick: () => {
-                        createSubEntry(id);
+                        createEntry(id);
                         if (onClick) onClick("add");
                     },
                 });
@@ -81,7 +81,7 @@ export function Table({ id, displayMode = "normal", onClick }: TTable) {
             }
         }
         return options;
-    }, [id, displayMode, onClick, deleteTable, uploadTableToActive, createSubEntry, menuType]);
+    }, [id, displayMode, onClick, deleteTable, uploadTableToActive, createEntry, menuType]);
 
     const name = table?.name;
     let displayName = name || "Unnamed Table";
