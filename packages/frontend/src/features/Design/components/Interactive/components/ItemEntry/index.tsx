@@ -53,7 +53,9 @@ export function ItemEntry({ entry }: TItemEntry) {
         return lootGeneratorState.items.get(id) || null;
     }, [id, lootGeneratorState.items]);
 
-    const name = item && item.name ? item.name : "Unnamed Item";
+    let name = "Unnamed Item";
+    if (type === "item_id" && item?.name) name = item.name;
+    if (type === "item_noid" && entry.name) name = entry.name;
     const nameFontStyle = item && item.name ? "normal" : "italic";
 
     return (

@@ -71,7 +71,9 @@ export function TableEntry({ entry }: TTableEntry) {
         return lootGeneratorState.tables.get(id) || null;
     }, [id, lootGeneratorState.tables]);
 
-    const name = table && table.name ? table.name : "Unnamed Table";
+    let name = "Unnamed Table";
+    if (type === "table_id" && table?.name) name = table.name;
+    if (type === "table_noid" && entry.name) name = entry.name;
     const nameFontStyle = table && table.name ? "normal" : "italic";
 
     return (
