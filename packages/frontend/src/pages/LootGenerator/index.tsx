@@ -299,7 +299,7 @@ export function LootGenerator() {
                         };
                     }
                     if (subEntry.type === "table_noid") {
-                        search(subEntry.loot, [...currentPath, subEntry]);
+                        return search(subEntry.loot, [...currentPath, subEntry]);
                     }
                 }
                 return null;
