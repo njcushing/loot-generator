@@ -139,7 +139,9 @@ const populateTable = (active: Table, tables: Tables, items: Items): PopulatedTa
 };
 
 type SummedLootTable = PopulatedLootTable & { totalLootWeight: number };
-type SummedTable = PopulatedTable & { loot: (SummedLootTable | PopulatedLootItem)[] } & {
+type SummedTable = Omit<PopulatedTable, "loot"> & {
+    loot: (SummedLootTable | PopulatedLootItem)[];
+} & {
     totalLootWeight: number;
 };
 
