@@ -478,6 +478,75 @@ export function LootGenerator() {
         setLootGeneratorState((current) => ({ ...structuredClone(current), loot: new Map() }));
     }, [lootGeneratorState.active]);
 
+    const pageContent = useMemo(() => {
+        switch (layout) {
+            case "wide":
+                return (
+                    <>
+                        <div className={styles["left-panel"]}>
+                            <h1 className={styles["title"]}>Loot Generator</h1>
+                            <p className={styles["name"]}>by njcushing</p>
+                            <p className={styles["version"]}>{`v${version}`}</p>
+                            <Structural.TabSelector
+                                tabs={{
+                                    design: {
+                                        name: "Design",
+                                        content: <Design />,
+                                        position: "left",
+                                    },
+                                    about: {
+                                        name: "About",
+                                        content: <p>About</p>,
+                                        position: "right",
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className={styles["right-panel"]}>
+                            <Structural.TabSelector
+                                tabs={{
+                                    generate: {
+                                        name: "Generate",
+                                        content: <Generate />,
+                                        position: "left",
+                                    },
+                                }}
+                            />
+                        </div>
+                    </>
+                );
+            case "thin":
+                return (
+                    <div className={styles["main-panel"]}>
+                        <h1 className={styles["title"]}>Loot Generator</h1>
+                        <p className={styles["name"]}>by njcushing</p>
+                        <p className={styles["version"]}>{`v${version}`}</p>
+                        <Structural.TabSelector
+                            tabs={{
+                                design: {
+                                    name: "Design",
+                                    content: <Design />,
+                                    position: "left",
+                                },
+                                generate: {
+                                    name: "Generate",
+                                    content: <Generate />,
+                                    position: "left",
+                                },
+                                about: {
+                                    name: "About",
+                                    content: <p>About</p>,
+                                    position: "right",
+                                },
+                            }}
+                        />
+                    </div>
+                );
+            default:
+        }
+        return null;
+    }, [layout]);
+
     return (
         <LootGeneratorContext.Provider
             value={useMemo(
@@ -532,24 +601,7 @@ export function LootGenerator() {
             )}
         >
             <div className={`${styles["page"]} ${styles[`${layout}`]}`} ref={containerRef}>
-                <div className={styles["left-panel"]}>
-                    <h1 className={styles["title"]}>Loot Generator</h1>
-                    <p className={styles["name"]}>by njcushing</p>
-                    <p className={styles["version"]}>{`v${version}`}</p>
-                    <Structural.TabSelector
-                        tabs={{
-                            design: { name: "Design", content: <Design />, position: "left" },
-                            about: { name: "About", content: <p>About</p>, position: "right" },
-                        }}
-                    />
-                </div>
-                <div className={styles["right-panel"]}>
-                    <Structural.TabSelector
-                        tabs={{
-                            generate: { name: "Generate", content: <Generate />, position: "left" },
-                        }}
-                    />
-                </div>
+                {pageContent}
             </div>
         </LootGeneratorContext.Provider>
     );

@@ -1,9 +1,4 @@
 .page {
-    display: grid;
-    grid-template-columns: 40% auto;
-    grid-template-rows: 100%;
-    gap: 12px;
-
     color: black;
     font-family: Roboto;
 
@@ -12,8 +7,16 @@
     padding: 16px;
 }
 
+.page.wide {
+    display: grid;
+    grid-template-columns: 40% auto;
+    grid-template-rows: 100%;
+    gap: 12px;
+}
+
 .left-panel,
-.right-panel {
+.right-panel,
+.main-panel {
     background-color: var(--background-secondary, white);
     -webkit-box-shadow: 0px 10px 10px 0px rgba(158, 158, 158, 1);
     -moz-box-shadow: 0px 10px 10px 0px rgba(158, 158, 158, 1);
@@ -23,7 +26,8 @@
     padding: 12px;
 }
 
-.left-panel {
+.left-panel,
+.main-panel {
     display: flex;
     flex-direction: column;
     gap: 6px;
