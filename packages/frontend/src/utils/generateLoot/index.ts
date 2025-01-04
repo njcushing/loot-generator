@@ -202,28 +202,20 @@ const rollTable = (
     }
 
     // Rolled entry is an item; append to current loot
-    if (rolledEntry.type === "item_id") {
-        if (rolledEntry.id) {
-            // Create new entry
-            if (!mutableLoot.has(rolledEntry.id)) {
-                mutableLoot.set(rolledEntry.id, {
-                    props: structuredClone(rolledEntry),
-                    quantity: 0,
-                });
-            }
-            // Increment quantity of existing entry
-            const { min, max } = rolledEntry.quantity;
-            mutableLoot.get(rolledEntry.id)!.quantity += randomRange(min, max, true);
-        }
-    }
-    if (rolledEntry.type === "item_noid") {
-        if (rolledEntry.key) {
-            const { min, max } = rolledEntry.quantity;
-            mutableLoot.set(rolledEntry.key, {
-                props: structuredClone(rolledEntry),
-                quantity: randomRange(min, max, true),
+    let idOrKey = null;
+    if (rolledEntry.type === "item_id") idOrKey = rolledEntry.id;
+    if (rolledEntry.type === "item_noid") idOrKey = rolledEntry.key;
+    if (idOrKey !== null) {
+        // Create new entry
+        if (!mutableLoot.has(idOrKey)) {
+            mutableLoot.set(idOrKey, {
+                props: structuredClone(rolledEntry as PopulatedLootItem),
+                quantity: 0,
             });
         }
+        // Increment quantity of existing entry
+        const { min, max } = (rolledEntry as PopulatedLootItem).quantity;
+        mutableLoot.get(idOrKey)!.quantity += randomRange(min, max, true);
     }
 
     return [mutableLoot, mutableSummedTable];
