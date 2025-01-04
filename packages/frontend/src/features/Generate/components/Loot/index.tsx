@@ -15,7 +15,12 @@ export function Loot() {
                     const { name } = props;
                     return (
                         <li className={styles["item"]} key={key}>
-                            <p className={`${styles["item-name"]} truncate-ellipsis`}>{name}</p>
+                            <p
+                                className={`${styles["item-name"]} truncate-ellipsis`}
+                                style={{ fontStyle: name ? "normal" : "italic" }}
+                            >
+                                {name || "Unnamed Item"}
+                            </p>
                             <p className={styles["item-quantity"]}>{quantity}</p>
                         </li>
                     );
