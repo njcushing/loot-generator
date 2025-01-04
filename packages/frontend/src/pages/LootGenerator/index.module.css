@@ -30,6 +30,12 @@
 .main-panel {
     display: flex;
     flex-direction: column;
+    gap: 16px;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
     gap: 6px;
 }
 

@@ -484,9 +484,11 @@ export function LootGenerator() {
                 return (
                     <>
                         <div className={styles["left-panel"]}>
-                            <h1 className={styles["title"]}>Loot Generator</h1>
-                            <p className={styles["name"]}>by njcushing</p>
-                            <p className={styles["version"]}>{`v${version}`}</p>
+                            <div className={styles["info"]}>
+                                <h1 className={styles["title"]}>Loot Generator</h1>
+                                <p className={styles["name"]}>by njcushing</p>
+                                <p className={styles["version"]}>{`v${version}`}</p>
+                            </div>
                             <Structural.TabSelector
                                 tabs={{
                                     design: {
@@ -518,9 +520,11 @@ export function LootGenerator() {
             case "thin":
                 return (
                     <div className={styles["main-panel"]}>
-                        <h1 className={styles["title"]}>Loot Generator</h1>
-                        <p className={styles["name"]}>by njcushing</p>
-                        <p className={styles["version"]}>{`v${version}`}</p>
+                        <div className={styles["info"]}>
+                            <h1 className={styles["title"]}>Loot Generator</h1>
+                            <p className={styles["name"]}>by njcushing</p>
+                            <p className={styles["version"]}>{`v${version}`}</p>
+                        </div>
                         <Structural.TabSelector
                             tabs={{
                                 design: {
