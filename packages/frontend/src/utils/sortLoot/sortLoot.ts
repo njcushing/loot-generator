@@ -1,12 +1,16 @@
 import { LootGeneratorState } from "@/pages/LootGenerator";
 import { Loot } from "../types";
 
-export const sortLoot = (loot: Loot, sortOptions: LootGeneratorState["sortOptions"]): Loot => {
+export const sortLoot = (
+    loot: Loot,
+    sortOptions: LootGeneratorState["sortOptions"],
+): Map<string, Loot[string]> => {
     const { selected, options } = sortOptions;
     const criterion = options.get(selected);
-    if (!criterion) return loot;
 
-    let mutableLoot = new Map([...loot.entries()]);
+    let mutableLoot = new Map([...Object.entries(loot)]);
+
+    if (!criterion) return mutableLoot;
 
     switch (selected) {
         case "name": {

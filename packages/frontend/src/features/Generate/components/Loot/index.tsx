@@ -10,8 +10,8 @@ export function Loot() {
         <ul className={styles["loot"]}>
             {[...sortLoot(lootGeneratorState.loot, lootGeneratorState.sortOptions).keys()].map(
                 (key) => {
-                    if (!lootGeneratorState.loot.has(key)) return null;
-                    const { props, quantity } = lootGeneratorState.loot.get(key)!;
+                    if (!(key in lootGeneratorState.loot)) return null;
+                    const { props, quantity } = lootGeneratorState.loot[key]!;
                     const { name } = props;
                     return (
                         <li className={styles["item"]} key={key}>

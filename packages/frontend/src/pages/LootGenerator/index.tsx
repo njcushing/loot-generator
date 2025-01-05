@@ -30,7 +30,7 @@ export type LootGeneratorState = {
 };
 
 const defaultLootGeneratorState: LootGeneratorState = {
-    loot: new Map(),
+    loot: {},
     active: [...exampleLoot.tables.keys()][0],
     tables: exampleLoot.tables,
     items: exampleLoot.items,
@@ -487,7 +487,7 @@ export function LootGenerator() {
     );
 
     useEffect(() => {
-        setLootGeneratorState((current) => ({ ...structuredClone(current), loot: new Map() }));
+        setLootGeneratorState((current) => ({ ...structuredClone(current), loot: {} }));
     }, [lootGeneratorState.active]);
 
     useEffect(() => {

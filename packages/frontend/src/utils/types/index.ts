@@ -47,7 +47,7 @@ export type Table = {
 } & CustomFields;
 export type Tables = Map<string, Table>;
 
-export type Loot = Map<string, { props: PopulatedLootItem; quantity: number }>;
+export type Loot = { [key: string]: { props: PopulatedLootItem; quantity: number } };
 
 export type SortCriteria = Map<string, { selected: string; values: string[] }>;
 export type SortOptions = Map<string, SortCriteria>;

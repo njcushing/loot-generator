@@ -61,7 +61,7 @@ export function Generate() {
                                 {createButton(
                                     "Reset",
                                     () => {
-                                        setLootGeneratorStateProperty("loot", new Map());
+                                        setLootGeneratorStateProperty("loot", {});
                                     },
                                     "reset-button",
                                 )}

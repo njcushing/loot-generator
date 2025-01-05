@@ -175,7 +175,7 @@ const rollTable = (
     summedTable: SummedTable,
     items: Items,
 ): [Loot, SummedTable] => {
-    let mutableLoot = new Map(currentLoot);
+    let mutableLoot = currentLoot;
     const mutableSummedTable = { ...summedTable };
 
     // Roll a random entry in the table based on weighting of each entry
@@ -207,15 +207,15 @@ const rollTable = (
     if (rolledEntry.type === "item_noid") idOrKey = rolledEntry.key;
     if (idOrKey !== null) {
         // Create new entry
-        if (!mutableLoot.has(idOrKey)) {
-            mutableLoot.set(idOrKey, {
+        if (!(idOrKey in mutableLoot)) {
+            mutableLoot[idOrKey] = {
                 props: structuredClone(rolledEntry as PopulatedLootItem),
                 quantity: 0,
-            });
+            };
         }
         // Increment quantity of existing entry
         const { min, max } = (rolledEntry as PopulatedLootItem).quantity;
-        mutableLoot.get(idOrKey)!.quantity += randomRange(min, max, true);
+        mutableLoot[idOrKey]!.quantity += randomRange(min, max, true);
     }
 
     return [mutableLoot, mutableSummedTable];
@@ -226,9 +226,9 @@ export const generateLoot = (
     tables: Tables,
     items: Items,
     rolls: number = 1,
-    appendToExisting: Loot = new Map(),
+    appendToExisting: Loot = {},
 ): Loot => {
-    let loot = new Map(appendToExisting);
+    let loot = appendToExisting;
 
     if (!active || !tables || !items) return loot;
 
