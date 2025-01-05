@@ -492,6 +492,7 @@ export function LootGenerator() {
 
     useEffect(() => {
         saveState(lootGeneratorState);
+        return () => saveState(lootGeneratorState);
     }, [lootGeneratorState]);
 
     const pageContent = useMemo(() => {
