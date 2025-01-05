@@ -489,6 +489,10 @@ export function LootGenerator() {
         setLootGeneratorState((current) => ({ ...structuredClone(current), loot: new Map() }));
     }, [lootGeneratorState.active]);
 
+    useEffect(() => {
+        saveState(lootGeneratorState);
+    }, [lootGeneratorState]);
+
     const pageContent = useMemo(() => {
         switch (layout) {
             case "wide":
