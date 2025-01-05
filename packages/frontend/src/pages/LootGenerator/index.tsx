@@ -43,6 +43,17 @@ const defaultLootGeneratorState: LootGeneratorState = {
     },
 };
 
+const loadState = (): LootGeneratorState | null => {
+    const state = localStorage.getItem(`${import.meta.env.LOCALSTORAGE_PREFIX}-session`);
+    if (!state) return null;
+    const parsed = JSON.parse(state);
+    return parsed as LootGeneratorState;
+};
+
+const saveState = (state: LootGeneratorState) => {
+    localStorage.setItem(`${import.meta.env.LOCALSTORAGE_PREFIX}-session`, JSON.stringify(state));
+};
+
 interface LootGeneratorContext {
     lootGeneratorState: LootGeneratorState;
     setLootGeneratorStateProperty: <K extends keyof LootGeneratorState>(
