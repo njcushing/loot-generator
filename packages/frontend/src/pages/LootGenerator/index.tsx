@@ -115,8 +115,9 @@ export const LootGeneratorContext = createContext<LootGeneratorContext>(
 );
 
 export function LootGenerator() {
-    const [lootGeneratorState, setLootGeneratorState] =
-        useState<LootGeneratorState>(defaultLootGeneratorState);
+    const [lootGeneratorState, setLootGeneratorState] = useState<LootGeneratorState>(
+        loadState() || defaultLootGeneratorState,
+    );
 
     const containerRef = useRef<HTMLDivElement>(null);
     const [containerSize] = useResizeObserverElement({ ref: containerRef });
