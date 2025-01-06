@@ -207,7 +207,7 @@ const rollTable = (
     if (rolledEntry.type === "item_noid") idOrKey = rolledEntry.key;
     if (idOrKey !== null) {
         // Create new entry
-        if (!(idOrKey in mutableLoot)) {
+        if (!mutableLoot[idOrKey]) {
             mutableLoot[idOrKey] = {
                 props: structuredClone(rolledEntry as PopulatedLootItem),
                 quantity: 0,
