@@ -13,7 +13,6 @@ import { LootTable, Items, Table, Tables, Loot, SortOptions } from "@/utils/type
 import { Design } from "@/features/Design";
 import { updateFieldsInObject, TFieldToUpdate } from "@/utils/mutateFieldsInObject";
 import { v4 as uuid } from "uuid";
-import * as exampleLoot from "./utils/exampleLoot";
 import { sortOptions } from "./utils/sortOptions";
 import { version } from "../../../package.json";
 import styles from "./index.module.css";
@@ -31,9 +30,9 @@ export type LootGeneratorState = {
 
 const defaultLootGeneratorState: LootGeneratorState = {
     loot: {},
-    active: Object.keys(exampleLoot.tables)[0],
-    tables: exampleLoot.tables,
-    items: exampleLoot.items,
+    active: null,
+    tables: {},
+    items: {},
     quantitySelected: 1,
     quantityOptionSelected: 0,
     customQuantity: 50,
