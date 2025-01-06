@@ -8,33 +8,32 @@ const tableIds: Map<string, string> = new Map([
     ["Dairy", uuid()],
 ]);
 
-const itemIds: Map<string, string> = new Map([
-    ["Apple", uuid()],
-    ["Banana", uuid()],
-    ["Orange", uuid()],
-    ["Peach", uuid()],
-    ["Cherry", uuid()],
-    ["Broccoli", uuid()],
-    ["Carrot", uuid()],
-    ["Potato", uuid()],
-    ["Milk", uuid()],
-    ["Yoghurt", uuid()],
-    ["Cheese", uuid()],
-]);
+const itemIds = {
+    Apple: uuid(),
+    Banana: uuid(),
+    Orange: uuid(),
+    Peach: uuid(),
+    Cherry: uuid(),
+    Broccoli: uuid(),
+    Carrot: uuid(),
+    Potato: uuid(),
+    Milk: uuid(),
+    Yoghurt: uuid(),
+    Cheese: uuid(),
+};
 
-export const items: Items = new Map([
-    [itemIds.get("Apple")!, createItem({ name: "Apple" })],
-    [itemIds.get("Banana")!, createItem({ name: "Banana" })],
-    [itemIds.get("Orange")!, createItem({ name: "Orange" })],
-    [itemIds.get("Peach")!, createItem({ name: "Peach" })],
-    [itemIds.get("Cherry")!, createItem({ name: "Cherry" })],
-    [itemIds.get("Broccoli")!, createItem({ name: "Broccoli" })],
-    [itemIds.get("Carrot")!, createItem({ name: "Carrot" })],
-    [itemIds.get("Potato")!, createItem({ name: "Potato" })],
-    [itemIds.get("Milk")!, createItem({ name: "Milk" })],
-    [itemIds.get("Yoghurt")!, createItem({ name: "Yoghurt" })],
-    [itemIds.get("Cheese")!, createItem({ name: "Cheese" })],
-]);
+export const items: Items = {};
+items[itemIds["Apple"]] = createItem({ name: "Apple" });
+items[itemIds["Banana"]] = createItem({ name: "Banana" });
+items[itemIds["Orange"]] = createItem({ name: "Orange" });
+items[itemIds["Peach"]] = createItem({ name: "Peach" });
+items[itemIds["Cherry"]] = createItem({ name: "Cherry" });
+items[itemIds["Broccoli"]] = createItem({ name: "Broccoli" });
+items[itemIds["Carrot"]] = createItem({ name: "Carrot" });
+items[itemIds["Potato"]] = createItem({ name: "Potato" });
+items[itemIds["Milk"]] = createItem({ name: "Milk" });
+items[itemIds["Yoghurt"]] = createItem({ name: "Yoghurt" });
+items[itemIds["Cheese"]] = createItem({ name: "Cheese" });
 
 export const tables: Tables = new Map([
     [
@@ -42,11 +41,11 @@ export const tables: Tables = new Map([
         createTable({
             name: "Fruits",
             loot: [
-                createLootItem("item_id", { id: itemIds.get("Apple"), criteria: { weight: 10 } }),
-                createLootItem("item_id", { id: itemIds.get("Banana"), criteria: { weight: 10 } }),
-                createLootItem("item_id", { id: itemIds.get("Orange"), criteria: { weight: 10 } }),
-                createLootItem("item_id", { id: itemIds.get("Peach"), criteria: { weight: 10 } }),
-                createLootItem("item_id", { id: itemIds.get("Cherry"), criteria: { weight: 10 } }),
+                createLootItem("item_id", { id: itemIds["Apple"], criteria: { weight: 10 } }),
+                createLootItem("item_id", { id: itemIds["Banana"], criteria: { weight: 10 } }),
+                createLootItem("item_id", { id: itemIds["Orange"], criteria: { weight: 10 } }),
+                createLootItem("item_id", { id: itemIds["Peach"], criteria: { weight: 10 } }),
+                createLootItem("item_id", { id: itemIds["Cherry"], criteria: { weight: 10 } }),
                 createLootTable("table_id", {
                     id: tableIds.get("Vegetables"),
                     criteria: {
@@ -62,11 +61,11 @@ export const tables: Tables = new Map([
             name: "Vegetables",
             loot: [
                 createLootItem("item_id", {
-                    id: itemIds.get("Broccoli"),
+                    id: itemIds["Broccoli"],
                     criteria: { weight: 10 },
                 }),
-                createLootItem("item_id", { id: itemIds.get("Carrot"), criteria: { weight: 10 } }),
-                createLootItem("item_id", { id: itemIds.get("Potato"), criteria: { weight: 10 } }),
+                createLootItem("item_id", { id: itemIds["Carrot"], criteria: { weight: 10 } }),
+                createLootItem("item_id", { id: itemIds["Potato"], criteria: { weight: 10 } }),
                 createLootTable("table_id", {
                     id: tableIds.get("Dairy"),
                     criteria: {
@@ -81,9 +80,9 @@ export const tables: Tables = new Map([
         createTable({
             name: "Dairy",
             loot: [
-                createLootItem("item_id", { id: itemIds.get("Milk"), criteria: { weight: 10 } }),
-                createLootItem("item_id", { id: itemIds.get("Yoghurt"), criteria: { weight: 10 } }),
-                createLootItem("item_id", { id: itemIds.get("Cheese"), criteria: { weight: 10 } }),
+                createLootItem("item_id", { id: itemIds["Milk"], criteria: { weight: 10 } }),
+                createLootItem("item_id", { id: itemIds["Yoghurt"], criteria: { weight: 10 } }),
+                createLootItem("item_id", { id: itemIds["Cheese"], criteria: { weight: 10 } }),
             ],
         }),
     ],

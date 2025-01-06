@@ -50,7 +50,7 @@ export function ItemEntry({ entry }: TItemEntry) {
 
     const item: ItemTypes | null = useMemo(() => {
         if (!id) return null;
-        return lootGeneratorState.items.get(id) || null;
+        return lootGeneratorState.items[id] || null;
     }, [id, lootGeneratorState.items]);
 
     let name = "Unnamed Item";

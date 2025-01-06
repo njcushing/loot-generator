@@ -12,7 +12,7 @@ export function Items() {
     const filterRegex = new RegExp(`${currentSearch}`, "i");
 
     const itemKeys = useMemo(() => {
-        return [...lootGeneratorState.items.keys()];
+        return [...Object.keys(lootGeneratorState.items)];
     }, [lootGeneratorState.items]);
 
     return (
@@ -27,12 +27,12 @@ export function Items() {
                 {itemKeys.length > 0 ? (
                     itemKeys
                         .filter((key) => {
-                            const item = lootGeneratorState.items.get(key);
+                            const item = lootGeneratorState.items[key];
                             if (!item) return false;
                             return filterRegex.test(item.name || "");
                         })
                         .map((key) => {
-                            const item = lootGeneratorState.items.get(key);
+                            const item = lootGeneratorState.items[key];
                             return item && <Item id={key} key={key} />;
                         })
                 ) : (

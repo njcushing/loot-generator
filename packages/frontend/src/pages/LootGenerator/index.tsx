@@ -244,15 +244,15 @@ export function LootGenerator() {
     );
 
     const createItem = useCallback(() => {
-        const newItems = new Map(lootGeneratorState.items);
-        newItems.set(uuid(), newItem());
+        const newItems = structuredClone(lootGeneratorState.items);
+        newItems[uuid()] = newItem();
         setLootGeneratorStateProperty("items", newItems);
     }, [lootGeneratorState.items, setLootGeneratorStateProperty]);
 
     const updateItem = useCallback(
         (id: string, fieldsToUpdate: TFieldToUpdate[]): boolean => {
             const itemsCopy = structuredClone(lootGeneratorState.items);
-            const item = itemsCopy.get(id);
+            const item = itemsCopy[id];
             if (!item) return false;
 
             updateFieldsInObject(item, fieldsToUpdate);
@@ -266,9 +266,9 @@ export function LootGenerator() {
 
     const deleteItem = useCallback(
         (id: string): boolean => {
-            if (!lootGeneratorState.items.has(id)) return false;
-            const newItems = new Map(lootGeneratorState.items);
-            newItems.delete(id);
+            if (!Object.prototype.hasOwnProperty.call(lootGeneratorState.items, id)) return false;
+            const newItems = structuredClone(lootGeneratorState.items);
+            delete newItems.id;
             setLootGeneratorStateProperty("items", newItems);
             return true;
         },
@@ -373,7 +373,9 @@ export function LootGenerator() {
         (tableId: string, entryKey: string, setId: string): boolean => {
             let type: "table" | "item" | null = null;
             if (lootGeneratorState.tables.has(setId)) type = "table";
-            if (lootGeneratorState.items.has(setId)) type = "item";
+            if (Object.prototype.hasOwnProperty.call(lootGeneratorState.items, setId)) {
+                type = "item";
+            }
             if (!type) return false;
 
             const result = getEntry(tableId, entryKey);

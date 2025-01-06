@@ -13,7 +13,7 @@ export type TItem = {
 export function Item({ id, displayMode = "normal", onClick }: TItem) {
     const { lootGeneratorState, deleteItem } = useContext(LootGeneratorContext);
 
-    const item = useMemo(() => lootGeneratorState.items.get(id), [id, lootGeneratorState.items]);
+    const item = useMemo(() => lootGeneratorState.items[id], [id, lootGeneratorState.items]);
 
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
