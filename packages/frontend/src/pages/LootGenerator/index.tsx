@@ -488,10 +488,6 @@ export function LootGenerator() {
     );
 
     useEffect(() => {
-        setLootGeneratorState((current) => ({ ...structuredClone(current), loot: {} }));
-    }, [lootGeneratorState.active]);
-
-    useEffect(() => {
         saveState(lootGeneratorState);
         return () => saveState(lootGeneratorState);
     }, [lootGeneratorState]);
