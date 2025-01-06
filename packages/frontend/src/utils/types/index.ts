@@ -39,7 +39,7 @@ export type Item = {
     sprite?: URL;
     value: number;
 } & CustomFields;
-export type Items = Map<string, Item>;
+export type Items = { [key: string]: Item };
 
 export type Table = {
     name?: string;
@@ -49,7 +49,7 @@ export type Tables = Map<string, Table>;
 
 export type Loot = { [key: string]: { props: PopulatedLootItem; quantity: number } };
 
-export type SortCriteria = Map<string, { selected: string; values: string[] }>;
-export type SortOptions = Map<string, SortCriteria>;
+export type SortCriterion = { name: string; selected: string; values: string[] };
+export type SortOptions = { name: string; criteria: SortCriterion[] }[];
 
 /* eslint-enable no-use-before-define */

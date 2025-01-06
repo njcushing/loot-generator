@@ -6,16 +6,16 @@ export const sortLoot = (
     sortOptions: LootGeneratorState["sortOptions"],
 ): Map<string, Loot[string]> => {
     const { selected, options } = sortOptions;
-    const criterion = options.get(selected);
+    const criteria = options.find((option) => option.name === selected)?.criteria;
 
     let mutableLoot = new Map([...Object.entries(loot)]);
 
-    if (!criterion) return mutableLoot;
+    if (!criteria) return mutableLoot;
 
     switch (selected) {
         case "name": {
-            if (!criterion.has("order")) break;
-            const order = criterion.get("order")!.selected;
+            const order = criteria.find((criterion) => criterion.name === "order")?.selected;
+            if (!order) break;
             // Sort by 'name' as a priority, and fall back on key in its absence
             mutableLoot = new Map(
                 [...mutableLoot.entries()].sort((a, b) => {
@@ -38,8 +38,8 @@ export const sortLoot = (
             break;
         }
         case "quantity": {
-            if (!criterion.has("order")) break;
-            const order = criterion.get("order")!.selected;
+            const order = criteria.find((criterion) => criterion.name === "order")?.selected;
+            if (!order) break;
             mutableLoot = new Map(
                 [...mutableLoot.entries()].sort((a, b) => {
                     const [, itemA] = a;
@@ -51,10 +51,12 @@ export const sortLoot = (
             break;
         }
         case "value": {
-            if (!criterion.has("order")) break;
-            if (!criterion.has("summation")) break;
-            const order = criterion.get("order")!.selected;
-            const summation = criterion.get("summation")!.selected;
+            const order = criteria.find((criterion) => criterion.name === "order")?.selected;
+            const summation = criteria.find(
+                (criterion) => criterion.name === "summation",
+            )?.selected;
+            if (!order) break;
+            if (!summation) break;
             mutableLoot = new Map(
                 [...mutableLoot.entries()].sort((a, b) => {
                     const [, itemA] = a;

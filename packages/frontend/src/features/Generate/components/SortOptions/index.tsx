@@ -15,9 +15,9 @@ export function SortOptions() {
 
     const inputs = useMemo(() => {
         const { selected, options } = sortOptions;
-        const optionSelected = options.get(selected);
+        const optionSelected = options.find((option) => option.name === selected);
         if (!optionSelected) return null;
-        const criteria = [...optionSelected.entries()];
+        const criteria = structuredClone(optionSelected.criteria);
         return (
             <>
                 <p className={styles["sort-options-title"]}>Sort By:</p>
@@ -31,22 +31,25 @@ export function SortOptions() {
                     }}
                     key="sort-options"
                 >
-                    {[...options.keys()].map((optionName) => {
+                    {options.map((option) => {
                         return (
                             <option
                                 className={styles["sort-option-select-option"]}
-                                value={optionName}
-                                key={`sort-option-${optionName}`}
+                                value={option.name}
+                                key={`sort-option-${option.name}`}
                             >
-                                {optionName}
+                                {option.name}
                             </option>
                         );
                     })}
                 </select>
                 <div className={styles["sort-option-criteria"]}>
                     {criteria.map((criterion) => {
-                        const [criterionName, criterionInformation] = criterion;
-                        const { selected: selectedCriterion, values } = criterionInformation;
+                        const {
+                            name: criterionName,
+                            selected: selectedCriterion,
+                            values,
+                        } = criterion;
                         return (
                             <select
                                 className={styles["sort-option-select"]}
@@ -55,13 +58,16 @@ export function SortOptions() {
                                 defaultValue={selectedCriterion}
                                 onChange={(e) => {
                                     setSortOptions((current) => {
-                                        const newOptions = new Map(current.options);
-                                        if (!newOptions.has(selected)) return current;
-                                        if (!newOptions.get(selected)!.has(criterionName)) {
-                                            return current;
-                                        }
-                                        newOptions.get(selected)!.get(criterionName)!.selected =
-                                            e.target.value;
+                                        const newOptions = structuredClone(current.options);
+                                        const optionToUpdate = newOptions.find(
+                                            (o) => o.name === selected,
+                                        );
+                                        if (!optionToUpdate) return current;
+                                        const criterionToUpdate = optionToUpdate.criteria.find(
+                                            (c) => c.name === criterionName,
+                                        );
+                                        if (!criterionToUpdate) return current;
+                                        criterionToUpdate.selected = e.target.value;
                                         return { ...current, options: newOptions };
                                     });
                                 }}
