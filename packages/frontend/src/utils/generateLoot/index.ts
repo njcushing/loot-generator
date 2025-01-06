@@ -102,7 +102,7 @@ const populateTable = (active: Table, tables: Tables, items: Items): PopulatedTa
 
             switch (entry.type) {
                 case "item_id": {
-                    const item = structuredClone(items.get(entry.id || ""));
+                    const item = structuredClone(items[entry.id || ""]);
                     if (item) {
                         const popItem: PopulatedLootItem = { ...entry, ...item };
                         loot.push(popItem);
@@ -114,7 +114,7 @@ const populateTable = (active: Table, tables: Tables, items: Items): PopulatedTa
                     break;
                 }
                 case "table_id": {
-                    const table = structuredClone(tables.get(entry.id || ""));
+                    const table = structuredClone(tables[entry.id || ""]);
                     if (table) {
                         const popTable: PopulatedLootTable = { ...entry, ...table, loot: [] };
                         loot.push(popTable);
@@ -232,7 +232,7 @@ export const generateLoot = (
 
     if (!active || !tables || !items) return loot;
 
-    const activeTable = tables.get(active);
+    const activeTable = tables[active];
     if (!activeTable) return loot;
     const workingTable = structuredClone(activeTable);
     const populatedTable = populateTable(workingTable, tables, items) as PopulatedTable;

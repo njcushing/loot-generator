@@ -12,7 +12,7 @@ export function Tables() {
     const filterRegex = new RegExp(`${currentSearch}`, "i");
 
     const tableKeys = useMemo(() => {
-        return [...lootGeneratorState.tables.keys()];
+        return [...Object.keys(lootGeneratorState.tables)];
     }, [lootGeneratorState.tables]);
 
     return (
@@ -27,12 +27,12 @@ export function Tables() {
                 {tableKeys.length > 0 ? (
                     tableKeys
                         .filter((key) => {
-                            const table = lootGeneratorState.tables.get(key);
+                            const table = lootGeneratorState.tables[key];
                             if (!table) return false;
                             return filterRegex.test(table.name || "");
                         })
                         .map((key) => {
-                            const table = lootGeneratorState.tables.get(key);
+                            const table = lootGeneratorState.tables[key];
                             return table && <Table id={key} key={key} />;
                         })
                 ) : (

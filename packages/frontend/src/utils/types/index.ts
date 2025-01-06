@@ -45,7 +45,7 @@ export type Table = {
     name?: string;
     loot: (LootEntry | LootItem | LootTable)[];
 } & CustomFields;
-export type Tables = Map<string, Table>;
+export type Tables = { [key: string]: Table };
 
 export type Loot = { [key: string]: { props: PopulatedLootItem; quantity: number } };
 

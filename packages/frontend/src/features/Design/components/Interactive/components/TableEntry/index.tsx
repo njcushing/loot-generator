@@ -21,7 +21,7 @@ export function TableEntry({ entry }: TTableEntry) {
     const { menuType } = useContext(InteractiveContext);
     const { pathToRoot } = useContext(TableContext);
 
-    const isImportedTable = lootGeneratorState.tables.has(entry.id || "");
+    const isImportedTable = lootGeneratorState.tables[entry.id || ""];
     const isDescendantOfImportedTable =
         pathToRoot.findIndex((pathStep) => pathStep.type === "imported") !== -1;
 
@@ -68,7 +68,7 @@ export function TableEntry({ entry }: TTableEntry) {
 
     const table: TableTypes | null = useMemo(() => {
         if (!id) return null;
-        return lootGeneratorState.tables.get(id) || null;
+        return lootGeneratorState.tables[id] || null;
     }, [id, lootGeneratorState.tables]);
 
     let name = "Unnamed Table";

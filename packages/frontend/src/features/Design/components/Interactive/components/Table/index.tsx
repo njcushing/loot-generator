@@ -40,7 +40,7 @@ export function Table({ id, displayMode = "normal", onClick }: TTable) {
 
     const disablePropsFields = menuType === "active" || displayMode !== "normal";
 
-    const table = useMemo(() => lootGeneratorState.tables.get(id), [id, lootGeneratorState.tables]);
+    const table = useMemo(() => lootGeneratorState.tables[id], [id, lootGeneratorState.tables]);
 
     const toggleBarOptions = useMemo((): TToggleBar["options"] => {
         const options: TToggleBar["options"] = [];
