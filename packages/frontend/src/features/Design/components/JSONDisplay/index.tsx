@@ -17,7 +17,7 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
 
     const activeTable = useMemo((): object | null => {
         const activeTableCopy = structuredClone(
-            lootGeneratorState.tables.get(lootGeneratorState.active || ""),
+            lootGeneratorState.tables[lootGeneratorState.active || ""],
         );
         if (!activeTableCopy) return null;
 
@@ -42,14 +42,14 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
                 const entry = loot[i];
 
                 if (entry.type === "item_id") {
-                    const item = structuredClone(lootGeneratorState.items.get(entry.id || ""));
+                    const item = structuredClone(lootGeneratorState.items[entry.id || ""]);
                     if (item) {
                         mutableLoot[i] = { ...entry, ...item };
                     }
                 }
 
                 if (entry.type === "table_id") {
-                    const table = structuredClone(lootGeneratorState.tables.get(entry.id || ""));
+                    const table = structuredClone(lootGeneratorState.tables[entry.id || ""]);
                     if (table) {
                         mutableLoot[i] = { ...entry, ...table };
                         populate(table.loot);
