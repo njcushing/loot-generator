@@ -10,6 +10,8 @@ import {
     createLootTable,
 } from "@/utils/generateLoot";
 import { LootTable, Items, Table, Tables, Loot, SortOptions } from "@/utils/types";
+import { z } from "zod";
+import { itemsSchema, tablesSchema, lootSchema, sortOptionsSchema } from "@/utils/types/zod";
 import { Design } from "@/features/Design";
 import { updateFieldsInObject, TFieldToUpdate } from "@/utils/mutateFieldsInObject";
 import { v4 as uuid } from "uuid";
@@ -28,6 +30,20 @@ export type LootGeneratorState = {
     sortOptions: { selected: string; options: SortOptions };
 };
 
+const lootGeneratorStateSchema = z.object({
+    loot: lootSchema,
+    active: z.string().nullable(),
+    tables: tablesSchema,
+    items: itemsSchema,
+    quantitySelected: z.number(),
+    quantityOptionSelected: z.number(),
+    customQuantity: z.number(),
+    sortOptions: z.object({
+        selected: z.string(),
+        options: sortOptionsSchema,
+    }),
+});
+
 const defaultLootGeneratorState: LootGeneratorState = {
     loot: {},
     active: null,
@@ -45,8 +61,16 @@ const defaultLootGeneratorState: LootGeneratorState = {
 const loadState = (): LootGeneratorState | null => {
     const state = localStorage.getItem(`${import.meta.env.LOCALSTORAGE_PREFIX}-session`);
     if (!state) return null;
-    const parsed = JSON.parse(state);
-    return parsed as LootGeneratorState;
+
+    try {
+        const parsed = JSON.parse(state);
+        const validated = lootGeneratorStateSchema.parse(parsed);
+        return validated as LootGeneratorState;
+    } catch (error) {
+        /* eslint-disable-next-line no-console */
+        console.error("Unable to load session state (invalid):", error);
+        return defaultLootGeneratorState;
+    }
 };
 
 const saveState = (state: LootGeneratorState) => {
