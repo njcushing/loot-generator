@@ -34,7 +34,7 @@ export type CustomFields = { custom: { [key: string]: unknown } };
 
 export type Item = {
     name?: string;
-    sprite?: URL;
+    sprite?: string;
     value: number;
 } & CustomFields;
 export type Items = { [key: string]: Item };
