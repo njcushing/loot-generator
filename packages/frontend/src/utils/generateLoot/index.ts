@@ -1,5 +1,15 @@
 import { v4 as uuid } from "uuid";
-import { LootEntry, LootItem, LootTable, Item, Items, Table, Tables, Loot } from "../types";
+import {
+    LootEntry,
+    LootItem,
+    LootTable,
+    Item,
+    Items,
+    Table,
+    Tables,
+    PopulatedLootItem,
+    Loot,
+} from "../types";
 import { randomRange } from "../randomRange";
 
 type RecursiveOptional<T> = {
@@ -84,7 +94,6 @@ export const createLootItem = (
     };
 };
 
-export type PopulatedLootItem = LootItem & Item;
 type PopulatedLootTable = LootTable &
     Omit<Table, "loot"> & { loot: (PopulatedLootTable | PopulatedLootItem)[] };
 type PopulatedTable = Omit<Table, "loot"> & { loot: (PopulatedLootTable | PopulatedLootItem)[] };

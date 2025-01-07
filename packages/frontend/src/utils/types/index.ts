@@ -1,5 +1,3 @@
-import { PopulatedLootItem } from "../generateLoot";
-
 /* eslint-disable no-use-before-define */
 
 export type GenerationQuantity = {
@@ -47,6 +45,7 @@ export type Table = {
 } & CustomFields;
 export type Tables = { [key: string]: Table };
 
+export type PopulatedLootItem = LootItem & Item;
 export type Loot = { [key: string]: { props: PopulatedLootItem; quantity: number } };
 
 export type SortCriterion = { name: string; selected: string; values: string[] };
