@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { createContext, useState, useEffect, useCallback, useRef, useMemo } from "react";
 import useResizeObserverElement from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
 import { Generate } from "@/features/Generate";
@@ -12,6 +12,7 @@ import {
 import { LootTable, Items, Table, Tables, Loot, SortOptions } from "@/utils/types";
 import { z } from "zod";
 import { itemsSchema, tablesSchema, lootSchema, sortOptionsSchema } from "@/utils/types/zod";
+import { PopUpModal } from "@/components/ui/components/PopUpModal";
 import { Design } from "@/features/Design";
 import { updateFieldsInObject, TFieldToUpdate } from "@/utils/mutateFieldsInObject";
 import { v4 as uuid } from "uuid";
@@ -78,6 +79,8 @@ const saveState = (state: LootGeneratorState) => {
 };
 
 interface LootGeneratorContext {
+    displayPopUpMessage: (text: string) => void;
+
     lootGeneratorState: LootGeneratorState;
     setLootGeneratorStateProperty: <K extends keyof LootGeneratorState>(
         property: K,
@@ -109,6 +112,8 @@ interface LootGeneratorContext {
 }
 
 const defaultLootGeneratorContext: LootGeneratorContext = {
+    displayPopUpMessage: () => {},
+
     lootGeneratorState: defaultLootGeneratorState,
     setLootGeneratorStateProperty: () => {},
 
@@ -138,9 +143,34 @@ export const LootGeneratorContext = createContext<LootGeneratorContext>(
 );
 
 export function LootGenerator() {
-    const [lootGeneratorState, setLootGeneratorState] = useState<LootGeneratorState>(
-        loadState() || defaultLootGeneratorState,
-    );
+    const messages = useRef<{ [key: string]: JSX.Element }>({});
+    const [messagesMutated, setMessagesMutated] = useState<string>("");
+    const displayPopUpMessage = useCallback((text: string) => {
+        const id = uuid();
+        const callback = () => {
+            setMessagesMutated(id);
+            delete messages.current[id as keyof typeof messages.current];
+        };
+        const element = (
+            <PopUpModal
+                text={text}
+                timer={{ duration: 3000, callback }}
+                onClose={callback}
+                key={id}
+            />
+        );
+        messages.current[id] = element;
+    }, []);
+
+    const [lootGeneratorState, setLootGeneratorState] = useState<LootGeneratorState>(() => {
+        const loadedState = loadState();
+        if (!loadedState) {
+            displayPopUpMessage("Could not load session state");
+            return defaultLootGeneratorState;
+        }
+        displayPopUpMessage("Successfully loaded session state");
+        return loadedState;
+    });
 
     const containerRef = useRef<HTMLDivElement>(null);
     const [containerSize] = useResizeObserverElement({ ref: containerRef });
@@ -589,10 +619,21 @@ export function LootGenerator() {
         return null;
     }, [layout]);
 
+    const messageElements = useMemo(() => {
+        return Object.keys(messages.current).length > 0 ? (
+            <div className={styles["messages"]}>
+                {Object.values(messages.current).map((message) => message)}
+            </div>
+        ) : null;
+        /* eslint-disable-next-line react-hooks/exhaustive-deps */
+    }, [messagesMutated]);
+
     return (
         <LootGeneratorContext.Provider
             value={useMemo(
                 () => ({
+                    displayPopUpMessage,
+
                     lootGeneratorState,
                     setLootGeneratorStateProperty,
 
@@ -617,6 +658,8 @@ export function LootGenerator() {
                     createSubEntry,
                 }),
                 [
+                    displayPopUpMessage,
+
                     lootGeneratorState,
                     setLootGeneratorStateProperty,
 
@@ -644,6 +687,7 @@ export function LootGenerator() {
         >
             <div className={`${styles["page"]} ${styles[`${layout}`]}`} ref={containerRef}>
                 {pageContent}
+                {messageElements}
             </div>
         </LootGeneratorContext.Provider>
     );
