@@ -35,6 +35,23 @@ export function PopUpModal({ text, timer }: TPopUpModal) {
     return (
         <div className={styles["pop-up-modal"]}>
             <p className={styles["text"]}>{text}</p>
+            <button
+                type="button"
+                className={styles["close-button"]}
+                onClick={(e) => {
+                    e.currentTarget.blur();
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.blur();
+                }}
+            >
+                <p
+                    className={`${styles["symbol"]} material-symbols-sharp`}
+                    style={{ fontSize: "1.2rem" }}
+                >
+                    Close
+                </p>
+            </button>
         </div>
     );
 }

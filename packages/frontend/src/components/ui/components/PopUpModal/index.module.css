@@ -1,6 +1,9 @@
 .pop-up-modal {
-    display: flex;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
+    gap: 8px;
 
     width: 100%;
     max-width: 400px;
@@ -20,4 +23,40 @@
     color: black;
     font-family: Roboto;
     font-size: 1rem;
+}
+
+.close-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+
+    pointer-events: all;
+
+    color: black;
+    font-family: Roboto;
+    font-size: 0.9rem;
+    text-wrap: nowrap;
+
+    border: none;
+    border-radius: 9999px;
+    background-color: rgba(0, 0, 0, 0);
+
+    height: 100%;
+    aspect-ratio: 1;
+    padding: 3px;
+}
+
+@media (hover: hover) {
+    .close-button:hover {
+        cursor: pointer;
+
+        background-color: rgba(0, 0, 0, 0.16);
+    }
+}
+
+.close-button:focus {
+    cursor: pointer;
+
+    background-color: rgba(0, 0, 0, 0.24);
 }
