@@ -34,7 +34,7 @@ export function PopUpModal({ text, timer }: TPopUpModal) {
 
     return (
         <div className={styles["pop-up-modal"]}>
-            <p className={styles["text"]}>{text}</p>
+            <p className={`${styles["text"]} truncate-ellipsis`}>{text}</p>
             <button
                 type="button"
                 className={styles["close-button"]}
