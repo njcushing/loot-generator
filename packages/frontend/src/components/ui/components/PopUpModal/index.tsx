@@ -7,6 +7,7 @@ export type TPopUpModal = {
         duration?: number;
         callback?: () => unknown;
     };
+    onClose?: () => unknown;
 };
 
 const defaultTimer: Required<TPopUpModal["timer"]> = {
@@ -14,7 +15,7 @@ const defaultTimer: Required<TPopUpModal["timer"]> = {
     callback: () => {},
 };
 
-export function PopUpModal({ text, timer }: TPopUpModal) {
+export function PopUpModal({ text, timer, onClose }: TPopUpModal) {
     const concatenatedTimer = useMemo(() => {
         return { ...defaultTimer, ...timer };
     }, [timer]);
@@ -39,6 +40,7 @@ export function PopUpModal({ text, timer }: TPopUpModal) {
                 type="button"
                 className={styles["close-button"]}
                 onClick={(e) => {
+                    if (onClose) onClose();
                     e.currentTarget.blur();
                 }}
                 onMouseLeave={(e) => {
