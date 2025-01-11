@@ -10,6 +10,7 @@
         "install": "cd ./packages/frontend && npm install",
         "dev": "npm run start:front",
         "start:front": "vite ./packages/frontend",
-        "watch:front": "vite build --watch ./packages/frontend"
+        "watch:front": "vite build --watch ./packages/frontend",
+        "coverage:front": "npx --prefix ./packages/frontend vitest --root ./packages/frontend --coverage"
     }
 }
