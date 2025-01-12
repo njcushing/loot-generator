@@ -143,23 +143,26 @@ export const LootGeneratorContext = createContext<LootGeneratorContext>(
 );
 
 export function LootGenerator() {
-    const messages = useRef<{ [key: string]: JSX.Element }>({});
+    const messages = useRef<{
+        [key: string]: { state: "normal" | "removing"; element: JSX.Element };
+    }>({});
     const [messagesMutated, setMessagesMutated] = useState<string>("");
     const displayPopUpMessage = useCallback((text: string) => {
         const id = uuid();
         const callback = () => {
-            setMessagesMutated(id);
-            delete messages.current[id as keyof typeof messages.current];
+            setMessagesMutated(uuid());
+            if (!messages.current[id]) return;
+            messages.current[id as keyof typeof messages.current].state = "removing";
         };
         const element = (
             <PopUpModal
                 text={text}
-                timer={{ duration: 3000, callback }}
+                timer={{ duration: Math.random() * 3000 + 2000, callback }}
                 onClose={callback}
                 key={id}
             />
         );
-        messages.current[id] = element;
+        messages.current[id] = { state: "normal", element };
     }, []);
 
     const [lootGeneratorState, setLootGeneratorState] = useState<LootGeneratorState>(() => {
@@ -620,11 +623,34 @@ export function LootGenerator() {
     }, [layout]);
 
     const messageElements = useMemo(() => {
-        return Object.keys(messages.current).length > 0 ? (
+        if (Object.keys(messages.current).length === 0) return null;
+
+        return (
             <div className={styles["messages"]}>
-                {Object.values(messages.current).map((message) => message)}
+                {Object.entries(messages.current)
+                    .reverse()
+                    .map((entry, i) => {
+                        const [key, value] = entry;
+                        const { state, element } = value;
+                        return (
+                            <div
+                                className={`${styles["message-container"]} ${styles[state]}`}
+                                onAnimationEnd={() => {
+                                    if (state !== "removing") return;
+                                    setMessagesMutated(uuid());
+                                    delete messages.current[key as keyof typeof messages.current];
+                                }}
+                                style={{
+                                    translate: `0px calc(${i} * (100% + 8px) * -1)`,
+                                }}
+                                key={key}
+                            >
+                                {element}
+                            </div>
+                        );
+                    })}
             </div>
-        ) : null;
+        );
         /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [messagesMutated]);
 
