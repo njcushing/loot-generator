@@ -38,6 +38,7 @@ export function Messages({ children }: TMessages) {
                 key={id}
             />
         );
+        setMessagesMutated(uuid());
         messages.current[id] = { state: "normal", element };
     }, []);
 
