@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Theme } from "./themes";
+import { Messages } from "./features/Messages";
 import { Pages } from "./pages";
 import config from "./appconfig.json";
 import "./index.css";
@@ -31,7 +32,9 @@ export function App() {
 
     return (
         <Theme>
-            <Pages.LootGenerator />
+            <Messages>
+                <Pages.LootGenerator />
+            </Messages>
         </Theme>
     );
 }

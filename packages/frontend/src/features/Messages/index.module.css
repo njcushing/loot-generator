@@ -1,0 +1,54 @@
+.messages {
+    position: absolute;
+    top: 0;
+    z-index: 1000;
+
+    pointer-events: none;
+
+    justify-content: end;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+
+    padding: 16px;
+}
+
+@keyframes message-in {
+    0% {
+        scale: 90%;
+        opacity: 0;
+    }
+    100% {
+        scale: 100%;
+        opacity: 1;
+    }
+}
+
+@keyframes message-out {
+    0% {
+        scale: 100%;
+        opacity: 1;
+    }
+    100% {
+        scale: 90%;
+        opacity: 0;
+    }
+}
+
+.message-container {
+    position: absolute;
+    bottom: 16px;
+
+    display: flex;
+    justify-content: center;
+
+    width: 100%;
+
+    transition: translate 0.3s ease-out;
+    animation: 0.3s cubic-bezier(0.4, -1.02, 0.49, 1.93) 0s 1 normal forwards message-in;
+}
+
+.message-container.removing {
+    animation: 0.3s cubic-bezier(0.43, -1.09, 0.49, 0.99) 0s 1 normal forwards message-out;
+}

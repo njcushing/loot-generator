@@ -1,4 +1,13 @@
-import { createContext, useState, useEffect, useCallback, useRef, useMemo } from "react";
+import {
+    createContext,
+    useContext,
+    useState,
+    useEffect,
+    useCallback,
+    useRef,
+    useMemo,
+} from "react";
+import { MessagesContext } from "@/features/Messages";
 import useResizeObserverElement from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
 import { Generate } from "@/features/Generate";
@@ -12,7 +21,6 @@ import {
 import { LootTable, Items, Table, Tables, Loot, SortOptions } from "@/utils/types";
 import { z } from "zod";
 import { itemsSchema, tablesSchema, lootSchema, sortOptionsSchema } from "@/utils/types/zod";
-import { PopUpModal } from "@/components/ui/components/PopUpModal";
 import { Design } from "@/features/Design";
 import { updateFieldsInObject, TFieldToUpdate } from "@/utils/mutateFieldsInObject";
 import { v4 as uuid } from "uuid";
@@ -79,8 +87,6 @@ const saveState = (state: LootGeneratorState) => {
 };
 
 interface LootGeneratorContext {
-    displayPopUpMessage: (text: string) => void;
-
     lootGeneratorState: LootGeneratorState;
     setLootGeneratorStateProperty: <K extends keyof LootGeneratorState>(
         property: K,
@@ -112,8 +118,6 @@ interface LootGeneratorContext {
 }
 
 const defaultLootGeneratorContext: LootGeneratorContext = {
-    displayPopUpMessage: () => {},
-
     lootGeneratorState: defaultLootGeneratorState,
     setLootGeneratorStateProperty: () => {},
 
@@ -143,35 +147,15 @@ export const LootGeneratorContext = createContext<LootGeneratorContext>(
 );
 
 export function LootGenerator() {
-    const messages = useRef<{
-        [key: string]: { state: "normal" | "removing"; element: JSX.Element };
-    }>({});
-    const [messagesMutated, setMessagesMutated] = useState<string>("");
-    const displayPopUpMessage = useCallback((text: string) => {
-        const id = uuid();
-        const callback = () => {
-            setMessagesMutated(uuid());
-            if (!messages.current[id]) return;
-            messages.current[id as keyof typeof messages.current].state = "removing";
-        };
-        const element = (
-            <PopUpModal
-                text={text}
-                timer={{ duration: Math.random() * 3000 + 2000, callback }}
-                onClose={callback}
-                key={id}
-            />
-        );
-        messages.current[id] = { state: "normal", element };
-    }, []);
+    const { displayMessage } = useContext(MessagesContext);
 
     const [lootGeneratorState, setLootGeneratorState] = useState<LootGeneratorState>(() => {
         const loadedState = loadState();
         if (!loadedState) {
-            displayPopUpMessage("Could not load session state");
+            displayMessage("Could not load session state");
             return defaultLootGeneratorState;
         }
-        displayPopUpMessage("Successfully loaded session state");
+        displayMessage("Successfully loaded session state");
         return loadedState;
     });
 
@@ -622,44 +606,10 @@ export function LootGenerator() {
         return null;
     }, [layout]);
 
-    const messageElements = useMemo(() => {
-        if (Object.keys(messages.current).length === 0) return null;
-
-        return (
-            <div className={styles["messages"]}>
-                {Object.entries(messages.current)
-                    .reverse()
-                    .map((entry, i) => {
-                        const [key, value] = entry;
-                        const { state, element } = value;
-                        return (
-                            <div
-                                className={`${styles["message-container"]} ${styles[state]}`}
-                                onAnimationEnd={() => {
-                                    if (state !== "removing") return;
-                                    setMessagesMutated(uuid());
-                                    delete messages.current[key as keyof typeof messages.current];
-                                }}
-                                style={{
-                                    translate: `0px calc(${i} * (100% + 8px) * -1)`,
-                                }}
-                                key={key}
-                            >
-                                {element}
-                            </div>
-                        );
-                    })}
-            </div>
-        );
-        /* eslint-disable-next-line react-hooks/exhaustive-deps */
-    }, [messagesMutated]);
-
     return (
         <LootGeneratorContext.Provider
             value={useMemo(
                 () => ({
-                    displayPopUpMessage,
-
                     lootGeneratorState,
                     setLootGeneratorStateProperty,
 
@@ -684,8 +634,6 @@ export function LootGenerator() {
                     createSubEntry,
                 }),
                 [
-                    displayPopUpMessage,
-
                     lootGeneratorState,
                     setLootGeneratorStateProperty,
 
@@ -713,7 +661,6 @@ export function LootGenerator() {
         >
             <div className={`${styles["page"]} ${styles[`${layout}`]}`} ref={containerRef}>
                 {pageContent}
-                {messageElements}
             </div>
         </LootGeneratorContext.Provider>
     );
