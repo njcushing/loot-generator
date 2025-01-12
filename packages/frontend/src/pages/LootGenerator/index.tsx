@@ -149,15 +149,19 @@ export const LootGeneratorContext = createContext<LootGeneratorContext>(
 export function LootGenerator() {
     const { displayMessage } = useContext(MessagesContext);
 
+    const [loadStateMessage, setLoadStateMessage] = useState<string>("");
     const [lootGeneratorState, setLootGeneratorState] = useState<LootGeneratorState>(() => {
         const loadedState = loadState();
         if (!loadedState) {
-            displayMessage("Could not load session state");
+            setLoadStateMessage("Could not load session state");
             return defaultLootGeneratorState;
         }
-        displayMessage("Successfully loaded session state");
+        setLoadStateMessage("Successfully loaded session state");
         return loadedState;
     });
+    useEffect(() => {
+        displayMessage(loadStateMessage);
+    }, [displayMessage, loadStateMessage]);
 
     const containerRef = useRef<HTMLDivElement>(null);
     const [containerSize] = useResizeObserverElement({ ref: containerRef });
