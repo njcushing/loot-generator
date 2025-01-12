@@ -33,7 +33,7 @@ export function Messages({ children }: TMessages) {
         const element = (
             <PopUpModal
                 text={text}
-                timer={{ duration: Math.random() * 3000 + 2000, callback }}
+                timer={{ duration: 5000, callback }}
                 onClose={callback}
                 key={id}
             />
