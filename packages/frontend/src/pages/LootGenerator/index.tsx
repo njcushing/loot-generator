@@ -160,7 +160,10 @@ export function LootGenerator() {
         return loadedState;
     });
     useEffect(() => {
-        displayMessage(loadStateMessage);
+        if (loadStateMessage.length > 0) {
+            displayMessage(loadStateMessage);
+            setLoadStateMessage("");
+        }
     }, [displayMessage, loadStateMessage]);
 
     const containerRef = useRef<HTMLDivElement>(null);
