@@ -152,13 +152,16 @@ export function LootGenerator() {
     const [loadStateMessage, setLoadStateMessage] = useState<string>("");
     const [lootGeneratorState, setLootGeneratorState] = useState<LootGeneratorState>(() => {
         const loadedState = loadState();
+        return loadedState || defaultLootGeneratorState;
+    });
+    useEffect(() => {
+        const loadedState = loadState();
         if (!loadedState) {
             setLoadStateMessage("Could not load session state");
-            return defaultLootGeneratorState;
+        } else {
+            setLoadStateMessage("Successfully loaded session state");
         }
-        setLoadStateMessage("Successfully loaded session state");
-        return loadedState;
-    });
+    }, []);
     useEffect(() => {
         if (loadStateMessage.length > 0) {
             displayMessage(loadStateMessage);
