@@ -52,7 +52,7 @@ export function QuantityOptions() {
             </div>
             {quantityOptionSelected === 4 && (
                 <label htmlFor="custom-quantity" className={styles["custom-quantity-field"]}>
-                    Enter custom quantity:
+                    Enter quantity:
                     <input
                         type="number"
                         value={lootGeneratorState.customQuantity}
