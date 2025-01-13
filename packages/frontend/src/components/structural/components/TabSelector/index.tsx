@@ -1,4 +1,4 @@
-import { useCallback, useState, useMemo } from "react";
+import { useCallback, useState, useEffect, useMemo } from "react";
 import _ from "lodash";
 import styles from "./index.module.css";
 
@@ -30,9 +30,20 @@ export function TabSelector({ tabs, selectedTabName, style }: TTabSelector) {
         [style],
     );
 
-    const [selectedTab, setSelectedTab] = useState<keyof Tabs>(
-        selectedTabName || Object.keys(tabs)[0],
+    const [selectedTab, setSelectedTab] = useState<keyof Tabs | null>(
+        (() => {
+            if (selectedTabName && tabs[selectedTabName]) return selectedTabName;
+            if (Object.keys(tabs).length > 0) return Object.keys(tabs)[0];
+            return null;
+        })(),
     );
+    useEffect(() => {
+        if (!tabs[selectedTab || ""]) {
+            if (Object.keys(tabs).length > 0) {
+                setSelectedTab(Object.keys(tabs)[0]);
+            } else setSelectedTab(null);
+        }
+    }, [tabs, selectedTab]);
 
     const createTab = useCallback(
         (key: keyof Tabs) => {
@@ -77,7 +88,9 @@ export function TabSelector({ tabs, selectedTabName, style }: TTabSelector) {
                     })}
                 </ul>
             </div>
-            <div className={styles["tab-content"]}>{tabs[selectedTab].content}</div>
+            <div className={styles["tab-content"]}>
+                {selectedTab && tabs[selectedTab] && tabs[selectedTab].content}
+            </div>
         </div>
     );
 }
