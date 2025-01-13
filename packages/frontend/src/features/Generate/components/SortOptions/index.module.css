@@ -10,6 +10,13 @@
 .sort-options-title {
     color: black;
     font-size: 0.9rem;
+    text-wrap: nowrap;
+}
+
+.option-and-criteria-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
 }
 
 .sort-option-input {
@@ -53,10 +60,4 @@
 
 .sort-option-select-option:nth-child(2n) {
     background-color: rgba(0, 0, 0, 0.16);
-}
-
-.sort-option-criteria {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 8px;
 }

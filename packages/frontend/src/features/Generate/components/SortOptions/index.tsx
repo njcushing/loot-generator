@@ -21,29 +21,29 @@ export function SortOptions() {
         return (
             <>
                 <p className={styles["sort-options-title"]}>Sort By:</p>
-                <select
-                    className={styles["sort-option-select"]}
-                    id="sort-options"
-                    name="sort-options"
-                    defaultValue={sortOptions.selected}
-                    onChange={(e) => {
-                        setSortOptions((current) => ({ ...current, selected: e.target.value }));
-                    }}
-                    key="sort-options"
-                >
-                    {options.map((option) => {
-                        return (
-                            <option
-                                className={styles["sort-option-select-option"]}
-                                value={option.name}
-                                key={`sort-option-${option.name}`}
-                            >
-                                {option.name}
-                            </option>
-                        );
-                    })}
-                </select>
-                <div className={styles["sort-option-criteria"]}>
+                <div className={styles["option-and-criteria-container"]}>
+                    <select
+                        className={styles["sort-option-select"]}
+                        id="sort-options"
+                        name="sort-options"
+                        defaultValue={sortOptions.selected}
+                        onChange={(e) => {
+                            setSortOptions((current) => ({ ...current, selected: e.target.value }));
+                        }}
+                        key="sort-options"
+                    >
+                        {options.map((option) => {
+                            return (
+                                <option
+                                    className={styles["sort-option-select-option"]}
+                                    value={option.name}
+                                    key={`sort-option-${option.name}`}
+                                >
+                                    {option.name}
+                                </option>
+                            );
+                        })}
+                    </select>
                     {criteria.map((criterion) => {
                         const {
                             name: criterionName,
