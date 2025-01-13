@@ -37,7 +37,7 @@ export const createLootTable = (
             key: props.key || uuid(),
             id: props.id || null,
             criteria: {
-                weight: props.criteria?.weight || 0,
+                weight: props.criteria?.weight || 1,
                 rolls: props.criteria?.rolls || {},
             },
         };
@@ -46,7 +46,7 @@ export const createLootTable = (
         type: "table_noid",
         key: props.key || uuid(),
         criteria: {
-            weight: props.criteria?.weight || 0,
+            weight: props.criteria?.weight || 1,
             rolls: props.criteria?.rolls || {},
         },
         ...createTable(props as Table),
@@ -70,7 +70,7 @@ export const createLootItem = (
             key: props.key || uuid(),
             id: props.id || null,
             criteria: {
-                weight: props.criteria?.weight || 0,
+                weight: props.criteria?.weight || 1,
                 rolls: props.criteria?.rolls || {},
             },
             quantity: {
@@ -83,7 +83,7 @@ export const createLootItem = (
         type: "item_noid",
         key: props.key || uuid(),
         criteria: {
-            weight: props.criteria?.weight || 0,
+            weight: props.criteria?.weight || 1,
             rolls: props.criteria?.rolls || {},
         },
         quantity: {
