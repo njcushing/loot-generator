@@ -36,14 +36,20 @@
 }
 
 .generate-button {
-    left: 50%;
-    transform: translateX(-50%);
-
     flex: 0 1 auto;
 
     font-size: 1.4rem;
     font-weight: var(--text-bold-font-weight);
     background-color: #fff;
+}
+
+.generate-and-reset-buttons.wide .generate-button {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.generate-and-reset-buttons.thin .generate-button {
+    left: 0%;
 }
 
 .reset-button {
