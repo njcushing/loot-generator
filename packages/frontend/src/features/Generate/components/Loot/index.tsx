@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
-import { sortLoot } from "@/utils/sortLoot/sortLoot";
+import { sortLoot } from "@/utils/sortLoot";
 import styles from "./index.module.css";
 
 export function Loot() {
