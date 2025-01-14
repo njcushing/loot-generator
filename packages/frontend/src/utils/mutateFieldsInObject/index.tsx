@@ -4,6 +4,7 @@ export type TFieldToUpdate = {
 };
 
 export const updateFieldsInObject = (obj: object, fieldsToUpdate: TFieldToUpdate[]): void => {
+    if (typeof obj !== "object" || obj === null) return;
     for (let i = 0; i < fieldsToUpdate.length; i++) {
         const { path, newValue } = fieldsToUpdate[i];
         let currentField = obj;
