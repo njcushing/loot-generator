@@ -24,7 +24,7 @@ import { itemsSchema, tablesSchema, lootSchema, sortOptionsSchema } from "@/util
 import { Design } from "@/features/Design";
 import { updateFieldsInObject, TFieldToUpdate } from "@/utils/mutateFieldsInObject";
 import { v4 as uuid } from "uuid";
-import { sortOptions } from "./utils/sortOptions";
+import { sortOptions } from "@/utils/sortOptions";
 import { version } from "../../../package.json";
 import styles from "./index.module.css";
 
