@@ -7,7 +7,7 @@ type Params = {
 
 type ReturnTypes = [[number, number], React.Dispatch<React.SetStateAction<[number, number]>>];
 
-function useResizeObserverElement(
+export function useResizeObserverElement(
     params: Params,
     dependencies: unknown[] | undefined = undefined,
 ): ReturnTypes {
@@ -31,5 +31,3 @@ function useResizeObserverElement(
 
     return [elementSize, setElementSize];
 }
-
-export default useResizeObserverElement;

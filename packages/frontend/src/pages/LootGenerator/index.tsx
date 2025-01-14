@@ -8,7 +8,7 @@ import {
     useMemo,
 } from "react";
 import { MessagesContext } from "@/features/Messages";
-import useResizeObserverElement from "@/hooks/useResizeObserverElement";
+import { useResizeObserverElement } from "@/hooks/useResizeObserverElement";
 import { Structural } from "@/components/structural";
 import { Generate } from "@/features/Generate";
 import {
