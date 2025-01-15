@@ -86,7 +86,7 @@ const saveState = (state: LootGeneratorState) => {
     localStorage.setItem(`${import.meta.env.LOCALSTORAGE_PREFIX}-session`, JSON.stringify(state));
 };
 
-interface LootGeneratorContext {
+export interface ILootGeneratorContext {
     lootGeneratorState: LootGeneratorState;
     setLootGeneratorStateProperty: <K extends keyof LootGeneratorState>(
         property: K,
@@ -117,7 +117,7 @@ interface LootGeneratorContext {
     createSubEntry: (tableId: string, entryKey: string) => boolean;
 }
 
-const defaultLootGeneratorContext: LootGeneratorContext = {
+const defaultLootGeneratorContext: ILootGeneratorContext = {
     lootGeneratorState: defaultLootGeneratorState,
     setLootGeneratorStateProperty: () => {},
 
@@ -142,7 +142,7 @@ const defaultLootGeneratorContext: LootGeneratorContext = {
     createSubEntry: () => false,
 };
 
-export const LootGeneratorContext = createContext<LootGeneratorContext>(
+export const LootGeneratorContext = createContext<ILootGeneratorContext>(
     defaultLootGeneratorContext,
 );
 
