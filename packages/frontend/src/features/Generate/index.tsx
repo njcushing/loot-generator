@@ -1,7 +1,7 @@
 import { useContext, useCallback, useRef, useEffect, useState } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { TabSelector } from "@/components/structural/components/TabSelector";
-import useResizeObserverElement from "@/hooks/useResizeObserverElement";
+import { useResizeObserverElement } from "@/hooks/useResizeObserverElement";
 import { generateLoot } from "@/utils/generateLoot";
 import { Loot } from "./components/Loot";
 import { QuantityOptions } from "./components/QuantityOptions";
