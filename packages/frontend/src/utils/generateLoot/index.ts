@@ -1,5 +1,6 @@
 import { v4 as uuid } from "uuid";
 import {
+    RecursiveOptional,
     LootEntry,
     LootItem,
     LootTable,
@@ -11,10 +12,6 @@ import {
     Loot,
 } from "../types";
 import { randomRange } from "../randomRange";
-
-type RecursiveOptional<T> = {
-    [P in keyof T]?: T[P] extends object ? RecursiveOptional<T[P]> : T[P];
-};
 
 export const createLootEntry = (props: RecursiveOptional<LootEntry> = {}): LootEntry => ({
     type: "entry",

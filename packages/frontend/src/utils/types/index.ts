@@ -1,3 +1,7 @@
+export type RecursiveOptional<T> = {
+    [P in keyof T]?: T[P] extends object ? RecursiveOptional<T[P]> : T[P];
+};
+
 /* eslint-disable no-use-before-define */
 
 export type GenerationQuantity = {
