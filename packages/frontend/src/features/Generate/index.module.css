@@ -8,6 +8,8 @@
 }
 
 .generate-and-reset-buttons {
+    container-type: inline-size;
+
     justify-self: end;
     display: flex;
     flex-direction: row;
@@ -43,13 +45,16 @@
     background-color: #fff;
 }
 
-.generate-and-reset-buttons.wide .generate-button {
+.generate-button {
     left: 50%;
     transform: translateX(-50%);
 }
 
-.generate-and-reset-buttons.thin .generate-button {
-    left: 0%;
+@container (width < 300px) {
+    .generate-button {
+        left: 0%;
+        transform: translateX(0%);
+    }
 }
 
 .reset-button {

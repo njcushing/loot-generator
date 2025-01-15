@@ -1,7 +1,6 @@
-import { useContext, useCallback, useRef, useEffect, useState } from "react";
+import { useContext, useCallback } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { TabSelector } from "@/components/structural/components/TabSelector";
-import { useResizeObserverElement } from "@/hooks/useResizeObserverElement";
 import { generateLoot } from "@/utils/generateLoot";
 import { Loot } from "./components/Loot";
 import { QuantityOptions } from "./components/QuantityOptions";
@@ -10,13 +9,6 @@ import styles from "./index.module.css";
 
 export function Generate() {
     const { lootGeneratorState, setLootGeneratorStateProperty } = useContext(LootGeneratorContext);
-
-    const buttonsRef = useRef<HTMLDivElement>(null);
-    const [buttonsSize] = useResizeObserverElement({ ref: buttonsRef });
-    const [buttonsLayout, setButtonsLayout] = useState<"wide" | "thin">("wide");
-    useEffect(() => {
-        setButtonsLayout(buttonsSize[0] >= 300 ? "wide" : "thin");
-    }, [buttonsSize]);
 
     const createButton = useCallback(
         (text: string, onClickHandler: () => void, className: string) => {
@@ -49,10 +41,7 @@ export function Generate() {
                             <SortOptions />
                             <Loot />
                             <QuantityOptions />
-                            <div
-                                className={`${styles["generate-and-reset-buttons"]} ${styles[buttonsLayout]}`}
-                                ref={buttonsRef}
-                            >
+                            <div className={styles["generate-and-reset-buttons"]}>
                                 {createButton(
                                     "Generate",
                                     () => {
