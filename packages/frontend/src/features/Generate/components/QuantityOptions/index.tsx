@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import styles from "./index.module.css";
 
@@ -20,23 +20,17 @@ export function QuantityOptions() {
         ];
     }, [lootGeneratorState.customQuantity]);
 
-    useEffect(() => {
-        setLootGeneratorStateProperty(
-            "quantitySelected",
-            quantityOptions[quantityOptionSelected].value,
-        );
-    }, [setLootGeneratorStateProperty, quantityOptionSelected, quantityOptions]);
-
     return (
         <div className={styles["generation-quantity-options"]}>
             <div className={styles["quantity-buttons"]}>
                 {quantityOptions.map((option, i) => {
-                    const { text } = option;
+                    const { text, value } = option;
                     return (
                         <button
                             type="button"
                             className={`${styles["generation-quantity-button"]} ${styles[quantityOptionSelected === i ? "selected" : ""]}`}
                             onClick={(e) => {
+                                setLootGeneratorStateProperty("quantitySelected", value);
                                 setLootGeneratorStateProperty("quantityOptionSelected", i);
                                 e.currentTarget.blur();
                             }}
