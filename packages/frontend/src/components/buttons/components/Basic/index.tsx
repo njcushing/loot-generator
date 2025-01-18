@@ -86,7 +86,7 @@ export const Basic = forwardRef<HTMLButtonElement, TBasic>(
             >
                 {symbol && symbol.length > 0 && (
                     <p
-                        className={`${concatenatedStyles.symbol === "sharp" ? "material-symbols-sharp" : "material-symbols-rounded"} ${styles["symbol"]}`}
+                        className={`material-symbols-${concatenatedStyles.symbol} ${styles["symbol"]}`}
                     >
                         {symbol}
                     </p>
