@@ -8,15 +8,15 @@ import { ItemEntry } from "../ItemEntry";
 import { Entry } from "../Entry";
 import styles from "./index.module.css";
 
-interface TableContext {
+export interface ITableContext {
     pathToRoot: { type: "base" | "imported"; id: string | null }[];
 }
 
-const defaultTableContext: TableContext = {
+const defaultTableContext: ITableContext = {
     pathToRoot: [],
 };
 
-export const TableContext = createContext<TableContext>(defaultTableContext);
+export const TableContext = createContext<ITableContext>(defaultTableContext);
 
 export type TTable = {
     id: string;
