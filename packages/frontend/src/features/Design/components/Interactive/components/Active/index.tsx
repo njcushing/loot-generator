@@ -7,7 +7,7 @@ export function Active() {
     const { lootGeneratorState, deleteActive } = useContext(LootGeneratorContext);
 
     return (
-        <ul className={styles["active"]}>
+        <div className={styles["active"]}>
             {lootGeneratorState.active ? (
                 <Table
                     id={lootGeneratorState.active}
@@ -20,6 +20,6 @@ export function Active() {
                     className={styles["help-message"]}
                 >{`Please upload a table from the 'Tables' tab to start generating`}</p>
             )}
-        </ul>
+        </div>
     );
 }
