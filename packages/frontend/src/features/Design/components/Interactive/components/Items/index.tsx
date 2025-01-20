@@ -28,7 +28,6 @@ export function Items() {
                     itemKeys
                         .filter((key) => {
                             const item = lootGeneratorState.items[key];
-                            if (!item) return false;
                             return filterRegex.test(item.name || "");
                         })
                         .map((key) => {
