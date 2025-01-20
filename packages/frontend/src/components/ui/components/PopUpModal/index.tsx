@@ -24,12 +24,12 @@ export function PopUpModal({ text, timer, onClose }: TPopUpModal) {
     useEffect(() => {
         const { duration, callback } = concatenatedTimer!;
 
-        if (Number.isNaN(timerRef.current)) clearTimeout(timerRef.current);
+        if (!Number.isNaN(timerRef.current)) clearTimeout(timerRef.current);
 
         timerRef.current = setTimeout(() => callback && callback(), duration);
 
         return () => {
-            if (Number.isNaN(timerRef.current)) clearTimeout(timerRef.current);
+            if (!Number.isNaN(timerRef.current)) clearTimeout(timerRef.current);
         };
     }, [concatenatedTimer]);
 
