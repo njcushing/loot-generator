@@ -16,7 +16,7 @@ export function EntryFieldsToggleBar({
 }: TEntryFieldsToggleBar) {
     return (
         <ToggleBar
-            name={name || "Unnamed Item"}
+            name={name}
             onClick={() => {
                 if (onClick) onClick();
             }}
@@ -27,7 +27,6 @@ export function EntryFieldsToggleBar({
                     hover: "rgb(242, 242, 242)",
                     focus: "rgb(228, 228, 228)",
                 },
-                nameFontStyle: name ? "normal" : "italic",
             }}
         >
             <div className={styles["entry-fields-container"]}>
