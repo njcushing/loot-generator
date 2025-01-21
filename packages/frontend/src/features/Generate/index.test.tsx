@@ -7,6 +7,7 @@ import {
     LootGeneratorContext,
     LootGeneratorState,
 } from "@/pages/LootGenerator";
+import { v4 as uuid } from "uuid";
 import * as gen from "@/utils/generateLoot";
 import { Generate } from ".";
 
@@ -49,7 +50,7 @@ vi.mock("@/components/structural/components/TabSelector", () => ({
             TabSelector Component
             {Object.keys(tabs).map((key) => {
                 const tab = tabs[key];
-                return tab.content;
+                return <div key={uuid()}>{tab.content}</div>;
             })}
         </div>
     )),
