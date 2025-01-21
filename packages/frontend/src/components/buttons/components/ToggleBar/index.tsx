@@ -1,4 +1,4 @@
-import { CSSProperties, useState, useCallback, useRef, useMemo } from "react";
+import { CSSProperties, useState, useCallback, useMemo } from "react";
 import _ from "lodash";
 import styles from "./index.module.css";
 
@@ -46,25 +46,22 @@ export function ToggleBar({
     onClick,
     disabled = false,
     children,
-    style,
+    style = {},
 }: TToggleBar) {
     const concatenatedStyles = useMemo(
-        () => _.merge(structuredClone(defaultStyles), style || {}),
+        () => _.merge(structuredClone(defaultStyles), style),
         [style],
     );
 
     const [isOpen, setIsOpen] = useState<boolean>(defaultState);
 
-    const toggleBarRef = useRef<HTMLDivElement>(null);
-
-    const switchBackgroundColor = useCallback(
-        (color: CSSProperties["backgroundColor"]) => {
-            if (!toggleBarRef.current) return;
-            toggleBarRef.current.style.backgroundColor =
-                color || concatenatedStyles.colours.normal!;
-        },
-        [concatenatedStyles],
+    const [backgroundColor, setBackgroundColor] = useState<CSSProperties["backgroundColor"]>(
+        concatenatedStyles.colours.normal,
     );
+
+    const switchBackgroundColor = useCallback((color: CSSProperties["backgroundColor"]) => {
+        setBackgroundColor(color);
+    }, []);
 
     let toggleBarSymbol = "";
     if (concatenatedStyles.indicator === "signs") toggleBarSymbol = isOpen ? "Remove" : "Add";
@@ -72,13 +69,11 @@ export function ToggleBar({
         toggleBarSymbol = isOpen ? "Keyboard_Arrow_Down" : "Keyboard_Arrow_Right";
     }
 
+    const fontSize = concatenatedStyles.size === "m" ? "1.5rem" : "1.2rem";
+
     return (
         <div className={`${styles["toggle-bar-container"]} ${styles[concatenatedStyles.size]}`}>
-            <div
-                className={styles["toggle-bar"]}
-                style={{ backgroundColor: concatenatedStyles.colours.normal }}
-                ref={toggleBarRef}
-            >
+            <div className={styles["toggle-bar"]} style={{ backgroundColor }}>
                 <button
                     type="button"
                     className={styles["toggle-bar-button"]}
@@ -105,7 +100,7 @@ export function ToggleBar({
                                 justifyContent: "center",
                                 alignItems: "center",
 
-                                fontSize: concatenatedStyles.size === "m" ? "1.5rem" : "1.2rem",
+                                fontSize,
                                 fontWeight: 100,
                             }}
                         >
@@ -149,7 +144,7 @@ export function ToggleBar({
                                     justifyContent: "center",
                                     alignItems: "center",
 
-                                    fontSize: concatenatedStyles.size === "m" ? "1.5rem" : "1.4rem",
+                                    fontSize,
                                     fontWeight: 100,
                                 }}
                                 key={symbol}
