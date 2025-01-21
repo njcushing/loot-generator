@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { ToggleBar } from "@/components/buttons/components/ToggleBar";
 import styles from "./index.module.css";
 
 export type TEntryFieldsToggleBar = {
     name: string;
-    isOpen?: boolean;
     onClick?: () => unknown;
     fields?: JSX.Element | JSX.Element[] | null;
     subCategories?: JSX.Element | JSX.Element[] | null;
@@ -12,19 +10,15 @@ export type TEntryFieldsToggleBar = {
 
 export function EntryFieldsToggleBar({
     name,
-    isOpen = false,
     onClick,
     fields,
     subCategories,
 }: TEntryFieldsToggleBar) {
-    const [isOpenState, setIsOpenState] = useState<boolean>(isOpen);
-
     return (
         <ToggleBar
             name={name || "Unnamed Item"}
             onClick={() => {
                 if (onClick) onClick();
-                setIsOpenState(!isOpenState);
             }}
             style={{
                 size: "s",
