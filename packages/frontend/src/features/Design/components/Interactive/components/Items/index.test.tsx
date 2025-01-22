@@ -102,7 +102,7 @@ vi.mock("@/features/Design/components/Option", () => ({
     }),
 }));
 
-describe("The Numeric component...", () => {
+describe("The Items component...", () => {
     afterEach(() => {
         vi.restoreAllMocks();
     });
