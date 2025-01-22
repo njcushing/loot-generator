@@ -4,15 +4,15 @@ import { Active } from "./components/Active";
 import { Tables } from "./components/Tables";
 import { Items } from "./components/Items";
 
-interface InteractiveContext {
+export interface IInteractiveContext {
     menuType: "active" | "tables" | "items";
 }
 
-const defaultInteractiveContext: InteractiveContext = {
+const defaultInteractiveContext: IInteractiveContext = {
     menuType: "active",
 };
 
-export const InteractiveContext = createContext<InteractiveContext>(defaultInteractiveContext);
+export const InteractiveContext = createContext<IInteractiveContext>(defaultInteractiveContext);
 
 export function Interactive() {
     return (
