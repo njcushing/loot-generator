@@ -28,7 +28,6 @@ export function Tables() {
                     tableKeys
                         .filter((key) => {
                             const table = lootGeneratorState.tables[key];
-                            if (!table) return false;
                             return filterRegex.test(table.name || "");
                         })
                         .map((key) => {
