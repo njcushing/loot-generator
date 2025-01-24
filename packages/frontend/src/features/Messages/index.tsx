@@ -7,15 +7,15 @@ export type TMessages = {
     children?: JSX.Element | null | (JSX.Element | null)[];
 };
 
-interface MessagesContext {
+export interface IMessagesContext {
     displayMessage: (text: string) => void;
 }
 
-const defaultMessagesContext: MessagesContext = {
+const defaultMessagesContext: IMessagesContext = {
     displayMessage: () => {},
 };
 
-export const MessagesContext = createContext<MessagesContext>(defaultMessagesContext);
+export const MessagesContext = createContext<IMessagesContext>(defaultMessagesContext);
 
 export function Messages({ children }: TMessages) {
     const messages = useRef<{
@@ -72,7 +72,9 @@ export function Messages({ children }: TMessages) {
 
     return (
         <MessagesContext.Provider value={useMemo(() => ({ displayMessage }), [displayMessage])}>
-            <ul className={styles["messages"]}>{messageElements}</ul>
+            <ul aria-label="loot-generator-messages" className={styles["messages"]}>
+                {messageElements}
+            </ul>
             {children}
         </MessagesContext.Provider>
     );
