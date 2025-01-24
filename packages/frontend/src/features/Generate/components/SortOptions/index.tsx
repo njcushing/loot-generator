@@ -1,23 +1,15 @@
-import { useContext, useState, useEffect, useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { LootGeneratorContext } from "@/pages/LootGenerator";
 import styles from "./index.module.css";
 
 export function SortOptions() {
     const { lootGeneratorState, setLootGeneratorStateProperty } = useContext(LootGeneratorContext);
-
-    const [sortOptions, setSortOptions] = useState<typeof lootGeneratorState.sortOptions>(
-        lootGeneratorState.sortOptions,
-    );
-
-    useEffect(() => {
-        setLootGeneratorStateProperty("sortOptions", sortOptions);
-    }, [setLootGeneratorStateProperty, sortOptions]);
+    const { sortOptions } = lootGeneratorState;
 
     const inputs = useMemo(() => {
         const { selected, options } = sortOptions;
         const optionSelected = options.find((option) => option.name === selected);
-        if (!optionSelected) return null;
-        const criteria = structuredClone(optionSelected.criteria);
+        const criteria = structuredClone(optionSelected?.criteria || []);
         return (
             <>
                 <p className={styles["sort-options-title"]}>Sort By:</p>
@@ -26,9 +18,11 @@ export function SortOptions() {
                         className={styles["sort-option-select"]}
                         id="sort-options"
                         name="sort-options"
+                        aria-label="sort-options"
                         defaultValue={sortOptions.selected}
                         onChange={(e) => {
-                            setSortOptions((current) => ({ ...current, selected: e.target.value }));
+                            const newSortOptions = { ...sortOptions, selected: e.target.value };
+                            setLootGeneratorStateProperty("sortOptions", newSortOptions);
                         }}
                         key="sort-options"
                     >
@@ -55,21 +49,21 @@ export function SortOptions() {
                                 className={styles["sort-option-select"]}
                                 id={`sort-option-${selected}-${criterionName}`}
                                 name={`sort-option-${selected}-${criterionName}`}
+                                aria-label={`sort-option-${selected}-${criterionName}`}
                                 defaultValue={selectedCriterion}
                                 onChange={(e) => {
-                                    setSortOptions((current) => {
-                                        const newOptions = structuredClone(current.options);
-                                        const optionToUpdate = newOptions.find(
-                                            (o) => o.name === selected,
-                                        );
-                                        if (!optionToUpdate) return current;
-                                        const criterionToUpdate = optionToUpdate.criteria.find(
-                                            (c) => c.name === criterionName,
-                                        );
-                                        if (!criterionToUpdate) return current;
-                                        criterionToUpdate.selected = e.target.value;
-                                        return { ...current, options: newOptions };
-                                    });
+                                    const newOptions = structuredClone(sortOptions.options);
+                                    const optionToUpdate = newOptions.find(
+                                        (o) => o.name === selected,
+                                    );
+                                    if (!optionToUpdate) return;
+                                    const criterionToUpdate = optionToUpdate.criteria.find(
+                                        (c) => c.name === criterionName,
+                                    );
+                                    if (!criterionToUpdate) return;
+                                    criterionToUpdate.selected = e.target.value;
+                                    const newSortOptions = { ...sortOptions, options: newOptions };
+                                    setLootGeneratorStateProperty("sortOptions", newSortOptions);
                                 }}
                                 key={`sort-option-${selected}-${criterionName}`}
                             >
@@ -90,7 +84,7 @@ export function SortOptions() {
                 </div>
             </>
         );
-    }, [sortOptions]);
+    }, [sortOptions, setLootGeneratorStateProperty]);
 
     return <form className={styles["sort-options"]}>{inputs}</form>;
 }
