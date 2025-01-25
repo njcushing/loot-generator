@@ -90,7 +90,7 @@ export function ItemEntry({ entry }: TItemEntry) {
                                         idOrKey={key}
                                         type="entry"
                                         labelText="Name"
-                                        value={entry.name || ""}
+                                        value={entry.name!}
                                         fieldPath={["name"]}
                                         disabled={disablePropsFields}
                                     />
@@ -98,7 +98,7 @@ export function ItemEntry({ entry }: TItemEntry) {
                                         idOrKey={key}
                                         type="entry"
                                         labelText="Value"
-                                        value={typeof entry.value === "number" ? entry.value : 1}
+                                        value={entry.value}
                                         min={0}
                                         fieldPath={["value"]}
                                         disabled={disablePropsFields}
@@ -115,7 +115,7 @@ export function ItemEntry({ entry }: TItemEntry) {
                                     idOrKey={key}
                                     type="entry"
                                     labelText="Min"
-                                    value={typeof min === "number" ? min : 1}
+                                    value={min}
                                     min={0}
                                     fieldPath={["quantity", "min"]}
                                     disabled={disablePropsFields}
@@ -124,7 +124,7 @@ export function ItemEntry({ entry }: TItemEntry) {
                                     idOrKey={key}
                                     type="entry"
                                     labelText="Max"
-                                    value={typeof max === "number" ? max : 1}
+                                    value={max}
                                     min={0}
                                     fieldPath={["quantity", "max"]}
                                     disabled={disablePropsFields}
@@ -139,7 +139,7 @@ export function ItemEntry({ entry }: TItemEntry) {
                                 idOrKey={key}
                                 type="entry"
                                 labelText="Weight"
-                                value={typeof weight === "number" ? weight : 1}
+                                value={weight}
                                 fieldPath={["criteria", "weight"]}
                                 disabled={disablePropsFields}
                             />
