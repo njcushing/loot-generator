@@ -107,7 +107,7 @@ export function TableEntry({ entry }: TTableEntry) {
                                     idOrKey={key}
                                     type="entry"
                                     labelText="Name"
-                                    value={entry.name || ""}
+                                    value={entry.name!}
                                     fieldPath={["name"]}
                                     disabled={disablePropsFields}
                                 />
@@ -121,7 +121,7 @@ export function TableEntry({ entry }: TTableEntry) {
                                 idOrKey={key}
                                 type="entry"
                                 labelText="Weight"
-                                value={typeof weight === "number" ? weight : 1}
+                                value={weight}
                                 fieldPath={["criteria", "weight"]}
                                 disabled={disablePropsFields}
                             />
