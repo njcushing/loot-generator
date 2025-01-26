@@ -24,9 +24,10 @@ export type TTable = {
     onClick?: (
         optionClicked: "toggle" | "delete" | "edit" | "upload" | "add" | "remove_selection",
     ) => unknown;
+    children?: JSX.Element | null | (JSX.Element | null)[];
 };
 
-export function Table({ id, displayMode = "normal", onClick }: TTable) {
+export function Table({ id, displayMode = "normal", onClick, children }: TTable) {
     const { lootGeneratorState, deleteTable, uploadTableToActive, createEntry } =
         useContext(LootGeneratorContext);
     const { menuType } = useContext(InteractiveContext);
@@ -153,6 +154,7 @@ export function Table({ id, displayMode = "normal", onClick }: TTable) {
                             })}
                 </ul>
             </ToggleBar>
+            {children}
         </TableContext.Provider>
     );
 }
