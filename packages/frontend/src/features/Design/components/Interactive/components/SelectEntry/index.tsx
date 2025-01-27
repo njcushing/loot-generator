@@ -73,23 +73,20 @@ export function SelectEntry({ entryKey, id, disabled }: TSelectEntry) {
     }, [entryKey, id, disabled, removeIdFromEntry, pathToRoot, type]);
 
     const tableList = useMemo(() => {
-        return [...Object.keys(lootGeneratorState.tables)]
-            .filter((tableId) => pathToRoot.findIndex((step) => step.id === tableId) === -1)
-            .map((tableId) => {
-                return (
-                    <Table
-                        id={tableId}
-                        displayMode="selection"
-                        onClick={() => {
-                            const success =
-                                pathToRoot[0].id &&
-                                setIdOnEntry(pathToRoot[0].id, entryKey, tableId);
-                            if (success) setSelectingEntry(false);
-                        }}
-                        key={tableId}
-                    />
-                );
-            });
+        return [...Object.keys(lootGeneratorState.tables)].map((tableId) => {
+            return (
+                <Table
+                    id={tableId}
+                    displayMode="selection"
+                    onClick={() => {
+                        const success =
+                            pathToRoot[0].id && setIdOnEntry(pathToRoot[0].id, entryKey, tableId);
+                        if (success) setSelectingEntry(false);
+                    }}
+                    key={tableId}
+                />
+            );
+        });
     }, [entryKey, lootGeneratorState.tables, setIdOnEntry, pathToRoot]);
 
     const itemList = useMemo(() => {
