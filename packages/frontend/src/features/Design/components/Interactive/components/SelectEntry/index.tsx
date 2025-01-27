@@ -76,8 +76,7 @@ export function SelectEntry({ entryKey, id, disabled }: TSelectEntry) {
         return [...Object.keys(lootGeneratorState.tables)]
             .filter((tableId) => pathToRoot.findIndex((step) => step.id === tableId) === -1)
             .map((tableId) => {
-                const selectionTable = lootGeneratorState.tables[tableId];
-                return selectionTable ? (
+                return (
                     <Table
                         id={tableId}
                         displayMode="selection"
@@ -89,14 +88,13 @@ export function SelectEntry({ entryKey, id, disabled }: TSelectEntry) {
                         }}
                         key={tableId}
                     />
-                ) : null;
+                );
             });
     }, [entryKey, lootGeneratorState.tables, setIdOnEntry, pathToRoot]);
 
     const itemList = useMemo(() => {
         return [...Object.keys(lootGeneratorState.items)].map((itemId) => {
-            const selectionItem = lootGeneratorState.items[itemId];
-            return selectionItem ? (
+            return (
                 <Item
                     id={itemId}
                     displayMode="selection"
@@ -107,7 +105,7 @@ export function SelectEntry({ entryKey, id, disabled }: TSelectEntry) {
                     }}
                     key={itemId}
                 />
-            ) : null;
+            );
         });
     }, [entryKey, lootGeneratorState.items, setIdOnEntry, pathToRoot]);
 
