@@ -27,7 +27,6 @@ export function Messages({ children }: TMessages) {
         const id = uuid();
         const callback = () => {
             setMessagesMutated(uuid());
-            if (!messages.current[id]) return;
             messages.current[id as keyof typeof messages.current].state = "removing";
         };
         const element = (
