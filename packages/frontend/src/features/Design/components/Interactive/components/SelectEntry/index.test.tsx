@@ -169,14 +169,19 @@ vi.mock("@/components/structural/components/TabSelector", () => ({
             TabSelector Component
             {Object.keys(tabs).map((key) => {
                 const tab = tabs[key];
-                return <div key={uuid()}>{tab.content}</div>;
+                const { name, content } = tab;
+                return (
+                    <div aria-label={`TabSelector-tab-${name}`} key={uuid()}>
+                        {content}
+                    </div>
+                );
             })}
         </div>
     )),
 }));
 
 describe("The SelectEntry component...", () => {
-    beforeAll(() => {
+    beforeEach(() => {
         vi.spyOn(Table, "Table").mockImplementation(
             vi.fn(({ id, displayMode, onClick }) => {
                 return (
@@ -282,6 +287,140 @@ describe("The SelectEntry component...", () => {
                 await act(async () => userEvent.click(ToggleBarButton));
 
                 expect(screen.queryByText("TabSelector Component")).toBeNull();
+            });
+        });
+    });
+
+    describe("Should, if the 'id' prop is 'null', the 'disabled' prop is 'false', and the internal 'selectingEntry' state is 'true'...", () => {
+        describe("Render the TabSelector component...", async () => {
+            describe("With one tab called 'Tables' that contains a TableEntry component for each entry in the LootGenerator component's context's 'lootGeneratorState.tables' object...", async () => {
+                test("Each with an 'id' prop equal to the table's 'id' and 'displayMode' prop equal to 'selection'", async () => {
+                    renderFunc();
+
+                    const ToggleBarButton = screen.getByRole("button", { name: "Select an entry" });
+                    expect(ToggleBarButton).toBeInTheDocument();
+
+                    expect(screen.queryByText("TabSelector Component")).toBeNull();
+
+                    await act(async () => userEvent.click(ToggleBarButton));
+
+                    expect(screen.getByText("TabSelector Component")).toBeInTheDocument();
+
+                    const TablesTab = screen.getByLabelText("TabSelector-tab-Tables");
+                    expect(TablesTab).toBeInTheDocument();
+
+                    Object.keys(mockTables).forEach((tableId) => {
+                        const TableEntry = screen.getByText(tableId);
+                        expect(TableEntry).toBeInTheDocument();
+                        expect(TablesTab.contains(TableEntry)).toBeTruthy();
+                        expect(TableEntry.getAttribute("data-display-mode")).toBe("selection");
+                    });
+                });
+                test("That, on click, should invoke the LootGenerator component's context's 'setIdOnEntry' function, passing the root table's 'id', the entry's 'key', and the table's 'id'", async () => {
+                    renderFunc();
+
+                    const ToggleBarButton = screen.getByRole("button", { name: "Select an entry" });
+                    expect(ToggleBarButton).toBeInTheDocument();
+
+                    await act(async () => userEvent.click(ToggleBarButton));
+
+                    const tableId = Object.keys(mockTables)[0];
+
+                    const TableEntry = screen.getByText(tableId);
+                    expect(TableEntry).toBeInTheDocument();
+
+                    await act(() => userEvent.click(TableEntry));
+
+                    expect(mockSetIdOnEntry).toHaveBeenCalledWith(
+                        mockTableContextValue.pathToRoot![0]!.id,
+                        mockProps.entryKey,
+                        tableId,
+                    );
+                });
+                test("That, on click, should invert the 'selectingEntry' internal state boolean value", async () => {
+                    renderFunc();
+
+                    const ToggleBarButton = screen.getByRole("button", { name: "Select an entry" });
+                    expect(ToggleBarButton).toBeInTheDocument();
+
+                    await act(async () => userEvent.click(ToggleBarButton));
+
+                    const tableId = Object.keys(mockTables)[0];
+
+                    const TableEntry = screen.getByText(tableId);
+                    expect(TableEntry).toBeInTheDocument();
+
+                    expect(screen.getByText("TabSelector Component")).toBeInTheDocument();
+
+                    await act(() => userEvent.click(TableEntry));
+
+                    expect(screen.queryByText("TabSelector Component")).toBeNull();
+                });
+            });
+
+            describe("With one tab called 'Items' that contains an ItemEntry component for each entry in the LootGenerator component's context's 'lootGeneratorState.items' object...", async () => {
+                test("Each with an 'id' prop equal to the item's 'id' and 'displayMode' prop equal to 'selection'", async () => {
+                    renderFunc();
+
+                    const ToggleBarButton = screen.getByRole("button", { name: "Select an entry" });
+                    expect(ToggleBarButton).toBeInTheDocument();
+
+                    expect(screen.queryByText("TabSelector Component")).toBeNull();
+
+                    await act(async () => userEvent.click(ToggleBarButton));
+
+                    expect(screen.getByText("TabSelector Component")).toBeInTheDocument();
+
+                    const ItemsTab = screen.getByLabelText("TabSelector-tab-Items");
+                    expect(ItemsTab).toBeInTheDocument();
+
+                    Object.keys(mockItems).forEach((itemId) => {
+                        const ItemEntry = screen.getByText(itemId);
+                        expect(ItemEntry).toBeInTheDocument();
+                        expect(ItemsTab.contains(ItemEntry)).toBeTruthy();
+                        expect(ItemEntry.getAttribute("data-display-mode")).toBe("selection");
+                    });
+                });
+                test("That, on click, should invoke the LootGenerator component's context's 'setIdOnEntry' function, passing the root table's 'id', the entry's 'key', and the item's 'id'", async () => {
+                    renderFunc();
+
+                    const ToggleBarButton = screen.getByRole("button", { name: "Select an entry" });
+                    expect(ToggleBarButton).toBeInTheDocument();
+
+                    await act(async () => userEvent.click(ToggleBarButton));
+
+                    const itemId = Object.keys(mockItems)[0];
+
+                    const ItemEntry = screen.getByText(itemId);
+                    expect(ItemEntry).toBeInTheDocument();
+
+                    await act(() => userEvent.click(ItemEntry));
+
+                    expect(mockSetIdOnEntry).toHaveBeenCalledWith(
+                        mockTableContextValue.pathToRoot![0]!.id,
+                        mockProps.entryKey,
+                        itemId,
+                    );
+                });
+                test("That, on click, should invert the 'selectingEntry' internal state boolean value", async () => {
+                    renderFunc();
+
+                    const ToggleBarButton = screen.getByRole("button", { name: "Select an entry" });
+                    expect(ToggleBarButton).toBeInTheDocument();
+
+                    await act(async () => userEvent.click(ToggleBarButton));
+
+                    const itemId = Object.keys(mockItems)[0];
+
+                    const ItemEntry = screen.getByText(itemId);
+                    expect(ItemEntry).toBeInTheDocument();
+
+                    expect(screen.getByText("TabSelector Component")).toBeInTheDocument();
+
+                    await act(() => userEvent.click(ItemEntry));
+
+                    expect(screen.queryByText("TabSelector Component")).toBeNull();
+                });
             });
         });
     });
