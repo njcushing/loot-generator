@@ -106,4 +106,16 @@ describe("The Messages component...", () => {
 
         expect(screen.queryByRole("listitem")).toBeNull();
     });
+    test("Unless the state of the message is not currently 'removing', in which case the animation ending should not remove the <li> element", async () => {
+        const { MessagesContextValue } = renderFunc();
+        const { displayMessage } = MessagesContextValue;
+
+        await act(async () => displayMessage("testing"));
+
+        const listItem = screen.getByRole("listitem");
+
+        fireEvent.animationEnd(listItem);
+
+        expect(screen.getByRole("listitem")).toBeInTheDocument();
+    });
 });
