@@ -9,6 +9,7 @@ import {
     LootGeneratorContext,
 } from "@/pages/LootGenerator";
 import { TToggleBarButton } from "@/components/buttons/components/ToggleBar";
+import * as Item from "@/features/Design/components/Interactive/components/Item";
 import * as Table from "@/features/Design/components/Interactive/components/Table";
 import { v4 as uuid } from "uuid";
 import { act } from "react";
@@ -204,10 +205,10 @@ describe("The SelectEntry component...", () => {
     });
 
     describe("Should, if the 'id' prop is 'null' (or the specified table or item is not found), or the internal 'selectingEntry' state is 'false'...", () => {
-        describe("Render the ToggleBar component...", async () => {
+        describe("Render the ToggleBar component...", () => {
             describe("With the value being passed to its 'name' prop...", () => {
                 test("With a 'name' prop equal to 'Select an entry' if the 'disabled' prop is 'false'", async () => {
-                    renderFunc();
+                    renderFunc({ propsOverride: { ...mockProps, id: "invalid item or table" } });
 
                     const ToggleBarComponent = screen.getByLabelText("ToggleBar Component");
                     expect(ToggleBarComponent).toBeInTheDocument();
@@ -292,8 +293,8 @@ describe("The SelectEntry component...", () => {
     });
 
     describe("Should, if the 'id' prop is 'null', the 'disabled' prop is 'false', and the internal 'selectingEntry' state is 'true'...", () => {
-        describe("Render the TabSelector component...", async () => {
-            describe("With one tab called 'Tables' that contains a TableEntry component for each entry in the LootGenerator component's context's 'lootGeneratorState.tables' object...", async () => {
+        describe("Render the TabSelector component...", () => {
+            describe("With one tab called 'Tables' that contains a TableEntry component for each entry in the LootGenerator component's context's 'lootGeneratorState.tables' object...", () => {
                 test("Each with an 'id' prop equal to the table's 'id' and 'displayMode' prop equal to 'selection'", async () => {
                     renderFunc();
 
@@ -329,7 +330,7 @@ describe("The SelectEntry component...", () => {
                     const TableEntry = screen.getByText(tableId);
                     expect(TableEntry).toBeInTheDocument();
 
-                    await act(() => userEvent.click(TableEntry));
+                    await act(async () => userEvent.click(TableEntry));
 
                     expect(mockSetIdOnEntry).toHaveBeenCalledWith(
                         mockTableContextValue.pathToRoot![0]!.id,
@@ -352,13 +353,13 @@ describe("The SelectEntry component...", () => {
 
                     expect(screen.getByText("TabSelector Component")).toBeInTheDocument();
 
-                    await act(() => userEvent.click(TableEntry));
+                    await act(async () => userEvent.click(TableEntry));
 
                     expect(screen.queryByText("TabSelector Component")).toBeNull();
                 });
             });
 
-            describe("With one tab called 'Items' that contains an ItemEntry component for each entry in the LootGenerator component's context's 'lootGeneratorState.items' object...", async () => {
+            describe("With one tab called 'Items' that contains an ItemEntry component for each entry in the LootGenerator component's context's 'lootGeneratorState.items' object...", () => {
                 test("Each with an 'id' prop equal to the item's 'id' and 'displayMode' prop equal to 'selection'", async () => {
                     renderFunc();
 
@@ -394,7 +395,7 @@ describe("The SelectEntry component...", () => {
                     const ItemEntry = screen.getByText(itemId);
                     expect(ItemEntry).toBeInTheDocument();
 
-                    await act(() => userEvent.click(ItemEntry));
+                    await act(async () => userEvent.click(ItemEntry));
 
                     expect(mockSetIdOnEntry).toHaveBeenCalledWith(
                         mockTableContextValue.pathToRoot![0]!.id,
@@ -417,10 +418,240 @@ describe("The SelectEntry component...", () => {
 
                     expect(screen.getByText("TabSelector Component")).toBeInTheDocument();
 
-                    await act(() => userEvent.click(ItemEntry));
+                    await act(async () => userEvent.click(ItemEntry));
 
                     expect(screen.queryByText("TabSelector Component")).toBeNull();
                 });
+            });
+        });
+    });
+
+    describe("Should, if the 'id' prop results in a table or item being found, and the internal 'selectingEntry' state is 'false'...", () => {
+        describe("If the entry found is a table...", () => {
+            test("Render the Table component", () => {
+                renderFunc({ propsOverride: { ...mockProps, id: "fruits" } });
+
+                const TableComponent = screen.getByLabelText("Table Component");
+                expect(TableComponent).toBeInTheDocument();
+                expect(TableComponent.textContent).toBe("fruits");
+                expect(TableComponent.getAttribute("data-display-mode")).toBe("entry");
+            });
+            test("With a 'displayMode' prop equal to 'entry' if the 'disabled' prop is 'false'", () => {
+                renderFunc({ propsOverride: { ...mockProps, id: "fruits" } });
+
+                const TableComponent = screen.getByLabelText("Table Component");
+                expect(TableComponent).toBeInTheDocument();
+                expect(TableComponent.getAttribute("data-display-mode")).toBe("entry");
+            });
+            test("With a 'displayMode' prop equal to 'entryViewOnly' if the 'disabled' prop is 'true'", () => {
+                renderFunc({ propsOverride: { ...mockProps, id: "fruits", disabled: true } });
+
+                const TableComponent = screen.getByLabelText("Table Component");
+                expect(TableComponent).toBeInTheDocument();
+                expect(TableComponent.getAttribute("data-display-mode")).toBe("entryViewOnly");
+            });
+            test("That, on click, if the argument is 'remove_selection' should invoke the LootGenerator component's context's 'removeIdFromEntry' function, passing the root table's 'id' and the entry's 'key'", async () => {
+                vi.spyOn(Table, "Table").mockImplementationOnce(
+                    vi.fn(({ id, displayMode, onClick }) => {
+                        return (
+                            <button
+                                aria-label="Table Component"
+                                type="button"
+                                data-display-mode={displayMode}
+                                onClick={() => onClick && onClick("remove_selection")}
+                            >
+                                {id}
+                            </button>
+                        );
+                    }),
+                );
+
+                renderFunc({ propsOverride: { ...mockProps, id: "fruits" } });
+
+                const TableComponent = screen.getByLabelText("Table Component");
+                expect(TableComponent).toBeInTheDocument();
+                expect(TableComponent.getAttribute("data-display-mode")).toBe("entry");
+
+                await act(async () => userEvent.click(TableComponent));
+
+                expect(mockRemoveIdFromEntry).toHaveBeenCalledWith(
+                    mockTableContextValue.pathToRoot![0]!.id,
+                    mockProps.entryKey,
+                );
+            });
+            test("Unless the first entry in the nearest ancestor Table component's context's 'pathToRoot' array has an 'id' field equal to 'null'", async () => {
+                vi.spyOn(Table, "Table").mockImplementationOnce(
+                    vi.fn(({ id, displayMode, onClick }) => {
+                        return (
+                            <button
+                                aria-label="Table Component"
+                                type="button"
+                                data-display-mode={displayMode}
+                                onClick={() => onClick && onClick("remove_selection")}
+                            >
+                                {id}
+                            </button>
+                        );
+                    }),
+                );
+
+                renderFunc({
+                    TableContextOverride: {
+                        ...mockTableContextValue,
+                        pathToRoot: [{ type: "base", id: null }],
+                    },
+                    propsOverride: { ...mockProps, id: "fruits" },
+                });
+
+                const TableComponent = screen.getByLabelText("Table Component");
+                expect(TableComponent).toBeInTheDocument();
+                expect(TableComponent.getAttribute("data-display-mode")).toBe("entry");
+
+                await act(async () => userEvent.click(TableComponent));
+
+                expect(mockRemoveIdFromEntry).not.toHaveBeenCalled();
+            });
+            test("That, on click, if the argument is 'edit' should invert the 'selectingEntry' internal state boolean value", async () => {
+                vi.spyOn(Table, "Table").mockImplementationOnce(
+                    vi.fn(({ id, displayMode, onClick }) => {
+                        return (
+                            <button
+                                aria-label="Table Component"
+                                type="button"
+                                data-display-mode={displayMode}
+                                onClick={() => onClick && onClick("edit")}
+                            >
+                                {id}
+                            </button>
+                        );
+                    }),
+                );
+
+                renderFunc({ propsOverride: { ...mockProps, id: "fruits" } });
+
+                const TableComponent = screen.getByLabelText("Table Component");
+                expect(TableComponent).toBeInTheDocument();
+                expect(TableComponent.getAttribute("data-display-mode")).toBe("entry");
+
+                expect(screen.queryByText("TabSelector Component")).toBeNull();
+
+                await act(async () => userEvent.click(TableComponent));
+
+                expect(screen.getByText("TabSelector Component")).toBeInTheDocument();
+            });
+        });
+
+        describe("If the entry found is an item...", () => {
+            test("Render the Item component", () => {
+                renderFunc({ propsOverride: { ...mockProps, id: "apple" } });
+
+                const ItemComponent = screen.getByLabelText("Item Component");
+                expect(ItemComponent).toBeInTheDocument();
+                expect(ItemComponent.textContent).toBe("apple");
+                expect(ItemComponent.getAttribute("data-display-mode")).toBe("entry");
+            });
+            test("With a 'displayMode' prop equal to 'entry' if the 'disabled' prop is 'false'", () => {
+                renderFunc({ propsOverride: { ...mockProps, id: "apple" } });
+
+                const ItemComponent = screen.getByLabelText("Item Component");
+                expect(ItemComponent).toBeInTheDocument();
+                expect(ItemComponent.getAttribute("data-display-mode")).toBe("entry");
+            });
+            test("With a 'displayMode' prop equal to 'entryViewOnly' if the 'disabled' prop is 'true'", () => {
+                renderFunc({ propsOverride: { ...mockProps, id: "apple", disabled: true } });
+
+                const ItemComponent = screen.getByLabelText("Item Component");
+                expect(ItemComponent).toBeInTheDocument();
+                expect(ItemComponent.getAttribute("data-display-mode")).toBe("entryViewOnly");
+            });
+            test("That, on click, if the argument is 'remove_selection' should invoke the LootGenerator component's context's 'removeIdFromEntry' function, passing the root table's 'id' and the entry's 'key'", async () => {
+                vi.spyOn(Item, "Item").mockImplementationOnce(
+                    vi.fn(({ id, displayMode, onClick }) => {
+                        return (
+                            <button
+                                aria-label="Item Component"
+                                type="button"
+                                data-display-mode={displayMode}
+                                onClick={() => onClick && onClick("remove_selection")}
+                            >
+                                {id}
+                            </button>
+                        );
+                    }),
+                );
+
+                renderFunc({ propsOverride: { ...mockProps, id: "apple" } });
+
+                const ItemComponent = screen.getByLabelText("Item Component");
+                expect(ItemComponent).toBeInTheDocument();
+                expect(ItemComponent.getAttribute("data-display-mode")).toBe("entry");
+
+                await act(async () => userEvent.click(ItemComponent));
+
+                expect(mockRemoveIdFromEntry).toHaveBeenCalledWith(
+                    mockTableContextValue.pathToRoot![0]!.id,
+                    mockProps.entryKey,
+                );
+            });
+            test("Unless the first entry in the nearest ancestor Table component's context's 'pathToRoot' array has an 'id' field equal to 'null'", async () => {
+                vi.spyOn(Item, "Item").mockImplementationOnce(
+                    vi.fn(({ id, displayMode, onClick }) => {
+                        return (
+                            <button
+                                aria-label="Item Component"
+                                type="button"
+                                data-display-mode={displayMode}
+                                onClick={() => onClick && onClick("remove_selection")}
+                            >
+                                {id}
+                            </button>
+                        );
+                    }),
+                );
+
+                renderFunc({
+                    TableContextOverride: {
+                        ...mockTableContextValue,
+                        pathToRoot: [{ type: "base", id: null }],
+                    },
+                    propsOverride: { ...mockProps, id: "apple" },
+                });
+
+                const ItemComponent = screen.getByLabelText("Item Component");
+                expect(ItemComponent).toBeInTheDocument();
+                expect(ItemComponent.getAttribute("data-display-mode")).toBe("entry");
+
+                await act(async () => userEvent.click(ItemComponent));
+
+                expect(mockRemoveIdFromEntry).not.toHaveBeenCalled();
+            });
+            test("That, on click, if the argument is 'edit' should invert the 'selectingEntry' internal state boolean value", async () => {
+                vi.spyOn(Item, "Item").mockImplementationOnce(
+                    vi.fn(({ id, displayMode, onClick }) => {
+                        return (
+                            <button
+                                aria-label="Item Component"
+                                type="button"
+                                data-display-mode={displayMode}
+                                onClick={() => onClick && onClick("edit")}
+                            >
+                                {id}
+                            </button>
+                        );
+                    }),
+                );
+
+                renderFunc({ propsOverride: { ...mockProps, id: "apple" } });
+
+                const ItemComponent = screen.getByLabelText("Item Component");
+                expect(ItemComponent).toBeInTheDocument();
+                expect(ItemComponent.getAttribute("data-display-mode")).toBe("entry");
+
+                expect(screen.queryByText("TabSelector Component")).toBeNull();
+
+                await act(async () => userEvent.click(ItemComponent));
+
+                expect(screen.getByText("TabSelector Component")).toBeInTheDocument();
             });
         });
     });
