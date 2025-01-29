@@ -9,7 +9,8 @@ export function SortOptions() {
     const inputs = useMemo(() => {
         const { selected, options } = sortOptions;
         const optionSelected = options.find((option) => option.name === selected);
-        const criteria = structuredClone(optionSelected?.criteria || []);
+        if (!optionSelected) return null;
+        const criteria = structuredClone(optionSelected.criteria);
         return (
             <>
                 <p className={styles["sort-options-title"]}>Sort By:</p>

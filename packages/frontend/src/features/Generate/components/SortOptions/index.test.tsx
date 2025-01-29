@@ -98,6 +98,20 @@ describe("The SortOptions component...", () => {
                 expect(select.contains(option)).toBeTruthy();
             });
         });
+        test("Unless the selected option is not found in the LootGenerator component's context's 'sortOptions.options' array", () => {
+            renderFunc({
+                LootGeneratorContextOverride: {
+                    ...mockLootGeneratorContextValue,
+                    lootGeneratorState: {
+                        ...mockLootGeneratorContextValue.lootGeneratorState,
+                        sortOptions: { ...mockSortOptions, selected: "invalid-sort-option" },
+                    } as unknown as LootGeneratorState,
+                } as unknown as ILootGeneratorContext,
+            });
+
+            const select = screen.queryByRole("combobox", { name: "sort-options" });
+            expect(select).toBeNull();
+        });
         test("That, on change, should invoke the LootGenerator component's context's 'setLootGeneratorStateProperty' function", async () => {
             renderFunc();
 
