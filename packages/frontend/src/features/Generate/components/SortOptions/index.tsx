@@ -56,12 +56,10 @@ export function SortOptions() {
                                     const optionToUpdate = newOptions.find(
                                         (o) => o.name === selected,
                                     );
-                                    if (!optionToUpdate) return;
-                                    const criterionToUpdate = optionToUpdate.criteria.find(
+                                    const criterionToUpdate = optionToUpdate!.criteria.find(
                                         (c) => c.name === criterionName,
                                     );
-                                    if (!criterionToUpdate) return;
-                                    criterionToUpdate.selected = e.target.value;
+                                    criterionToUpdate!.selected = e.target.value;
                                     const newSortOptions = { ...sortOptions, options: newOptions };
                                     setLootGeneratorStateProperty("sortOptions", newSortOptions);
                                 }}
