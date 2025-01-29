@@ -12,7 +12,7 @@ export type TJSONDisplay = {
 export function JSONDisplay({ hideFields }: TJSONDisplay) {
     const { lootGeneratorState } = useContext(LootGeneratorContext);
 
-    const [tableIsPopulated, setTableIsPopulated] = useState<boolean>(false);
+    const [entriesArePopulated, setEntriesArePopulated] = useState<boolean>(false);
     const [showingHiddenFields, setShowingHiddenFields] = useState<boolean>(false);
 
     const activeTable = useMemo((): object | null => {
@@ -33,7 +33,7 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
 
         removeEmptyEntries(activeTableCopy.loot);
 
-        if (!tableIsPopulated) return activeTableCopy;
+        if (!entriesArePopulated) return activeTableCopy;
 
         const populate = (loot: Table["loot"]) => {
             const mutableLoot = loot;
@@ -64,7 +64,7 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
         lootGeneratorState.active,
         lootGeneratorState.tables,
         lootGeneratorState.items,
-        tableIsPopulated,
+        entriesArePopulated,
     ]);
     const hideFieldsSet: Set<string> = useMemo(() => new Set(hideFields), [hideFields]);
 
@@ -163,8 +163,8 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
         <div className={styles["json-display"]}>
             <div className={styles["json-display-options"]}>
                 <Option
-                    symbol={tableIsPopulated ? "Table_Eye" : "Table"}
-                    onClick={() => setTableIsPopulated(!tableIsPopulated)}
+                    symbol={entriesArePopulated ? "Table_Eye" : "Table"}
+                    onClick={() => setEntriesArePopulated(!entriesArePopulated)}
                 />
                 <Option
                     symbol={showingHiddenFields ? "Visibility" : "Visibility_Off"}
