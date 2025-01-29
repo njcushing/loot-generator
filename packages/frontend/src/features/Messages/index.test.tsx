@@ -119,3 +119,28 @@ describe("The Messages component...", () => {
         expect(screen.getByRole("listitem")).toBeInTheDocument();
     });
 });
+
+describe("The default context for the Messages component...", () => {
+    describe("Should pass context to its descendant components...", () => {
+        test("Including the 'displayMessage' function, which should do nothing when called", async () => {
+            let MessagesContextValue!: IMessagesContext;
+
+            render(
+                <div>
+                    <MessagesContext.Consumer>
+                        {(value) => {
+                            MessagesContextValue = value;
+                            return null;
+                        }}
+                    </MessagesContext.Consumer>
+                </div>,
+            );
+
+            expect(MessagesContextValue).toBeDefined();
+
+            const { displayMessage } = MessagesContextValue;
+
+            expect(() => displayMessage("")).not.toThrow();
+        });
+    });
+});
