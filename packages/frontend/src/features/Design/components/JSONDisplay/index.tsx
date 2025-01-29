@@ -155,7 +155,7 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
             }
         };
 
-        if (showingHiddenFields) deleteHiddenFields(activeTableCopy);
+        if (!showingHiddenFields) deleteHiddenFields(activeTableCopy);
         navigator.clipboard.writeText(JSON.stringify(activeTableCopy));
     }, [showingHiddenFields, activeTable, hideFieldsSet]);
 
