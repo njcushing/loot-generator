@@ -261,7 +261,7 @@ export function LootGenerator({ children }: TLootGenerator) {
         (id: string): boolean => {
             if (!lootGeneratorState.tables[id]) return false;
             const newTables = structuredClone(lootGeneratorState.tables);
-            delete newTables.id;
+            delete newTables[id];
             setLootGeneratorStateProperty("tables", newTables);
             return true;
         },
@@ -322,7 +322,7 @@ export function LootGenerator({ children }: TLootGenerator) {
         (id: string): boolean => {
             if (!lootGeneratorState.items[id]) return false;
             const newItems = structuredClone(lootGeneratorState.items);
-            delete newItems.id;
+            delete newItems[id];
             setLootGeneratorStateProperty("items", newItems);
             return true;
         },
