@@ -16,8 +16,10 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
     const [showingHiddenFields, setShowingHiddenFields] = useState<boolean>(false);
 
     const activeTable = useMemo((): object | null => {
+        if (!lootGeneratorState.active) return null;
+
         const activeTableCopy = structuredClone(
-            lootGeneratorState.tables[lootGeneratorState.active || ""],
+            lootGeneratorState.tables[lootGeneratorState.active],
         );
         if (!activeTableCopy) return null;
 
@@ -42,14 +44,16 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
                 const entry = loot[i];
 
                 if (entry.type === "item_id") {
-                    const item = structuredClone(lootGeneratorState.items[entry.id || ""]);
+                    const { id } = entry;
+                    const item = structuredClone(lootGeneratorState.items[id!]);
                     if (item) {
                         mutableLoot[i] = { ...entry, ...item };
                     }
                 }
 
                 if (entry.type === "table_id") {
-                    const table = structuredClone(lootGeneratorState.tables[entry.id || ""]);
+                    const { id } = entry;
+                    const table = structuredClone(lootGeneratorState.tables[id!]);
                     if (table) {
                         mutableLoot[i] = { ...entry, ...table };
                         populate(table.loot);
@@ -73,7 +77,6 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
             const displayKeys = !Array.isArray(obj);
             return Object.keys(obj).flatMap((key, i) => {
                 const field = obj[key as keyof typeof obj];
-                if (!field) return null;
                 if (!showingHiddenFields && hideFieldsSet.has(key)) return null;
 
                 const comma = i < Object.keys(obj).length - 1;
@@ -112,9 +115,7 @@ export function JSONDisplay({ hideFields }: TJSONDisplay) {
                             </p>
                             {value && (
                                 <>
-                                    <p className={styles["json-field-value"]}>
-                                        {value || "undefined"}
-                                    </p>
+                                    <p className={styles["json-field-value"]}>{value}</p>
                                     <p className={styles["json-field-wrapper"]}>
                                         {close}
                                         {comma ? "," : ""}
