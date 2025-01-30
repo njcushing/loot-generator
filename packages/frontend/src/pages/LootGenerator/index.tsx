@@ -146,7 +146,11 @@ export const LootGeneratorContext = createContext<ILootGeneratorContext>(
     defaultLootGeneratorContext,
 );
 
-export function LootGenerator() {
+export type TLootGenerator = {
+    children?: JSX.Element | null | (JSX.Element | null)[];
+};
+
+export function LootGenerator({ children }: TLootGenerator) {
     const { displayMessage } = useContext(MessagesContext);
 
     const [loadStateMessage, setLoadStateMessage] = useState<string>("");
@@ -671,6 +675,7 @@ export function LootGenerator() {
         >
             <div className={`${styles["page"]} ${styles[`${layout}`]}`} ref={containerRef}>
                 {pageContent}
+                {children}
             </div>
         </LootGeneratorContext.Provider>
     );
