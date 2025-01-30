@@ -280,7 +280,6 @@ export function LootGenerator({ children }: TLootGenerator) {
     const createEntry = useCallback(
         (tableId: string): boolean => {
             const copy = getCopy("tables") as LootGeneratorState["tables"];
-            if (!copy) return false;
 
             const table = copy[tableId];
             if (!table) return false;
@@ -340,7 +339,6 @@ export function LootGenerator({ children }: TLootGenerator) {
             copy: LootGeneratorState["tables"];
         } | null => {
             const copy = getCopy("tables") as LootGeneratorState["tables"];
-            if (!copy) return null;
 
             const table = copy[tableId];
             if (!table) return null;
@@ -499,7 +497,6 @@ export function LootGenerator({ children }: TLootGenerator) {
     const deleteEntry = useCallback(
         (tableId: string, entryKey: string): boolean => {
             const copy = getCopy("tables") as LootGeneratorState["tables"];
-            if (!copy) return false;
 
             const table = copy[tableId];
             if (!table) return false;
