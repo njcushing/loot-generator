@@ -18,7 +18,7 @@ import {
     createTable as newTable,
     createLootTable,
 } from "@/utils/generateLoot";
-import { LootTable, Items, Table, Tables, Loot, SortOptions } from "@/utils/types";
+import { LootTable, Item, Items, Table, Tables, Loot, SortOptions } from "@/utils/types";
 import { z } from "zod";
 import { itemsSchema, tablesSchema, lootSchema, sortOptionsSchema } from "@/utils/types/zod";
 import { Design } from "@/features/Design";
@@ -424,31 +424,34 @@ export function LootGenerator({ children }: TLootGenerator) {
 
     const setIdOnEntry = useCallback(
         (tableId: string, entryKey: string, setId: string): boolean => {
-            let type: "table" | "item" | null = null;
-            if (lootGeneratorState.tables[setId]) type = "table";
-            if (Object.prototype.hasOwnProperty.call(lootGeneratorState.items, setId)) {
-                type = "item";
-            }
-            if (!type) return false;
-
             const result = getEntry(tableId, entryKey);
             if (!result) return false;
             const { entry, copy } = result;
+            const { type } = entry;
 
             let newEntry;
-            if (type === "table") {
+            if (type === "table_id" || type === "table_noid") {
                 newEntry = createLootTable("table_id", {
                     ...entry,
                     type: "table_id",
                     id: setId,
                 });
             }
-            if (type === "item") {
+            if (type === "item_id" || type === "item_noid") {
                 newEntry = createLootItem("item_id", {
                     ...entry,
                     type: "item_id",
                     id: setId,
                 });
+            }
+
+            if (type === "table_noid") {
+                copy[setId] = newTable({ ...(newEntry as unknown as Table) });
+            }
+            if (type === "item_noid") {
+                const itemsCopy = getCopy("items") as LootGeneratorState["items"];
+                itemsCopy[setId] = newItem({ ...(newEntry as unknown as Item) });
+                saveCopy("items", itemsCopy);
             }
 
             Object.keys(entry).forEach((key) => delete entry[key as keyof typeof entry]);
@@ -458,7 +461,7 @@ export function LootGenerator({ children }: TLootGenerator) {
 
             return true;
         },
-        [lootGeneratorState.tables, lootGeneratorState.items, saveCopy, getEntry],
+        [getCopy, saveCopy, getEntry],
     );
 
     const removeIdFromEntry = useCallback(
