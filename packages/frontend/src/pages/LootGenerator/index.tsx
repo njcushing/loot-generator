@@ -363,7 +363,8 @@ export function LootGenerator({ children }: TLootGenerator) {
                         };
                     }
                     if (subEntry.type === "table_noid") {
-                        return search(subEntry.loot, [...currentPath, subEntry]);
+                        const found = search(subEntry.loot, [...currentPath, subEntry]);
+                        if (found) return found;
                     }
                 }
                 return null;
