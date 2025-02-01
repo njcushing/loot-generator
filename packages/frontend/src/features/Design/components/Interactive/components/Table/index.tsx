@@ -136,9 +136,9 @@ export function Table({ id, displayMode = "normal", onClick, children }: TTable)
                         disabled={disablePropsFields}
                     />
                 </div>
-                <ul className={styles["table-entries"]}>
-                    {table &&
-                        table.loot
+                {table && table.loot && table.loot.length > 0 ? (
+                    <ul className={styles["table-entries"]}>
+                        {table.loot
                             .sort((a, b) => a.type.localeCompare(b.type))
                             .map((entry) => {
                                 if (entry.type === "item_id" || entry.type === "item_noid") {
@@ -152,7 +152,8 @@ export function Table({ id, displayMode = "normal", onClick, children }: TTable)
                                 }
                                 return null;
                             })}
-                </ul>
+                    </ul>
+                ) : null}
             </ToggleBar>
             {children}
         </TableContext.Provider>
