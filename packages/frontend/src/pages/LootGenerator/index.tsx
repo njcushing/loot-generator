@@ -192,35 +192,6 @@ export function LootGenerator({ children }: TLootGenerator) {
         [],
     );
 
-    const getCopy = useCallback(
-        (
-            source: "tables" | "items",
-        ): LootGeneratorState["tables"] | LootGeneratorState["items"] => {
-            let copy;
-            if (source === "tables") copy = lootGeneratorState.tables;
-            if (source === "items") copy = lootGeneratorState.items;
-            copy = structuredClone(copy)!;
-
-            return copy;
-        },
-        [lootGeneratorState.tables, lootGeneratorState.items],
-    );
-
-    const saveCopy = useCallback(
-        (
-            source: "tables" | "items",
-            copy: LootGeneratorState["tables"] | LootGeneratorState["items"],
-        ) => {
-            if (source === "tables") {
-                setLootGeneratorStateProperty("tables", copy as LootGeneratorState["tables"]);
-            }
-            if (source === "items") {
-                setLootGeneratorStateProperty("items", copy as LootGeneratorState["items"]);
-            }
-        },
-        [setLootGeneratorStateProperty],
-    );
-
     const deleteActive = useCallback(() => {
         setLootGeneratorState({ ...structuredClone(lootGeneratorState), active: null });
     }, [lootGeneratorState]);
@@ -239,11 +210,11 @@ export function LootGenerator({ children }: TLootGenerator) {
 
             updateFieldsInObject(table, fieldsToUpdate);
 
-            saveCopy("tables", tablesCopy);
+            setLootGeneratorStateProperty("tables", tablesCopy);
 
             return true;
         },
-        [lootGeneratorState.tables, saveCopy],
+        [lootGeneratorState.tables, setLootGeneratorStateProperty],
     );
 
     const deleteTable = useCallback(
@@ -268,7 +239,7 @@ export function LootGenerator({ children }: TLootGenerator) {
 
     const createEntry = useCallback(
         (tableId: string): boolean => {
-            const copy = getCopy("tables") as LootGeneratorState["tables"];
+            const copy = structuredClone(lootGeneratorState.tables);
 
             const table = copy[tableId];
             if (!table) return false;
@@ -278,11 +249,11 @@ export function LootGenerator({ children }: TLootGenerator) {
             if (!newSubEntry) return false;
             table.loot.push(newSubEntry);
 
-            saveCopy("tables", copy);
+            setLootGeneratorStateProperty("tables", copy);
 
             return true;
         },
-        [getCopy, saveCopy],
+        [lootGeneratorState.tables, setLootGeneratorStateProperty],
     );
 
     const createItem = useCallback(() => {
@@ -299,11 +270,11 @@ export function LootGenerator({ children }: TLootGenerator) {
 
             updateFieldsInObject(item, fieldsToUpdate);
 
-            saveCopy("items", itemsCopy);
+            setLootGeneratorStateProperty("items", itemsCopy);
 
             return true;
         },
-        [lootGeneratorState.items, saveCopy],
+        [lootGeneratorState.items, setLootGeneratorStateProperty],
     );
 
     const deleteItem = useCallback(
@@ -327,7 +298,7 @@ export function LootGenerator({ children }: TLootGenerator) {
             index: number;
             copy: LootGeneratorState["tables"];
         } | null => {
-            const copy = getCopy("tables") as LootGeneratorState["tables"];
+            const copy = structuredClone(lootGeneratorState.tables);
 
             const table = copy[tableId];
             if (!table) return null;
@@ -361,7 +332,7 @@ export function LootGenerator({ children }: TLootGenerator) {
 
             return search(table.loot as unknown as Table["loot"], [table]);
         },
-        [getCopy],
+        [lootGeneratorState.tables],
     );
 
     const updateEntry = useCallback(
@@ -372,11 +343,11 @@ export function LootGenerator({ children }: TLootGenerator) {
 
             updateFieldsInObject(entry, fieldsToUpdate);
 
-            saveCopy("tables", copy);
+            setLootGeneratorStateProperty("tables", copy);
 
             return true;
         },
-        [saveCopy, getEntry],
+        [setLootGeneratorStateProperty, getEntry],
     );
 
     const setTypeOnEntry = useCallback(
@@ -404,11 +375,11 @@ export function LootGenerator({ children }: TLootGenerator) {
             Object.keys(entry).forEach((key) => delete entry[key as keyof typeof entry]);
             Object.assign(entry, newEntry);
 
-            saveCopy("tables", copy);
+            setLootGeneratorStateProperty("tables", copy);
 
             return true;
         },
-        [saveCopy, getEntry],
+        [setLootGeneratorStateProperty, getEntry],
     );
 
     const setIdOnEntry = useCallback(
@@ -441,11 +412,16 @@ export function LootGenerator({ children }: TLootGenerator) {
             Object.keys(entry).forEach((key) => delete entry[key as keyof typeof entry]);
             Object.assign(entry, newEntry);
 
-            saveCopy("tables", copy);
+            setLootGeneratorStateProperty("tables", copy);
 
             return true;
         },
-        [lootGeneratorState.tables, lootGeneratorState.items, getEntry, saveCopy],
+        [
+            lootGeneratorState.tables,
+            lootGeneratorState.items,
+            setLootGeneratorStateProperty,
+            getEntry,
+        ],
     );
 
     const removeIdFromEntry = useCallback(
@@ -475,16 +451,16 @@ export function LootGenerator({ children }: TLootGenerator) {
             Object.keys(entry).forEach((key) => delete entry[key as keyof typeof entry]);
             Object.assign(entry, newEntry);
 
-            saveCopy("tables", copy);
+            setLootGeneratorStateProperty("tables", copy);
 
             return true;
         },
-        [saveCopy, getEntry],
+        [setLootGeneratorStateProperty, getEntry],
     );
 
     const deleteEntry = useCallback(
         (tableId: string, entryKey: string): boolean => {
-            const copy = getCopy("tables") as LootGeneratorState["tables"];
+            const copy = structuredClone(lootGeneratorState.tables);
 
             const table = copy[tableId];
             if (!table) return false;
@@ -500,11 +476,11 @@ export function LootGenerator({ children }: TLootGenerator) {
                 return false;
             };
 
-            if (search(table.loot)) saveCopy("tables", copy);
+            if (search(table.loot)) setLootGeneratorStateProperty("tables", copy);
 
             return true;
         },
-        [getCopy, saveCopy],
+        [lootGeneratorState.tables, setLootGeneratorStateProperty],
     );
 
     const createSubEntry = useCallback(
@@ -520,11 +496,11 @@ export function LootGenerator({ children }: TLootGenerator) {
             if (!newSubEntry) return false;
             entry.loot.push(newSubEntry);
 
-            saveCopy("tables", copy);
+            setLootGeneratorStateProperty("tables", copy);
 
             return true;
         },
-        [saveCopy, getEntry],
+        [setLootGeneratorStateProperty, getEntry],
     );
 
     useEffect(() => {
