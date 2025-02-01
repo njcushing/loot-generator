@@ -76,9 +76,7 @@ const loadState = (): LootGeneratorState | null => {
         const validated = lootGeneratorStateSchema.parse(parsed);
         return validated as LootGeneratorState;
     } catch (error) {
-        /* eslint-disable-next-line no-console */
-        console.error("Unable to load session state (invalid):", error);
-        return defaultLootGeneratorState;
+        return null;
     }
 };
 
@@ -153,19 +151,20 @@ export type TLootGenerator = {
 export function LootGenerator({ children }: TLootGenerator) {
     const { displayMessage } = useContext(MessagesContext);
 
+    const [loadStateSuccess, setLoadStateSuccess] = useState<boolean>(false);
     const [loadStateMessage, setLoadStateMessage] = useState<string>("");
     const [lootGeneratorState, setLootGeneratorState] = useState<LootGeneratorState>(() => {
         const loadedState = loadState();
+        if (loadedState) setLoadStateSuccess(true);
         return loadedState || defaultLootGeneratorState;
     });
     useEffect(() => {
-        const loadedState = loadState();
-        if (!loadedState) {
+        if (!loadStateSuccess) {
             setLoadStateMessage("Could not load session state");
         } else {
             setLoadStateMessage("Successfully loaded session state");
         }
-    }, []);
+    }, [loadStateSuccess]);
     useEffect(() => {
         if (loadStateMessage.length > 0) {
             displayMessage(loadStateMessage);
