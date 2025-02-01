@@ -194,20 +194,16 @@ export function LootGenerator({ children }: TLootGenerator) {
 
     const getCopy = useCallback(
         (
-            source: "active" | "tables" | "items",
-        ):
-            | LootGeneratorState["active"]
-            | LootGeneratorState["tables"]
-            | LootGeneratorState["items"] => {
+            source: "tables" | "items",
+        ): LootGeneratorState["tables"] | LootGeneratorState["items"] => {
             let copy;
-            if (source === "active") copy = lootGeneratorState.active;
             if (source === "tables") copy = lootGeneratorState.tables;
             if (source === "items") copy = lootGeneratorState.items;
             copy = structuredClone(copy)!;
 
             return copy;
         },
-        [lootGeneratorState.active, lootGeneratorState.tables, lootGeneratorState.items],
+        [lootGeneratorState.tables, lootGeneratorState.items],
     );
 
     const saveCopy = useCallback(
