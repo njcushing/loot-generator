@@ -10,6 +10,7 @@ import {
 } from "@/pages/LootGenerator";
 import * as uuid from "uuid";
 import { act } from "react";
+import { IMessagesContext, MessagesContext } from "@/features/Messages";
 
 // Mock dependencies
 const mockItems: Items = {
@@ -129,6 +130,11 @@ const mockLootGeneratorState: LootGeneratorState = {
     sortOptions: mockSortOptions,
 };
 
+const mockDisplayMessage = vi.fn((message) => message);
+const mockMessagesContext: IMessagesContext = {
+    displayMessage: mockDisplayMessage,
+};
+
 const mockGetItem = vi.fn(() => JSON.stringify(mockLootGeneratorState));
 const mockSetItem = vi.fn(() => null);
 
@@ -142,23 +148,42 @@ Object.defineProperty(window, "localStorage", {
     },
 });
 
-const renderFunc = () => {
+type renderFuncArgs = {
+    MessagesContextOverride?: IMessagesContext;
+};
+const renderFunc = (args: renderFuncArgs = {}) => {
+    const { MessagesContextOverride } = args;
+
+    let MessagesContextValue!: IMessagesContext;
     let LootGeneratorContextValue!: ILootGeneratorContext;
 
     const component = (
-        <LootGenerator>
-            <LootGeneratorContext.Consumer>
+        <MessagesContext.Provider
+            value={MessagesContextOverride || (mockMessagesContext as unknown as IMessagesContext)}
+        >
+            <MessagesContext.Consumer>
                 {(value) => {
-                    LootGeneratorContextValue = value;
+                    MessagesContextValue = value;
                     return null;
                 }}
-            </LootGeneratorContext.Consumer>
-        </LootGenerator>
+            </MessagesContext.Consumer>
+            <LootGenerator>
+                <LootGeneratorContext.Consumer>
+                    {(value) => {
+                        LootGeneratorContextValue = value;
+                        return null;
+                    }}
+                </LootGeneratorContext.Consumer>
+            </LootGenerator>
+        </MessagesContext.Provider>
     );
 
     const { rerender } = render(component);
 
-    const getContextValue = () => LootGeneratorContextValue;
+    const getContextValue = () => ({
+        Messages: MessagesContextValue,
+        LootGenerator: LootGeneratorContextValue,
+    });
 
     return {
         rerender,
@@ -228,11 +253,32 @@ describe("The LootGenerator component...", () => {
         vi.restoreAllMocks();
     });
 
+    describe("Should attempt to load the lootGeneratorState JSON from localStorage on mount, parse it, then parse it again through a zod parser...", () => {
+        test("And, upon completion, should invoke the Messages component's context's 'displayMessage' function with the text 'Successfully loaded session state'", () => {
+            expect(mockDisplayMessage).not.toHaveBeenCalled();
+
+            renderFunc();
+
+            expect(mockDisplayMessage).toHaveBeenCalledTimes(1);
+            expect(mockDisplayMessage).toHaveBeenCalledWith("Successfully loaded session state");
+        });
+        test("Unless the state load was unsuccessful, in which case the 'displayMessage' function should be called with the text 'Could not load session state'", () => {
+            expect(mockDisplayMessage).not.toHaveBeenCalled();
+
+            mockGetItem.mockReturnValueOnce("{}");
+
+            renderFunc();
+
+            expect(mockDisplayMessage).toHaveBeenCalledTimes(1);
+            expect(mockDisplayMessage).toHaveBeenCalledWith("Could not load session state");
+        });
+    });
+
     describe("Should pass a context object to its descendant components...", () => {
         describe("Including a 'lootGeneratorState' field loaded from localStorage...", async () => {
             test("That contains the parsed JSON fields or default state returned by the loadState function", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
 
                 expect(LootGeneratorContextValue).toBeDefined();
                 expect(LootGeneratorContextValue.lootGeneratorState).toBeDefined();
@@ -261,14 +307,14 @@ describe("The LootGenerator component...", () => {
 
         test("Including a setter function for updating the 'lootGeneratorState' field", async () => {
             const { getContextValue } = renderFunc();
-            const LootGeneratorContextValue = getContextValue();
+            const LootGeneratorContextValue = getContextValue().LootGenerator;
             const { setLootGeneratorStateProperty } = LootGeneratorContextValue;
 
             expect(setLootGeneratorStateProperty).toBeDefined();
 
             await act(async () => setLootGeneratorStateProperty("active", "vegetables"));
 
-            const updatedLootGeneratorContextValue = getContextValue();
+            const updatedLootGeneratorContextValue = getContextValue().LootGenerator;
 
             expect(updatedLootGeneratorContextValue.lootGeneratorState.active).toBe("vegetables");
         });
@@ -276,24 +322,26 @@ describe("The LootGenerator component...", () => {
         describe("Including the 'deleteActive' function...", () => {
             test("Which should set the context's 'lootGeneratorState.active' field to 'null'", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { deleteActive } = LootGeneratorContextValue;
 
-                expect(getContextValue().lootGeneratorState.active).toBe("fruits");
+                expect(getContextValue().LootGenerator.lootGeneratorState.active).toBe("fruits");
 
                 await act(async () => deleteActive());
 
-                expect(getContextValue().lootGeneratorState.active).toBeNull();
+                expect(getContextValue().LootGenerator.lootGeneratorState.active).toBeNull();
             });
         });
 
         describe("Including the 'createTable' function...", () => {
             test("Which should set a new table in the context's 'lootGeneratorState.tables' object with a random key and value equal to the return value of the 'createTable' function from the generateLoot utility functions file", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { createTable } = LootGeneratorContextValue;
 
-                expect(getContextValue().lootGeneratorState.tables).toStrictEqual(mockTables);
+                expect(getContextValue().LootGenerator.lootGeneratorState.tables).toStrictEqual(
+                    mockTables,
+                );
 
                 const newTable = { name: "Dairy", loot: [], custom: {} };
 
@@ -305,14 +353,16 @@ describe("The LootGenerator component...", () => {
                 const newTables = structuredClone(mockTables);
                 newTables["dairy"] = newTable;
 
-                expect(getContextValue().lootGeneratorState.tables).toStrictEqual(newTables);
+                expect(getContextValue().LootGenerator.lootGeneratorState.tables).toStrictEqual(
+                    newTables,
+                );
             });
         });
 
         describe("Including the 'updateTable' function...", () => {
             test("Which should invoke the 'updateFieldsInObject' function with the specified table from the context's 'lootGeneratorState.tables' object and the second argument passed to the 'updateTable' function as arguments", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { updateTable } = LootGeneratorContextValue;
 
                 expect(mockUpdateFieldsInObject).not.toHaveBeenCalled();
@@ -328,7 +378,7 @@ describe("The LootGenerator component...", () => {
             });
             test("Unless the specified table is not found in the context's 'lootGeneratorState.tables' object", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { updateTable } = LootGeneratorContextValue;
 
                 expect(mockUpdateFieldsInObject).not.toHaveBeenCalled();
@@ -344,57 +394,67 @@ describe("The LootGenerator component...", () => {
         describe("Including the 'deleteTable' function...", () => {
             test("Which should remove the table from the context's 'lootGeneratorState.tables' object", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { deleteTable } = LootGeneratorContextValue;
 
-                expect(getContextValue().lootGeneratorState.tables).toStrictEqual(mockTables);
+                expect(getContextValue().LootGenerator.lootGeneratorState.tables).toStrictEqual(
+                    mockTables,
+                );
 
                 await act(async () => deleteTable("vegetables"));
 
                 const newTables = structuredClone(mockTables);
                 delete newTables["vegetables"];
 
-                expect(getContextValue().lootGeneratorState.tables).toStrictEqual(newTables);
+                expect(getContextValue().LootGenerator.lootGeneratorState.tables).toStrictEqual(
+                    newTables,
+                );
             });
             test("Unless the specified table is not found in the context's 'lootGeneratorState.tables' object", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { deleteTable } = LootGeneratorContextValue;
 
-                expect(getContextValue().lootGeneratorState.tables).toStrictEqual(mockTables);
+                expect(getContextValue().LootGenerator.lootGeneratorState.tables).toStrictEqual(
+                    mockTables,
+                );
 
                 await act(async () => deleteTable("invalid-table"));
 
-                expect(getContextValue().lootGeneratorState.tables).toStrictEqual(mockTables);
+                expect(getContextValue().LootGenerator.lootGeneratorState.tables).toStrictEqual(
+                    mockTables,
+                );
             });
         });
 
         describe("Including the 'uploadTableToActive' function...", () => {
             test("Which should set the context's 'lootGeneratorState.active' field to the value of the argument", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { uploadTableToActive } = LootGeneratorContextValue;
 
-                expect(getContextValue().lootGeneratorState.active).toBe(
+                expect(getContextValue().LootGenerator.lootGeneratorState.active).toBe(
                     mockLootGeneratorState.active,
                 );
 
                 await act(async () => uploadTableToActive("vegetables"));
 
-                expect(getContextValue().lootGeneratorState.active).toBe("vegetables");
+                expect(getContextValue().LootGenerator.lootGeneratorState.active).toBe(
+                    "vegetables",
+                );
             });
             test("Unless the specified table is not found in the context's 'lootGeneratorState.tables' object", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { uploadTableToActive } = LootGeneratorContextValue;
 
-                expect(getContextValue().lootGeneratorState.active).toBe(
+                expect(getContextValue().LootGenerator.lootGeneratorState.active).toBe(
                     mockLootGeneratorState.active,
                 );
 
                 await act(async () => uploadTableToActive("invalid-table"));
 
-                expect(getContextValue().lootGeneratorState.active).toBe(
+                expect(getContextValue().LootGenerator.lootGeneratorState.active).toBe(
                     mockLootGeneratorState.active,
                 );
             });
@@ -403,11 +463,11 @@ describe("The LootGenerator component...", () => {
         describe("Including the 'createEntry' function...", () => {
             test("Which should push a new entry to the end of the specified table's 'loot' array equal to the return value of the 'createLootEntry' function", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { createEntry } = LootGeneratorContextValue;
 
                 expect(
-                    getContextValue().lootGeneratorState.tables["vegetables"].loot,
+                    getContextValue().LootGenerator.lootGeneratorState.tables["vegetables"].loot,
                 ).toStrictEqual(mockTables["vegetables"].loot);
 
                 const newEntry = { key: "loot-entry-key", type: "entry" };
@@ -420,16 +480,16 @@ describe("The LootGenerator component...", () => {
                 newLoot.push(newEntry as LootEntry);
 
                 expect(
-                    getContextValue().lootGeneratorState.tables["vegetables"].loot,
+                    getContextValue().LootGenerator.lootGeneratorState.tables["vegetables"].loot,
                 ).toStrictEqual(newLoot);
             });
             test("Unless the specified table is not found in the context's 'lootGeneratorState.items' object", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { createEntry } = LootGeneratorContextValue;
 
                 expect(
-                    getContextValue().lootGeneratorState.tables["vegetables"].loot,
+                    getContextValue().LootGenerator.lootGeneratorState.tables["vegetables"].loot,
                 ).toStrictEqual(mockTables["vegetables"].loot);
 
                 const newEntry = { key: "loot-entry-key", type: "entry" };
@@ -439,16 +499,16 @@ describe("The LootGenerator component...", () => {
                 await act(async () => createEntry("invalid-table"));
 
                 expect(
-                    getContextValue().lootGeneratorState.tables["vegetables"].loot,
+                    getContextValue().LootGenerator.lootGeneratorState.tables["vegetables"].loot,
                 ).toStrictEqual(mockTables["vegetables"].loot);
             });
             test("Unless the 'createLootEntry' function returns a falsy value", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { createEntry } = LootGeneratorContextValue;
 
                 expect(
-                    getContextValue().lootGeneratorState.tables["vegetables"].loot,
+                    getContextValue().LootGenerator.lootGeneratorState.tables["vegetables"].loot,
                 ).toStrictEqual(mockTables["vegetables"].loot);
 
                 mockCreateLootEntry.mockReturnValueOnce(null);
@@ -456,7 +516,7 @@ describe("The LootGenerator component...", () => {
                 await act(async () => createEntry("invalid-table"));
 
                 expect(
-                    getContextValue().lootGeneratorState.tables["vegetables"].loot,
+                    getContextValue().LootGenerator.lootGeneratorState.tables["vegetables"].loot,
                 ).toStrictEqual(mockTables["vegetables"].loot);
             });
         });
@@ -464,10 +524,12 @@ describe("The LootGenerator component...", () => {
         describe("Including the 'createItem' function...", () => {
             test("Which should set a new item in the context's 'lootGeneratorState.items' object with a random key and value equal to the return value of the 'createItem' function from the generateLoot utility functions file", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { createItem } = LootGeneratorContextValue;
 
-                expect(getContextValue().lootGeneratorState.items).toStrictEqual(mockItems);
+                expect(getContextValue().LootGenerator.lootGeneratorState.items).toStrictEqual(
+                    mockItems,
+                );
 
                 const newItem = { name: "Durian", value: 1, custom: {} };
 
@@ -479,14 +541,16 @@ describe("The LootGenerator component...", () => {
                 const newItems = structuredClone(mockItems);
                 newItems["durian"] = newItem;
 
-                expect(getContextValue().lootGeneratorState.items).toStrictEqual(newItems);
+                expect(getContextValue().LootGenerator.lootGeneratorState.items).toStrictEqual(
+                    newItems,
+                );
             });
         });
 
         describe("Including the 'updateItem' function...", () => {
             test("Which should invoke the 'updateFieldsInObject' function with the specified item from the context's 'lootGeneratorState.items' object and the second argument passed to the 'updateItem' function as arguments", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { updateItem } = LootGeneratorContextValue;
 
                 expect(mockUpdateFieldsInObject).not.toHaveBeenCalled();
@@ -502,7 +566,7 @@ describe("The LootGenerator component...", () => {
             });
             test("Unless the specified item is not found in the context's 'lootGeneratorState.items' object", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { updateItem } = LootGeneratorContextValue;
 
                 expect(mockUpdateFieldsInObject).not.toHaveBeenCalled();
@@ -518,38 +582,48 @@ describe("The LootGenerator component...", () => {
         describe("Including the 'deleteItem' function...", () => {
             test("Which should remove the item from the context's 'lootGeneratorState.items' object", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { deleteItem } = LootGeneratorContextValue;
 
-                expect(getContextValue().lootGeneratorState.items).toStrictEqual(mockItems);
+                expect(getContextValue().LootGenerator.lootGeneratorState.items).toStrictEqual(
+                    mockItems,
+                );
 
                 await act(async () => deleteItem("apple"));
 
                 const newItems = structuredClone(mockItems);
                 delete newItems["apple"];
 
-                expect(getContextValue().lootGeneratorState.items).toStrictEqual(newItems);
+                expect(getContextValue().LootGenerator.lootGeneratorState.items).toStrictEqual(
+                    newItems,
+                );
             });
             test("Unless the specified item is not found in the context's 'lootGeneratorState.items' object", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { deleteItem } = LootGeneratorContextValue;
 
-                expect(getContextValue().lootGeneratorState.items).toStrictEqual(mockItems);
+                expect(getContextValue().LootGenerator.lootGeneratorState.items).toStrictEqual(
+                    mockItems,
+                );
 
                 await act(async () => deleteItem("invalid-item"));
 
-                expect(getContextValue().lootGeneratorState.items).toStrictEqual(mockItems);
+                expect(getContextValue().LootGenerator.lootGeneratorState.items).toStrictEqual(
+                    mockItems,
+                );
             });
         });
 
         describe("Including the 'getEntry' function...", () => {
             test("Which should recursively search the specified table and its 'noid' loot tables until the specified entry is found", () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { getEntry } = LootGeneratorContextValue;
 
-                expect(getContextValue().lootGeneratorState.items).toStrictEqual(mockItems);
+                expect(getContextValue().LootGenerator.lootGeneratorState.items).toStrictEqual(
+                    mockItems,
+                );
 
                 const result = getEntry("fruits", "cherry");
 
@@ -563,10 +637,12 @@ describe("The LootGenerator component...", () => {
             });
             test("Which should return 'null' if the specified table is not found in the context's 'lootGeneratorState.tables' object", () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { getEntry } = LootGeneratorContextValue;
 
-                expect(getContextValue().lootGeneratorState.items).toStrictEqual(mockItems);
+                expect(getContextValue().LootGenerator.lootGeneratorState.items).toStrictEqual(
+                    mockItems,
+                );
 
                 const result = getEntry("invalid-table", "cherry");
 
@@ -574,10 +650,12 @@ describe("The LootGenerator component...", () => {
             });
             test("Which should return 'null' if the specified entry is not found", () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { getEntry } = LootGeneratorContextValue;
 
-                expect(getContextValue().lootGeneratorState.items).toStrictEqual(mockItems);
+                expect(getContextValue().LootGenerator.lootGeneratorState.items).toStrictEqual(
+                    mockItems,
+                );
 
                 const result = getEntry("fruits", "invalid-entry");
 
@@ -588,7 +666,7 @@ describe("The LootGenerator component...", () => {
         describe("Including the 'updateEntry' function...", () => {
             test("Which should invoke the 'updateFieldsInObject' function with the specified entry within the specified table from the context's 'lootGeneratorState.tables' object and the third argument passed to the 'updateEntry' function as arguments", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { updateEntry } = LootGeneratorContextValue;
 
                 expect(mockUpdateFieldsInObject).not.toHaveBeenCalled();
@@ -604,7 +682,7 @@ describe("The LootGenerator component...", () => {
             });
             test("Unless the specified table is not found in the context's 'lootGeneratorState.tables' object", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { updateEntry } = LootGeneratorContextValue;
 
                 expect(mockUpdateFieldsInObject).not.toHaveBeenCalled();
@@ -619,7 +697,7 @@ describe("The LootGenerator component...", () => {
             });
             test("Unless the specified entry is not found", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { updateEntry } = LootGeneratorContextValue;
 
                 expect(mockUpdateFieldsInObject).not.toHaveBeenCalled();
@@ -635,7 +713,7 @@ describe("The LootGenerator component...", () => {
         describe("Including the 'setTypeOnEntry' function...", () => {
             test("Which should replace an entry with a 'noid' table if specified, returned by the createLootTable function", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { setTypeOnEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateLootTable).not.toHaveBeenCalled();
@@ -651,9 +729,9 @@ describe("The LootGenerator component...", () => {
                 };
                 mockCreateLootTable.mockReturnValueOnce(newEntry);
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"].loot[4]).toStrictEqual(
-                    oldEntry,
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"].loot[4],
+                ).toStrictEqual(oldEntry);
 
                 await act(async () => setTypeOnEntry("fruits", "pineapple", "table"));
 
@@ -663,13 +741,13 @@ describe("The LootGenerator component...", () => {
                     type: "table_noid",
                 });
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"].loot[4]).toStrictEqual(
-                    newEntry,
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"].loot[4],
+                ).toStrictEqual(newEntry);
             });
             test("Which should replace an entry with a 'noid' item if specified, returned by the createLootItem function", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { setTypeOnEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateLootItem).not.toHaveBeenCalled();
@@ -686,9 +764,9 @@ describe("The LootGenerator component...", () => {
                 };
                 mockCreateLootItem.mockReturnValueOnce(newEntry);
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"].loot[3]).toStrictEqual(
-                    oldEntry,
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"].loot[3],
+                ).toStrictEqual(oldEntry);
 
                 await act(async () => setTypeOnEntry("fruits", "carbohydrates", "item"));
 
@@ -698,13 +776,13 @@ describe("The LootGenerator component...", () => {
                     type: "item_noid",
                 });
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"].loot[3]).toStrictEqual(
-                    newEntry,
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"].loot[3],
+                ).toStrictEqual(newEntry);
             });
             test("Unless the specified table is not found in the context's 'lootGeneratorState.tables' or 'lootGeneratorState.items' objects, respectively", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { setTypeOnEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateLootTable).not.toHaveBeenCalled();
@@ -717,7 +795,7 @@ describe("The LootGenerator component...", () => {
             });
             test("Unless the specified entry is not found", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { setTypeOnEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateLootTable).not.toHaveBeenCalled();
@@ -733,7 +811,7 @@ describe("The LootGenerator component...", () => {
         describe("Including the 'setIdOnEntry' function...", () => {
             test("Which should replace an 'id' table entry's 'id' with the specified id, or a 'noid' table entry with an 'id' table entry with the specified id, returned by the createLootTable function", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { setIdOnEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateLootTable).not.toHaveBeenCalled();
@@ -746,9 +824,9 @@ describe("The LootGenerator component...", () => {
                 };
                 mockCreateLootTable.mockReturnValueOnce(newEntry);
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"].loot[2]).toStrictEqual(
-                    oldEntry,
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"].loot[2],
+                ).toStrictEqual(oldEntry);
 
                 await act(async () => setIdOnEntry("fruits", "vegetables", "dairy"));
 
@@ -758,13 +836,13 @@ describe("The LootGenerator component...", () => {
                     type: "table_id",
                 });
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"].loot[2]).toStrictEqual(
-                    newEntry,
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"].loot[2],
+                ).toStrictEqual(newEntry);
             });
             test("Which should replace an 'id' item entry's 'id' with the specified id, or a 'noid' item entry with an 'id' item entry with the specified id, returned by the createLootItem function", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { setIdOnEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateLootItem).not.toHaveBeenCalled();
@@ -777,9 +855,9 @@ describe("The LootGenerator component...", () => {
                 };
                 mockCreateLootItem.mockReturnValueOnce(newEntry);
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"].loot[0]).toStrictEqual(
-                    oldEntry,
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"].loot[0],
+                ).toStrictEqual(oldEntry);
 
                 await act(async () => setIdOnEntry("fruits", "apple", "pear"));
 
@@ -789,13 +867,13 @@ describe("The LootGenerator component...", () => {
                     type: "item_id",
                 });
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"].loot[0]).toStrictEqual(
-                    newEntry,
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"].loot[0],
+                ).toStrictEqual(newEntry);
             });
             test("Which should set the new table, returned by the createTable function from the generateLoot utility functions file, in the context's 'lootGeneratorState.tables' object function, when setting an id on a 'noid' table", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { setIdOnEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateTable).not.toHaveBeenCalled();
@@ -816,7 +894,9 @@ describe("The LootGenerator component...", () => {
                 };
                 mockCreateTable.mockReturnValueOnce(newTable);
 
-                expect(getContextValue().lootGeneratorState.tables).toStrictEqual(mockTables);
+                expect(getContextValue().LootGenerator.lootGeneratorState.tables).toStrictEqual(
+                    mockTables,
+                );
 
                 await act(async () => setIdOnEntry("fruits", "carbohydrates", "dairy"));
 
@@ -826,7 +906,7 @@ describe("The LootGenerator component...", () => {
                     type: "table_id",
                 });
 
-                expect(getContextValue().lootGeneratorState.tables).toStrictEqual({
+                expect(getContextValue().LootGenerator.lootGeneratorState.tables).toStrictEqual({
                     ...mockTables,
                     fruits: {
                         ...mockTables["fruits"],
@@ -841,7 +921,7 @@ describe("The LootGenerator component...", () => {
             });
             test("Which should set the new item, returned by the createItem function from the generateLoot utility functions file, in the context's 'lootGeneratorState.items' object function, when setting an id on a 'noid' item", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { setIdOnEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateItem).not.toHaveBeenCalled();
@@ -862,7 +942,9 @@ describe("The LootGenerator component...", () => {
                 };
                 mockCreateItem.mockReturnValueOnce(newItem);
 
-                expect(getContextValue().lootGeneratorState.items).toStrictEqual(mockItems);
+                expect(getContextValue().LootGenerator.lootGeneratorState.items).toStrictEqual(
+                    mockItems,
+                );
 
                 await act(async () => setIdOnEntry("fruits", "pineapple", "pear"));
 
@@ -872,14 +954,14 @@ describe("The LootGenerator component...", () => {
                     type: "item_id",
                 });
 
-                expect(getContextValue().lootGeneratorState.items).toStrictEqual({
+                expect(getContextValue().LootGenerator.lootGeneratorState.items).toStrictEqual({
                     ...mockItems,
                     pear: newItem,
                 });
             });
             test("Unless the specified entry does not have a 'type' field equal to 'table_id', 'table_noid', 'item_id' or 'item_noid'", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { removeIdFromEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateLootTable).not.toHaveBeenCalled();
@@ -896,7 +978,7 @@ describe("The LootGenerator component...", () => {
             });
             test("Unless the specified table is not found in the context's 'lootGeneratorState.tables' object", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { removeIdFromEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateLootTable).not.toHaveBeenCalled();
@@ -913,7 +995,7 @@ describe("The LootGenerator component...", () => {
             });
             test("Unless the specified entry is not found", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { removeIdFromEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateLootTable).not.toHaveBeenCalled();
@@ -929,7 +1011,7 @@ describe("The LootGenerator component...", () => {
         describe("Including the 'removeIdFromEntry' function...", () => {
             test("Which should replace an 'id' table entry with a 'noid' table entry if specified, returned by the createLootTable function", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { removeIdFromEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateLootTable).not.toHaveBeenCalled();
@@ -942,9 +1024,9 @@ describe("The LootGenerator component...", () => {
                 };
                 mockCreateLootTable.mockReturnValueOnce(newEntry);
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"].loot[2]).toStrictEqual(
-                    oldEntry,
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"].loot[2],
+                ).toStrictEqual(oldEntry);
 
                 await act(async () => removeIdFromEntry("fruits", "vegetables"));
 
@@ -954,13 +1036,13 @@ describe("The LootGenerator component...", () => {
                     type: "table_noid",
                 });
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"].loot[2]).toStrictEqual(
-                    newEntry,
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"].loot[2],
+                ).toStrictEqual(newEntry);
             });
             test("Which should replace an 'id' item entry with a 'noid' item entry if specified, returned by the createLootItem function", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { removeIdFromEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateLootItem).not.toHaveBeenCalled();
@@ -973,9 +1055,9 @@ describe("The LootGenerator component...", () => {
                 };
                 mockCreateLootItem.mockReturnValueOnce(newEntry);
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"].loot[1]).toStrictEqual(
-                    oldEntry,
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"].loot[1],
+                ).toStrictEqual(oldEntry);
 
                 await act(async () => removeIdFromEntry("fruits", "banana"));
 
@@ -985,13 +1067,13 @@ describe("The LootGenerator component...", () => {
                     type: "item_noid",
                 });
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"].loot[1]).toStrictEqual(
-                    newEntry,
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"].loot[1],
+                ).toStrictEqual(newEntry);
             });
             test("Unless the specified entry does not have a 'type' field equal to 'table_id' or 'item_id'", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { removeIdFromEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateLootTable).not.toHaveBeenCalled();
@@ -1004,7 +1086,7 @@ describe("The LootGenerator component...", () => {
             });
             test("Unless the specified table is not found in the context's 'lootGeneratorState.tables' object", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { removeIdFromEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateLootTable).not.toHaveBeenCalled();
@@ -1017,7 +1099,7 @@ describe("The LootGenerator component...", () => {
             });
             test("Unless the specified entry is not found", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { removeIdFromEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateLootTable).not.toHaveBeenCalled();
@@ -1033,60 +1115,60 @@ describe("The LootGenerator component...", () => {
         describe("Including the 'deleteEntry' function...", () => {
             test("Which should recursively search the specified table and its 'noid' loot tables until the specified entry is found, at which point it should be removed", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { deleteEntry } = LootGeneratorContextValue;
 
                 const oldTable = { ...mockTables["fruits"] };
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"]).toStrictEqual(
-                    oldTable,
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"],
+                ).toStrictEqual(oldTable);
 
                 await act(async () => deleteEntry("fruits", "pineapple"));
 
                 const newTable = { ...oldTable };
                 newTable.loot.splice(4, 1);
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"]).toStrictEqual(
-                    newTable,
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"],
+                ).toStrictEqual(newTable);
             });
             test("Unless the specified table is not found in the context's 'lootGeneratorState.tables' object", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { deleteEntry } = LootGeneratorContextValue;
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"]).toStrictEqual(
-                    mockTables["fruits"],
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"],
+                ).toStrictEqual(mockTables["fruits"]);
 
                 await act(async () => deleteEntry("invalid-table", "pineapple"));
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"]).toStrictEqual(
-                    mockTables["fruits"],
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"],
+                ).toStrictEqual(mockTables["fruits"]);
             });
             test("Unless the specified entry is not found", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { deleteEntry } = LootGeneratorContextValue;
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"]).toStrictEqual(
-                    mockTables["fruits"],
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"],
+                ).toStrictEqual(mockTables["fruits"]);
 
                 await act(async () => deleteEntry("fruits", "invalid-entry"));
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"]).toStrictEqual(
-                    mockTables["fruits"],
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"],
+                ).toStrictEqual(mockTables["fruits"]);
             });
         });
 
         describe("Including the 'createSubEntry' function...", () => {
             test("Which should push a new LootEntry, returned by the createLootEntry function, into the specified table's specified 'noid' table entry", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { createSubEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateLootEntry).not.toHaveBeenCalled();
@@ -1096,9 +1178,9 @@ describe("The LootGenerator component...", () => {
 
                 mockCreateLootEntry.mockReturnValueOnce(newEntry);
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"].loot[3]).toStrictEqual(
-                    oldTable,
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"].loot[3],
+                ).toStrictEqual(oldTable);
 
                 await act(async () => createSubEntry("fruits", "carbohydrates"));
 
@@ -1108,66 +1190,66 @@ describe("The LootGenerator component...", () => {
                 // @ts-expect-error - TypeScript isn't recognising that the LootTable type can have 'loot' as a field in some circumstances
                 (newTable as LootTable).loot.push(newEntry);
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"].loot[3]).toStrictEqual(
-                    newTable,
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"].loot[3],
+                ).toStrictEqual(newTable);
             });
             test("Unless the specified entry does not have a 'type' field equal to 'table_noid'", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { createSubEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateLootEntry).not.toHaveBeenCalled();
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"]).toStrictEqual(
-                    mockTables["fruits"],
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"],
+                ).toStrictEqual(mockTables["fruits"]);
 
                 await act(async () => createSubEntry("fruits", "vegetables"));
 
                 expect(mockCreateLootEntry).not.toHaveBeenCalled();
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"]).toStrictEqual(
-                    mockTables["fruits"],
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"],
+                ).toStrictEqual(mockTables["fruits"]);
             });
             test("Unless the specified table is not found in the context's 'lootGeneratorState.tables' object", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { createSubEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateLootEntry).not.toHaveBeenCalled();
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"]).toStrictEqual(
-                    mockTables["fruits"],
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"],
+                ).toStrictEqual(mockTables["fruits"]);
 
                 await act(async () => createSubEntry("invalid-table", "carbohydrates"));
 
                 expect(mockCreateLootEntry).not.toHaveBeenCalled();
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"]).toStrictEqual(
-                    mockTables["fruits"],
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"],
+                ).toStrictEqual(mockTables["fruits"]);
             });
             test("Unless the specified entry is not found", async () => {
                 const { getContextValue } = renderFunc();
-                const LootGeneratorContextValue = getContextValue();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
                 const { createSubEntry } = LootGeneratorContextValue;
 
                 expect(mockCreateLootEntry).not.toHaveBeenCalled();
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"]).toStrictEqual(
-                    mockTables["fruits"],
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"],
+                ).toStrictEqual(mockTables["fruits"]);
 
                 await act(async () => createSubEntry("fruits", "invalid-entry"));
 
                 expect(mockCreateLootEntry).not.toHaveBeenCalled();
 
-                expect(getContextValue().lootGeneratorState.tables["fruits"]).toStrictEqual(
-                    mockTables["fruits"],
-                );
+                expect(
+                    getContextValue().LootGenerator.lootGeneratorState.tables["fruits"],
+                ).toStrictEqual(mockTables["fruits"]);
             });
         });
 
