@@ -212,15 +212,9 @@ export function LootGenerator({ children }: TLootGenerator) {
 
     const saveCopy = useCallback(
         (
-            source: "active" | "tables" | "items",
-            copy:
-                | LootGeneratorState["active"]
-                | LootGeneratorState["tables"]
-                | LootGeneratorState["items"],
+            source: "tables" | "items",
+            copy: LootGeneratorState["tables"] | LootGeneratorState["items"],
         ) => {
-            if (source === "active") {
-                setLootGeneratorStateProperty("active", copy as LootGeneratorState["active"]);
-            }
             if (source === "tables") {
                 setLootGeneratorStateProperty("tables", copy as LootGeneratorState["tables"]);
             }
