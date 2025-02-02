@@ -51,12 +51,12 @@
 }
 
 @media (hover: hover) {
-    .toggle-bar-button:hover {
+    .toggle-bar-button:hover:not(:disabled) {
         cursor: pointer;
     }
 }
 
-.toggle-bar-button:focus {
+.toggle-bar-button:focus:not(:disabled) {
     cursor: pointer;
 }
 
@@ -106,14 +106,14 @@
 }
 
 @media (hover: hover) {
-    .options > *:hover {
+    .options > *:hover:not(:disabled) {
         cursor: pointer;
 
         color: rgba(0, 0, 0, 0.6);
     }
 }
 
-.options > *:focus {
+.options > *:focus:not(:disabled) {
     cursor: pointer;
 
     color: rgba(0, 0, 0, 0.8);
