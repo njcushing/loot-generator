@@ -3,6 +3,7 @@ import { LootGeneratorContext } from "@/pages/LootGenerator";
 import { ToggleBar, TToggleBar } from "@/components/buttons/components/ToggleBar";
 import { Table as TableTypes, Item as ItemTypes } from "@/utils/types";
 import { TabSelector } from "@/components/structural/components/TabSelector";
+import { findCompatibleDescendantTables } from "@/utils/findCompatibleDescendantTables";
 import { TableContext, Table } from "../Table";
 import { Item } from "../Item";
 import styles from "./index.module.css";
@@ -73,7 +74,13 @@ export function SelectEntry({ entryKey, id, disabled }: TSelectEntry) {
     }, [entryKey, id, disabled, removeIdFromEntry, pathToRoot, type]);
 
     const tableList = useMemo(() => {
-        return [...Object.keys(lootGeneratorState.tables)].map((tableId) => {
+        if (pathToRoot.length === 0) return null;
+        if (!pathToRoot[pathToRoot.length - 1].id) return null;
+        const compatibleTables = findCompatibleDescendantTables(
+            pathToRoot[pathToRoot.length - 1].id!,
+            lootGeneratorState.tables,
+        );
+        return [...compatibleTables.keys()].map((tableId) => {
             return (
                 <Table
                     id={tableId}
