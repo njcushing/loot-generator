@@ -25,6 +25,7 @@ import { Design } from "@/features/Design";
 import { updateFieldsInObject, TFieldToUpdate } from "@/utils/mutateFieldsInObject";
 import { v4 as uuid } from "uuid";
 import { sortOptions } from "@/utils/sortOptions";
+import { findCompatibleDescendantTables } from "@/utils/findCompatibleDescendantTables";
 import { version } from "../../../package.json";
 import styles from "./index.module.css";
 
@@ -395,6 +396,12 @@ export function LootGenerator({ children }: TLootGenerator) {
 
             let newEntry;
             if (type === "table") {
+                const compatible = findCompatibleDescendantTables(
+                    tableId,
+                    lootGeneratorState.tables,
+                );
+                if (!compatible.has(setId)) return false;
+
                 newEntry = createLootTable("table_id", {
                     ...entry,
                     type: "table_id",
