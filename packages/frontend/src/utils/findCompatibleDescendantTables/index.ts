@@ -32,7 +32,9 @@ export const findCompatibleDescendantTables = (
         if (!incompatibleTables.has(key)) scanLootTable(new Set([key]), value.loot);
     });
 
-    const compatibleTables = new Set([...Object.keys(tables)]).difference(incompatibleTables);
+    const compatibleTables = new Set(
+        [...Object.keys(tables)].filter((tableId) => !incompatibleTables.has(tableId)),
+    );
 
     return compatibleTables;
 };
