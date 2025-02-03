@@ -298,7 +298,54 @@ describe("The SelectEntry component...", () => {
 
     describe("Should, if the 'id' prop is 'null', the 'disabled' prop is 'false', and the internal 'selectingEntry' state is 'true'...", () => {
         describe("Render the TabSelector component...", () => {
-            describe("With one tab called 'Tables' that contains a TableEntry component for each entry in the LootGenerator component's context's 'lootGeneratorState.tables' object...", () => {
+            describe("With one tab called 'Tables' that contains a TableEntry component for each entry returned by the 'findCompatibleDescendantTables' function...", () => {
+                test("Unless the length of the nearest ancestor Table component's context's 'pathToRoot' field has a length of 0", async () => {
+                    renderFunc({
+                        TableContextOverride: { ...mockTableContextValue, pathToRoot: [] },
+                    });
+
+                    const ToggleBarButton = screen.getByRole("button", { name: "Select an entry" });
+                    expect(ToggleBarButton).toBeInTheDocument();
+
+                    expect(screen.queryByText("TabSelector Component")).toBeNull();
+
+                    await act(async () => userEvent.click(ToggleBarButton));
+
+                    expect(screen.getByText("TabSelector Component")).toBeInTheDocument();
+
+                    const TablesTab = screen.getByLabelText("TabSelector-tab-Tables");
+                    expect(TablesTab).toBeInTheDocument();
+
+                    Object.keys(mockTables).forEach((tableId) => {
+                        const TableEntry = screen.queryByText(tableId);
+                        expect(TableEntry).toBeNull();
+                    });
+                });
+                test("Unless the final entry of the nearest ancestor Table component's context's 'pathToRoot' field has an 'id' field with a falsy value", async () => {
+                    renderFunc({
+                        TableContextOverride: {
+                            ...mockTableContextValue,
+                            pathToRoot: [{ type: "base", id: null }],
+                        },
+                    });
+
+                    const ToggleBarButton = screen.getByRole("button", { name: "Select an entry" });
+                    expect(ToggleBarButton).toBeInTheDocument();
+
+                    expect(screen.queryByText("TabSelector Component")).toBeNull();
+
+                    await act(async () => userEvent.click(ToggleBarButton));
+
+                    expect(screen.getByText("TabSelector Component")).toBeInTheDocument();
+
+                    const TablesTab = screen.getByLabelText("TabSelector-tab-Tables");
+                    expect(TablesTab).toBeInTheDocument();
+
+                    Object.keys(mockTables).forEach((tableId) => {
+                        const TableEntry = screen.queryByText(tableId);
+                        expect(TableEntry).toBeNull();
+                    });
+                });
                 test("Each with an 'id' prop equal to the table's 'id' and 'displayMode' prop equal to 'selection'", async () => {
                     renderFunc();
 
