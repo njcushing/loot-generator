@@ -247,8 +247,9 @@ vi.mock("@/features/Generate", () => ({
     Generate: vi.fn(() => <div aria-label="Generate Component"></div>),
 }));
 
+const mockFindCompatibleDescendantTables = vi.fn(() => new Set([...Object.keys(mockTables)]));
 vi.mock("@/utils/findCompatibleDescendantTables", () => ({
-    findCompatibleDescendantTables: vi.fn(() => new Set([...Object.keys(mockTables)])),
+    findCompatibleDescendantTables: vi.fn(() => mockFindCompatibleDescendantTables()),
 }));
 
 describe("The LootGenerator component...", () => {
@@ -930,6 +931,19 @@ describe("The LootGenerator component...", () => {
 
                 expect(mockCreateLootTable).not.toHaveBeenCalled();
                 expect(mockCreateLootItem).not.toHaveBeenCalled();
+            });
+            test("Unless, when setting a table id on an entry, the 'findCompatibleDescendantTables' function doesn't return that table as compatible", async () => {
+                const { getContextValue } = renderFunc();
+                const LootGeneratorContextValue = getContextValue().LootGenerator;
+                const { setIdOnEntry } = LootGeneratorContextValue;
+
+                expect(mockCreateLootTable).not.toHaveBeenCalled();
+
+                mockFindCompatibleDescendantTables.mockReturnValueOnce(new Set());
+
+                await act(async () => setIdOnEntry("fruits", "carbohydrates", "vegetables"));
+
+                expect(mockCreateLootTable).not.toHaveBeenCalled();
             });
         });
 
