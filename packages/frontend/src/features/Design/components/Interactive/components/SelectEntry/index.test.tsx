@@ -164,6 +164,10 @@ vi.mock("@/features/Design/components/Interactive/components/Item", () => ({
     }),
 }));
 
+vi.mock("@/utils/findCompatibleDescendantTables", () => ({
+    findCompatibleDescendantTables: vi.fn(() => new Set([...Object.keys(mockTables)])),
+}));
+
 vi.mock("@/components/structural/components/TabSelector", () => ({
     TabSelector: vi.fn(({ tabs }) => (
         <div>
