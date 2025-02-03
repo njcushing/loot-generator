@@ -247,6 +247,10 @@ vi.mock("@/features/Generate", () => ({
     Generate: vi.fn(() => <div aria-label="Generate Component"></div>),
 }));
 
+vi.mock("@/utils/findCompatibleDescendantTables", () => ({
+    findCompatibleDescendantTables: vi.fn(() => new Set([...Object.keys(mockTables)])),
+}));
+
 describe("The LootGenerator component...", () => {
     afterEach(() => {
         vi.restoreAllMocks();
