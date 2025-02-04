@@ -69,6 +69,7 @@ export const sortLoot = (
             break;
         }
         default:
+            break;
     }
 
     return mutableLoot;

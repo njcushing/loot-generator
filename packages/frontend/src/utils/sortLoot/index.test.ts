@@ -85,6 +85,7 @@ describe("The sortLoot function...", () => {
         const result = sortLoot(mockLoot, mockSortOptions);
         expect(result instanceof Map).toBeTruthy();
     });
+
     describe("Should, if the selected sort option is 'name'...", () => {
         test("And, if the 'order' criterion's selected value is 'ascending', sort the loot accordingly", async () => {
             const adjustedSortOptions = structuredClone(mockSortOptions);
@@ -116,8 +117,11 @@ describe("The sortLoot function...", () => {
         });
         test("Using the key of the loot entry in the input object instead of a name when the item doesn't have a name", async () => {
             const adjustedLoot = structuredClone(mockLoot);
-            const { apple } = adjustedLoot;
+            const { apple, banana } = adjustedLoot;
             delete adjustedLoot["apple"];
+            delete adjustedLoot["banana"];
+            adjustedLoot["y"] = banana;
+            adjustedLoot["y"].props.name = undefined;
             adjustedLoot["z"] = apple;
             adjustedLoot["z"].props.name = undefined;
 
@@ -127,7 +131,7 @@ describe("The sortLoot function...", () => {
 
             const result = sortLoot(adjustedLoot, adjustedSortOptions);
             const correctResult = new Map(
-                ["banana", "cherry", "z"].map((key) => [key, adjustedLoot[key]]),
+                ["cherry", "y", "z"].map((key) => [key, adjustedLoot[key]]),
             );
             const resultValues = [...result.values()];
             const correctResultValues = [...correctResult.values()];
@@ -153,6 +157,7 @@ describe("The sortLoot function...", () => {
             resultValues.forEach((value, i) => expect(value).toStrictEqual(correctResultValues[i]));
         });
     });
+
     describe("Should, if the selected sort option is 'quantity'...", () => {
         test("And, if the 'order' criterion's selected value is 'ascending', sort the loot accordingly", async () => {
             const adjustedSortOptions = structuredClone(mockSortOptions);
@@ -203,6 +208,7 @@ describe("The sortLoot function...", () => {
             resultValues.forEach((value, i) => expect(value).toStrictEqual(correctResultValues[i]));
         });
     });
+
     describe("Should, if the selected sort option is 'value'...", () => {
         test("And, if the 'order' criterion's selected value is 'ascending' and the 'summation' criterion's selected value is 'individual', sort the loot accordingly", async () => {
             const adjustedSortOptions = structuredClone(mockSortOptions);
@@ -264,6 +270,28 @@ describe("The sortLoot function...", () => {
 
             resultValues.forEach((value, i) => expect(value).toStrictEqual(correctResultValues[i]));
         });
+        test("Using a value of 1 when the item doesn't have a valid 'value' field", async () => {
+            const adjustedLoot = structuredClone(mockLoot);
+            const { apple, banana } = adjustedLoot;
+            // @ts-expect-error - Disabling type checking for mocking props in unit test
+            apple.props.value = undefined;
+            // @ts-expect-error - Disabling type checking for mocking props in unit test
+            banana.props.value = undefined;
+
+            const adjustedSortOptions = structuredClone(mockSortOptions);
+            adjustedSortOptions.selected = "value";
+            setOptionSelected(adjustedSortOptions, "value", "order", "ascending");
+            setOptionSelected(adjustedSortOptions, "value", "summation", "individual");
+
+            const result = sortLoot(adjustedLoot, adjustedSortOptions);
+            const correctResult = new Map(
+                ["apple", "banana", "cherry"].map((key) => [key, adjustedLoot[key]]),
+            );
+            const resultValues = [...result.values()];
+            const correctResultValues = [...correctResult.values()];
+
+            resultValues.forEach((value, i) => expect(value).toStrictEqual(correctResultValues[i]));
+        });
         test("Unless the 'order' criterion is not present in the sort option, in which case the original loot object should be returned as a Map", async () => {
             const adjustedSortOptions = structuredClone(mockSortOptions);
             adjustedSortOptions.selected = "value";
@@ -299,6 +327,28 @@ describe("The sortLoot function...", () => {
             const correctResultValues = [...correctResult.values()];
 
             resultValues.forEach((value, i) => expect(value).toStrictEqual(correctResultValues[i]));
+        });
+    });
+
+    describe("Should, if the selected sort option does not have a valid option in the 'options' array...", () => {
+        test("Exit gracefully by returning the entries in the first argument object in a Map", () => {
+            const adjustedSortOptions = structuredClone(mockSortOptions);
+
+            adjustedSortOptions.options.push({ name: "invalid-sort-option", criteria: [] });
+            adjustedSortOptions.selected = "invalid-sort-option";
+
+            const result = sortLoot(mockLoot, adjustedSortOptions);
+            expect(result instanceof Map).toBeTruthy();
+        });
+    });
+
+    describe("Should, if the selected sort option does not contain a valid 'criteria' array...", () => {
+        test("Exit gracefully by returning the entries in the first argument object in a Map", () => {
+            const result = sortLoot(mockLoot, {
+                ...mockSortOptions,
+                selected: "invalid-sort-option",
+            });
+            expect(result instanceof Map).toBeTruthy();
         });
     });
 });
