@@ -30,7 +30,7 @@ export default defineConfig({
         environment: "jsdom",
         setupFilesAfterEnv: "./tests.config.js",
         coverage: {
-            exclude: ["**/types.ts", "**/*.config.*/**", "**/index.ts", "**/zod.ts"],
+            exclude: ["**/*.config.*/**", "**/zod.ts"],
         },
     },
 });
