@@ -25,14 +25,7 @@ export const sortLoot = (
                     const nameA = itemA.props.name || keyA;
                     const nameB = itemB.props.name || keyB;
 
-                    let result;
-
-                    if (nameA && nameB) result = nameA.localeCompare(nameB);
-                    else if (nameA) result = nameA.localeCompare(keyB);
-                    else if (nameB) result = keyA.localeCompare(nameB);
-                    else result = keyA.localeCompare(keyB);
-
-                    return result * (order === "descending" ? -1 : 1);
+                    return nameA.localeCompare(nameB) * (order === "descending" ? -1 : 1);
                 }),
             );
             break;
