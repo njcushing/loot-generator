@@ -13,12 +13,11 @@ export const findCompatibleDescendantTables = (
             const { type } = entry;
             if (type === "table_id") {
                 const { id } = entry;
-                if (!id) return;
                 if (id === target) {
                     incompatibleTables = new Set([...incompatibleTables, ...ancestors]);
                 }
-                const table = tables[id];
-                scanLootTable(new Set([...ancestors, id]), table.loot);
+                const table = tables[id!];
+                scanLootTable(new Set([...ancestors, id!]), table.loot);
             }
             if (type === "table_noid") {
                 const { loot: entryLoot } = entry;
