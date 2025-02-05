@@ -205,6 +205,8 @@ const rollTable = (
             rolledEntry as SummedTable,
             items,
         );
+
+        return [mutableLoot, mutableSummedTable];
     }
 
     // Rolled entry is an item; append to current loot
