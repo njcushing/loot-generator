@@ -1,6 +1,96 @@
 import * as uuid from "uuid";
 import { vi } from "vitest";
-import { createLootEntry, createTable, createLootTable, createItem, createLootItem } from ".";
+import { Items, Tables } from "@/utils/types";
+import {
+    createLootEntry,
+    createTable,
+    createLootTable,
+    createItem,
+    createLootItem,
+    generateLoot,
+} from ".";
+
+// Mock dependencies
+const mockItems: Items = {
+    apple: {
+        name: "Apple",
+        value: 10,
+        custom: {},
+    },
+    banana: {
+        name: "Banana",
+        value: 100,
+        custom: {},
+    },
+    cherry: {
+        name: "Cherry",
+        value: 1000,
+        custom: {},
+    },
+};
+
+const mockTables: Tables = {
+    fruits: {
+        name: "Fruits",
+        loot: [
+            {
+                key: "apple",
+                type: "item_id",
+                id: "apple",
+                quantity: { min: 1, max: 1 },
+                criteria: { weight: 1 },
+            },
+            {
+                key: "banana",
+                type: "item_id",
+                id: "banana",
+                quantity: { min: 1, max: 1 },
+                criteria: { weight: 1 },
+            },
+            {
+                key: "vegetables",
+                type: "table_id",
+                id: "vegetables",
+                criteria: { weight: 1 },
+            },
+            {
+                key: "carbohydrates",
+                type: "table_noid",
+                name: "Carbohydrates",
+                loot: [
+                    {
+                        key: "cherry",
+                        type: "item_id",
+                        id: "cherry",
+                        quantity: { min: 1, max: 1 },
+                        criteria: { weight: 1 },
+                    },
+                ],
+                custom: {},
+                criteria: { weight: 1 },
+            },
+            {
+                key: "pineapple",
+                type: "item_noid",
+                name: "pineapple",
+                value: 90,
+                custom: {},
+                quantity: { min: 1, max: 1 },
+                criteria: { weight: 1 },
+            },
+            {
+                key: "loot-entry-key",
+                type: "entry",
+            },
+        ],
+        custom: {},
+    },
+    vegetables: {
+        name: "Vegetables",
+        loot: [],
+        custom: {},
+    },
+};
 
 describe("The createLootEntry function...", () => {
     afterEach(() => {
@@ -108,17 +198,43 @@ describe("The createLootTable function...", () => {
             ...createTable(),
         });
     });
-    test("Using existing properties where provided", () => {
-        const result = createLootTable("table_id", { key: "table-key", id: "table" });
+    test("Using existing properties where provided for id LootTables", () => {
+        const result = createLootTable("table_id", {
+            key: "table-key",
+            id: "table",
+            criteria: {
+                weight: 10,
+                rolls: {},
+            },
+        });
 
         expect(result).toStrictEqual({
             type: "table_id",
             key: "table-key",
             id: "table",
             criteria: {
-                weight: 1,
+                weight: 10,
                 rolls: {},
             },
+        });
+    });
+    test("Using existing properties where provided for noid LootTables", () => {
+        const result = createLootTable("table_noid", {
+            key: "table-key",
+            criteria: {
+                weight: 10,
+                rolls: {},
+            },
+        });
+
+        expect(result).toStrictEqual({
+            type: "table_noid",
+            key: "table-key",
+            criteria: {
+                weight: 10,
+                rolls: {},
+            },
+            ...createTable(),
         });
     });
     test("Should not add any fields to the LootTable object that shouldn't be present on an object of this type", () => {
@@ -155,12 +271,12 @@ describe("The createItem function...", () => {
         });
     });
     test("Using existing properties where provided", () => {
-        const result = createItem({ name: "item" });
+        const result = createItem({ name: "item", sprite: "", value: 10, custom: {} });
 
         expect(result).toStrictEqual({
             name: "item",
-            sprite: undefined,
-            value: 1,
+            sprite: "",
+            value: 10,
             custom: {},
         });
     });
@@ -220,21 +336,59 @@ describe("The createLootItem function...", () => {
             ...createItem(),
         });
     });
-    test("Using existing properties where provided", () => {
-        const result = createLootItem("item_id", { key: "item-key", id: "item" });
+    test("Using existing properties where provided for id LootItems", () => {
+        const result = createLootItem("item_id", {
+            key: "item-key",
+            id: "item",
+            criteria: {
+                weight: 10,
+                rolls: {},
+            },
+            quantity: {
+                min: 10,
+                max: 10,
+            },
+        });
 
         expect(result).toStrictEqual({
             type: "item_id",
             key: "item-key",
             id: "item",
             criteria: {
-                weight: 1,
+                weight: 10,
                 rolls: {},
             },
             quantity: {
-                min: 1,
-                max: 1,
+                min: 10,
+                max: 10,
             },
+        });
+    });
+    test("Using existing properties where provided for noid LootItems", () => {
+        const result = createLootItem("item_noid", {
+            key: "item-key",
+            criteria: {
+                weight: 10,
+                rolls: {},
+            },
+            quantity: {
+                min: 10,
+                max: 10,
+            },
+        });
+
+        expect(result).toStrictEqual({
+            type: "item_noid",
+            key: "item-key",
+            criteria: {
+                weight: 10,
+                rolls: {},
+            },
+            quantity: {
+                min: 10,
+                max: 10,
+            },
+            ...createItem(),
         });
     });
     test("Should not add any fields to the LootItem object that shouldn't be present on an object of this type", () => {
