@@ -108,7 +108,7 @@ const populateTable = (active: Table, tables: Tables, items: Items): PopulatedTa
 
             switch (entry.type) {
                 case "item_id": {
-                    const item = structuredClone(items[entry.id || ""]);
+                    const item = structuredClone(items[entry.id!]);
                     if (item) {
                         const popItem: PopulatedLootItem = { ...entry, ...item };
                         loot.push(popItem);
@@ -120,7 +120,7 @@ const populateTable = (active: Table, tables: Tables, items: Items): PopulatedTa
                     break;
                 }
                 case "table_id": {
-                    const table = structuredClone(tables[entry.id || ""]);
+                    const table = structuredClone(tables[entry.id!]);
                     if (table) {
                         const popTable: PopulatedLootTable = { ...entry, ...table, loot: [] };
                         loot.push(popTable);
