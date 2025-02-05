@@ -92,6 +92,11 @@ const mockTables: Tables = {
     },
 };
 
+const mockRandomRange = vi.fn((min, max) => Math.min(min, max));
+vi.mock("@/utils/randomRange", () => ({
+    randomRange: vi.fn(({ min, max }) => mockRandomRange(min, max)),
+}));
+
 describe("The createLootEntry function...", () => {
     afterEach(() => {
         vi.restoreAllMocks();
@@ -408,5 +413,34 @@ describe("The createLootItem function...", () => {
                 max: 1,
             },
         });
+    });
+});
+
+describe("The generateLoot function...", () => {
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    test("Should return the input loot object if the 'active' argument is falsy", () => {
+        expect(generateLoot(null, mockTables, mockItems, 1, {})).toStrictEqual({});
+    });
+    test("Should return the input loot object if the 'tables' argument is falsy", () => {
+        // @ts-expect-error - Disabling type checking for mocking props in unit test
+        expect(generateLoot("fruits", null, mockItems, 1, {})).toStrictEqual({});
+    });
+    test("Should return the input loot object if the 'items' argument is falsy", () => {
+        // @ts-expect-error - Disabling type checking for mocking props in unit test
+        expect(generateLoot("fruits", mockTables, null, 1, {})).toStrictEqual({});
+    });
+    test("Should return the input loot object if the 'active' argument doesn't refer to a valid table in the 'tables' argument object", () => {
+        expect(generateLoot("invalid-table", mockTables, mockItems, 1, {})).toStrictEqual({});
+    });
+    test("Should return a new loot object containing the generated loot", () => {
+        for (let i = 0; i < 10; i++) {
+            vi.spyOn(global.Math, "random").mockReturnValueOnce(0.1 * i);
+        }
+
+        const result = generateLoot("fruits", mockTables, mockItems, 10, {});
+        expect(Object.keys(result).length).toBeGreaterThan(0);
     });
 });
