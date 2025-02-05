@@ -22,6 +22,32 @@ Object.defineProperty(window, "matchMedia", {
     })),
 });
 
+const renderFunc = () => {
+    let ThemeContextValue!: themeHelperFuncs.IThemeState;
+
+    const component = (
+        <Theme>
+            <ThemeContext.Consumer>
+                {(value) => {
+                    ThemeContextValue = value;
+                    return null;
+                }}
+            </ThemeContext.Consumer>
+        </Theme>
+    );
+
+    const { rerender } = render(component);
+
+    const getContextValue = () => ({
+        ThemeContextValue,
+    });
+
+    return {
+        rerender,
+        getContextValue,
+    };
+};
+
 vi.mock("./utils/themeHelperFuncs", async (importOriginal) => {
     const actual = await importOriginal();
     return {
@@ -38,34 +64,48 @@ describe("The Theme component...", () => {
     });
 
     describe("Should pass context to its descendant components...", () => {
-        let contextValue: themeHelperFuncs.IThemeState;
-
-        beforeEach(async () => {
-            render(
-                <Theme>
-                    <ThemeContext.Consumer>
-                        {(value) => {
-                            contextValue = value;
-                            return null;
-                        }}
-                    </ThemeContext.Consumer>
-                </Theme>,
-            );
-        });
-
         test("Including the current theme", async () => {
-            expect(contextValue).toBeDefined();
-            expect(contextValue.theme).toBeDefined();
+            const { getContextValue } = renderFunc();
+            const { ThemeContextValue } = getContextValue();
+
+            expect(ThemeContextValue).toBeDefined();
+            expect(ThemeContextValue.theme).toBeDefined();
         });
 
         test("Including a setter function for updating the theme", async () => {
-            const { setTheme } = contextValue;
+            const { getContextValue } = renderFunc();
+            const { ThemeContextValue } = getContextValue();
+            const { setTheme } = ThemeContextValue;
 
             await act(async () => {
                 setTheme("dark");
             });
 
-            expect(contextValue.theme).toBe("dark");
+            expect(getContextValue().ThemeContextValue.theme).toBe("dark");
+        });
+
+        describe("Which, when consumed by a component other than the Theme component, should contain the same context...", () => {
+            test("But any functions within the context should do nothing when invoked, and should exit gracefully", async () => {
+                let ThemeContextValue!: themeHelperFuncs.IThemeState;
+
+                render(
+                    <div>
+                        <ThemeContext.Consumer>
+                            {(value) => {
+                                ThemeContextValue = value;
+                                return null;
+                            }}
+                        </ThemeContext.Consumer>
+                    </div>,
+                );
+
+                expect(ThemeContextValue).toBeDefined();
+
+                const { theme, setTheme } = ThemeContextValue;
+
+                expect(theme).toBeDefined();
+                expect(() => setTheme("default")).not.toThrow();
+            });
         });
     });
 
