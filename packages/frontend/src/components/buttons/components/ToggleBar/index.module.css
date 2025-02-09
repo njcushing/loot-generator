@@ -11,7 +11,7 @@
     grid-template-rows: minmax(0, 1fr);
     grid-template-columns: minmax(0, 1fr) auto;
 
-    outline: 1px solid black;
+    outline: 1px solid var(--outline-primary, black);
 }
 
 .toggle-bar-button {
@@ -61,11 +61,14 @@
 }
 
 .symbol {
+    color: var(--text-primary, black);
+
     width: 1.2rem;
 }
 
 .name {
-    color: black;
+    color: var(--text-primary, black);
+    font-family: Roboto;
     font-size: 1rem;
     text-align: start;
     text-wrap: nowrap;
@@ -96,7 +99,7 @@
 
     pointer-events: all;
 
-    color: rgba(0, 0, 0, 0.4);
+    color: rgba(var(--text-primary-dec, 0, 0, 0), var(--togglebar-option-alpha, 0.5));
 
     border: none;
     background-color: transparent;
@@ -109,14 +112,17 @@
     .options > *:hover:not(:disabled) {
         cursor: pointer;
 
-        color: rgba(0, 0, 0, 0.6);
+        color: rgba(
+            var(--text-primary-dec, 0, 0, 0),
+            calc(var(--togglebar-option-alpha, 0.5) + 0.1)
+        );
     }
 }
 
 .options > *:focus:not(:disabled) {
     cursor: pointer;
 
-    color: rgba(0, 0, 0, 0.8);
+    color: rgba(var(--text-primary-dec, 0, 0, 0), calc(var(--togglebar-option-alpha, 0.5) + 0.3));
 }
 
 @media (hover: hover) {

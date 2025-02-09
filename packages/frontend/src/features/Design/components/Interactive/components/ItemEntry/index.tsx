@@ -42,7 +42,10 @@ export function ItemEntry({ entry }: TItemEntry) {
                 onClick: () => {
                     if (pathToRoot[0].id) deleteEntry(pathToRoot[0].id, key);
                 },
-                colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
+                colours: {
+                    hover: "var(--background-entrydeleteoption-hover, rgb(255, 120, 120))",
+                    focus: "var(--background-entrydeleteoption-focus, rgb(255, 83, 83))",
+                },
             });
         }
         return options;
@@ -72,9 +75,9 @@ export function ItemEntry({ entry }: TItemEntry) {
                 style={{
                     size: "s",
                     colours: {
-                        normal: "rgb(170, 238, 149)",
-                        hover: "rgb(151, 226, 128)",
-                        focus: "rgb(132, 206, 110)",
+                        normal: "var(--background-itementry, rgb(170, 238, 149))",
+                        hover: "var(--background-itementry-hover, rgb(151, 226, 128))",
+                        focus: "var(--background-itementry-focus, rgb(132, 206, 110))",
                     },
                     nameFontStyle,
                 }}

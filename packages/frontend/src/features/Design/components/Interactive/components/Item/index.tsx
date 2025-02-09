@@ -24,7 +24,10 @@ export function Item({ id, displayMode = "normal", onClick }: TItem) {
                     deleteItem(id);
                     if (onClick) onClick("delete");
                 },
-                colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
+                colours: {
+                    hover: "var(--background-entrydeleteoption-hover, rgb(255, 120, 120))",
+                    focus: "var(--background-entrydeleteoption-focus, rgb(255, 83, 83))",
+                },
             });
         }
         if (displayMode === "entry") {
@@ -51,15 +54,15 @@ export function Item({ id, displayMode = "normal", onClick }: TItem) {
     }
 
     let colours = {
-        normal: "rgb(245, 158, 240)",
-        hover: "rgb(235, 139, 230)",
-        focus: "rgb(226, 125, 221)",
+        normal: "var(--background-item, rgb(245, 158, 240))",
+        hover: "var(--background-item-hover, rgb(235, 139, 230))",
+        focus: "var(--background-item-focus, rgb(226, 125, 221))",
     };
     if (displayMode === "entry" || displayMode === "entryViewOnly") {
         colours = {
-            normal: "rgb(181, 186, 255)",
-            hover: "rgb(164, 169, 252)",
-            focus: "rgb(155, 161, 252)",
+            normal: "var(--background-item-viewonly, rgb(181, 186, 255))",
+            hover: "var(--background-item-viewonly-hover, rgb(164, 169, 252))",
+            focus: "var(--background-item-viewonly-focus, rgb(155, 161, 252))",
         };
     }
 

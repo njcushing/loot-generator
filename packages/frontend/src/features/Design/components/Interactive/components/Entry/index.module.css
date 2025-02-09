@@ -3,7 +3,7 @@
     flex-direction: column;
     gap: 1px;
 
-    outline: 1px solid black;
+    outline: 1px solid var(--outline-primary, black);
 }
 
 .entry-options {
@@ -14,7 +14,7 @@
     flex-wrap: wrap;
     gap: 4px;
 
-    outline: 1px solid black;
+    outline: 1px solid var(--outline-primary, black);
 
     width: 100%;
     padding: 3px;
@@ -30,13 +30,13 @@
 
     pointer-events: all;
 
-    color: black;
+    color: var(--text-primary, black);
     font-family: Roboto;
     font-size: 0.9rem;
     text-wrap: nowrap;
 
-    border: 1px solid black;
-    background-color: rgba(0, 0, 0, 0);
+    border: 1px solid var(--outline-primary, black);
+    background-color: rgba(var(--background-inverted-dec, 0, 0, 0), 0);
 
     padding: 3px;
 }
@@ -45,14 +45,14 @@
     .entry-option:hover {
         cursor: pointer;
 
-        outline: 1px solid black;
-        background-color: rgba(0, 0, 0, 0.1);
+        outline: 1px solid var(--outline-primary, black);
+        background-color: rgba(var(--background-inverted-dec, 0, 0, 0), 0.1);
     }
 }
 
 .entry-option:focus {
     cursor: pointer;
 
-    outline: 1px solid black;
-    background-color: rgba(0, 0, 0, 0.2);
+    outline: 1px solid var(--outline-primary, black);
+    background-color: rgba(var(--background-inverted-dec, 0, 0, 0), 0.2);
 }

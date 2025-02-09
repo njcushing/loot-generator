@@ -1,7 +1,7 @@
 .page {
     position: relative;
 
-    color: black;
+    color: var(--text-primary, black);
     font-family: Roboto;
 
     height: 100%;
@@ -19,10 +19,10 @@
 .left-panel,
 .right-panel,
 .main-panel {
-    background-color: var(--background-secondary, white);
-    -webkit-box-shadow: 0px 10px 10px 0px rgba(158, 158, 158, 1);
-    -moz-box-shadow: 0px 10px 10px 0px rgba(158, 158, 158, 1);
-    box-shadow: 0px 10px 10px 0px rgba(158, 158, 158, 1);
+    background-color: var(--background-primary, white);
+    -webkit-box-shadow: 0px 10px 10px 0px var(--box-shadow-color);
+    -moz-box-shadow: 0px 10px 10px 0px var(--box-shadow-color);
+    box-shadow: 0px 10px 10px 0px var(--box-shadow-color);
 
     height: 100%;
     padding: 12px;
@@ -58,6 +58,6 @@
 }
 
 .version {
-    color: grey;
+    color: var(--text-tertiary, rgb(46, 46, 46));
     font-size: 0.8rem;
 }

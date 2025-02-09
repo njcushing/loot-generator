@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
 
-    border-left: 1px solid black;
+    border-left: 1px solid var(--outline-primary, black);
 
     width: calc(100% - 12px);
 }

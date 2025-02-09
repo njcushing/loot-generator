@@ -35,24 +35,25 @@
 }
 
 .generation-quantity-button {
+    color: var(--text-primary, black);
     font-size: 1rem;
     font-weight: var(--text-bold-font-weight);
-    background-color: #fff;
+    background-color: var(--background-primary, white);
 }
 
 @media (hover: hover) {
     .generation-quantity-button:hover:not(:disabled) {
         cursor: pointer;
-        outline: 3px solid var(--outline-tertiary, grey);
-        background-color: #ececec;
+        outline: 3px solid var(--outline-tertiary, black);
+        background-color: var(--background-secondary, rgb(247, 247, 247));
     }
 }
 
 .generation-quantity-button:focus:not(:disabled),
 .generation-quantity-button.selected {
     cursor: pointer;
-    outline: 3px solid var(--outline-tertiary, grey);
-    background-color: #d4d4d4;
+    outline: 3px solid var(--outline-tertiary, black);
+    background-color: var(--background-primary, rgb(206, 206, 206));
 }
 
 .custom-quantity-field {
@@ -67,12 +68,13 @@
 }
 
 .custom-quantity-field input {
-    color: black;
+    color: var(--text-primary, black);
     font-family: Roboto;
     font-size: 1rem;
 
     border: none;
-    outline: 1px solid black;
+    outline: 1px solid var(--outline-primary, black);
+    background-color: var(--background-tertiary, rgb(216, 216, 216));
 
     min-width: 100px;
     width: 100%;

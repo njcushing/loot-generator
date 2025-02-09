@@ -8,7 +8,7 @@
 }
 
 .sort-options-title {
-    color: black;
+    color: var(--text-primary, black);
     font-size: 0.9rem;
     text-wrap: nowrap;
 }
@@ -27,19 +27,20 @@
 .sort-option-select {
     align-self: center;
 
-    color: black;
+    color: var(--text-primary, black);
     font-size: 0.9rem;
-    font-family: Roboto;
+    font-family: Roboto, sans-serif;
     text-transform: capitalize;
     text-align: center;
 
-    border: 1px solid black;
+    border: 1px solid var(--outline-primary, black);
     border-radius: 2px;
     outline: none;
+    background-color: var(--background-primary);
 
     width: min-content;
     height: min-content;
-    padding: 2px 0px;
+    padding: 2px;
 }
 
 @media (hover: hover) {
@@ -49,15 +50,15 @@
 }
 
 .sort-option-select-option {
-    color: black;
-    font-family: Roboto;
+    color: var(--text-primary, black);
+    font-family: Roboto, sans-serif;
     text-transform: capitalize;
 }
 
 .sort-option-select-option:nth-child(2n-1) {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(var(--background-inverted-dec, 0, 0, 0), 0.1);
 }
 
 .sort-option-select-option:nth-child(2n) {
-    background-color: rgba(0, 0, 0, 0.16);
+    background-color: rgba(var(--background-inverted-dec, 0, 0, 0), 0.16);
 }

@@ -1,19 +1,20 @@
 .search-input {
-    color: black;
+    color: var(--text-primary, black);
     font-family: Roboto;
     font-size: 0.9rem;
 
-    border: 1px solid black;
+    border: 1px solid var(--outline-primary, black);
     outline: none;
+    background-color: var(--background-primary, white);
 
     width: 100%;
     padding: 3px;
 }
 
 .search-input:focus {
-    outline: 1px solid black;
+    outline: 1px solid var(--outline-primary, black);
 }
 
 .search-input:disabled {
-    background-color: rgba(0, 0, 0, 0.12);
+    background-color: rgba(var(--background-inverted-dec, 0, 0, 0), 0.12);
 }

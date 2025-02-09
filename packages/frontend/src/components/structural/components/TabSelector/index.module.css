@@ -25,16 +25,16 @@
 }
 
 .tab-button {
-    color: black;
+    color: var(--text-primary, black);
     font-family: Roboto;
     font-size: 1rem;
 
     border: none;
     outline: none;
-    background-color: rgb(202, 202, 202);
-    -webkit-box-shadow: 0px 0px 0px 1px rgb(0, 0, 0);
-    -moz-box-shadow: 0px 0px 0px 1px rgb(0, 0, 0);
-    box-shadow: 0px 0px 0px 1px rgb(0, 0, 0);
+    background-color: var(--background-tertiary, rgb(216, 216, 216));
+    -webkit-box-shadow: 0px 0px 0px 1px var(--outline-secondary, black);
+    -moz-box-shadow: 0px 0px 0px 1px var(--outline-secondary, black);
+    box-shadow: 0px 0px 0px 1px var(--outline-secondary, black);
 
     padding: 3px 10px;
 }
@@ -46,10 +46,10 @@
 
         cursor: pointer;
 
-        background-color: rgb(226, 226, 226);
-        -webkit-box-shadow: 0px 0px 0px 2px rgb(0, 0, 0);
-        -moz-box-shadow: 0px 0px 0px 2px rgb(0, 0, 0);
-        box-shadow: 0px 0px 0px 2px rgb(0, 0, 0);
+        background-color: var(--background-secondary, rgb(226, 226, 226));
+        -webkit-box-shadow: 0px 0px 0px 2px var(--outline-secondary, black);
+        -moz-box-shadow: 0px 0px 0px 2px var(--outline-secondary, black);
+        box-shadow: 0px 0px 0px 2px var(--outline-secondary, black);
     }
 }
 
@@ -59,10 +59,10 @@
 
     cursor: pointer;
 
-    background-color: rgb(226, 226, 226);
-    -webkit-box-shadow: 0px 0px 0px 2px rgb(0, 0, 0);
-    -moz-box-shadow: 0px 0px 0px 2px rgb(0, 0, 0);
-    box-shadow: 0px 0px 0px 2px rgb(0, 0, 0);
+    background-color: var(--background-secondary, rgb(226, 226, 226));
+    -webkit-box-shadow: 0px 0px 0px 2px var(--outline-secondary, black);
+    -moz-box-shadow: 0px 0px 0px 2px var(--outline-secondary, black);
+    box-shadow: 0px 0px 0px 2px var(--outline-secondary, black);
 }
 
 .tab-selector.m .tab-button {
@@ -91,7 +91,7 @@
     display: flex;
     flex-direction: column;
 
-    background-color: rgb(226, 226, 226);
+    background-color: var(--background-secondary, rgb(226, 226, 226));
 }
 
 .tab.selected .tab-button::after {
@@ -103,12 +103,12 @@
 
     background: linear-gradient(
         to right,
-        rgb(226, 226, 226) 0px,
-        rgb(226, 226, 226) 4px,
-        rgb(56, 56, 56) 4px,
-        rgb(56, 56, 56) calc(100% - 4px),
-        rgb(226, 226, 226) calc(100% - 4px),
-        rgb(226, 226, 226) 100%
+        var(--background-secondary, rgb(226, 226, 226)) 0px,
+        var(--background-secondary, rgb(226, 226, 226)) 4px,
+        var(--outline-secondary, black) 4px,
+        var(--outline-secondary, black) calc(100% - 4px),
+        var(--background-secondary, rgb(226, 226, 226)) calc(100% - 4px),
+        var(--background-secondary, rgb(226, 226, 226)) 100%
     );
 
     width: 100%;
@@ -121,8 +121,8 @@
 
     overflow-y: auto;
 
-    outline: 1px solid black;
-    background-color: rgb(226, 226, 226);
+    outline: 1px solid var(--outline-primary, black);
+    background-color: var(--background-secondary, rgb(226, 226, 226));
 
     width: 100%;
     max-height: 100%;

@@ -23,9 +23,9 @@ export function EntryFieldsToggleBar({
             style={{
                 size: "s",
                 colours: {
-                    normal: "rgb(255, 255, 255)",
-                    hover: "rgb(242, 242, 242)",
-                    focus: "rgb(228, 228, 228)",
+                    normal: "var(--background-primary, white)",
+                    hover: "var(--background-secondary, rgb(226, 226, 226))",
+                    focus: "var(--background-tertiary, rgb(216, 216, 216))",
                 },
             }}
         >

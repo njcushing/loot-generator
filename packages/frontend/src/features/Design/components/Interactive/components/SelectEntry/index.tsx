@@ -127,9 +127,9 @@ export function SelectEntry({ entryKey, id, disabled }: TSelectEntry) {
                     style={{
                         size: "s",
                         colours: {
-                            normal: "rgb(181, 186, 255)",
-                            hover: "rgb(164, 169, 252)",
-                            focus: "rgb(155, 161, 252)",
+                            normal: "var(--background-selectentry, rgb(181, 186, 255))",
+                            hover: "var(--background-selectentry-hover, rgb(164, 169, 252))",
+                            focus: "var(--background-selectentry-focus, rgb(155, 161, 252))",
                         },
                         indicator: "none",
                         nameFontStyle: "italic",

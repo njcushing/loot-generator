@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
 
-    outline: 1px solid black;
+    outline: 1px solid var(--outline-primary, black);
 
     padding: 4px;
 }
@@ -10,8 +10,8 @@
 .selection-list {
     overflow-y: hidden;
 
-    border: 1px solid #000;
-    outline: 1px solid black;
+    border: 1px solid var(--outline-primary, black);
+    outline: 1px solid var(--outline-primary, black);
 
     min-height: 0;
     height: 100%;

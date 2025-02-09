@@ -31,9 +31,9 @@ export type TToggleBar = {
 const defaultStyles: Required<TToggleBar["style"]> = {
     size: "m",
     colours: {
-        normal: "rgba(0, 0, 0, 0)",
-        hover: "rgba(0, 0, 0, 0.1)",
-        focus: "rgba(0, 0, 0, 0.2)",
+        normal: "rgba(var(--text-primary-dec, 0, 0, 0), 0)",
+        hover: "rgba(var(--text-primary-dec, 0, 0, 0), 0.1)",
+        focus: "rgba(var(--text-primary-dec, 0, 0, 0), 0.2)",
     },
     indicator: "signs",
     nameFontStyle: "normal",

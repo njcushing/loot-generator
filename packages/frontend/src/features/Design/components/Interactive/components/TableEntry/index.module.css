@@ -11,7 +11,7 @@
 
     pointer-events: all;
 
-    outline: 1px solid black;
+    outline: 1px solid var(--outline-primary, black);
 
     width: 100%;
 }

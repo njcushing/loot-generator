@@ -51,7 +51,10 @@ export function TableEntry({ entry }: TTableEntry) {
             options.push({
                 symbol: "Delete",
                 onClick: () => pathToRoot[0].id && deleteEntry(pathToRoot[0].id, key),
-                colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
+                colours: {
+                    hover: "var(--background-entrydeleteoption-hover, rgb(255, 120, 120))",
+                    focus: "var(--background-entrydeleteoption-focus, rgb(255, 83, 83))",
+                },
             });
         }
         return options;
@@ -90,9 +93,9 @@ export function TableEntry({ entry }: TTableEntry) {
                 style={{
                     size: "s",
                     colours: {
-                        normal: "rgb(186, 240, 228)",
-                        hover: "rgb(157, 224, 210)",
-                        focus: "rgb(139, 206, 191)",
+                        normal: "var(--background-table, rgb(186, 240, 228))",
+                        hover: "var(--background-table-hover, rgb(157, 224, 210))",
+                        focus: "var(--background-table-focus, rgb(139, 206, 191))",
                     },
                     nameFontStyle,
                 }}

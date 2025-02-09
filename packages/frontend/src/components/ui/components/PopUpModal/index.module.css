@@ -8,7 +8,7 @@
     pointer-events: all;
 
     border-radius: 9999px;
-    background-color: rgba(240, 240, 240);
+    background-color: var(--background-pop-up-modal, rgb(240, 240, 240));
     -webkit-box-shadow: 0px 4px 16px 4px rgba(0, 0, 0, 0.32);
     -moz-box-shadow: 0px 4px 16px 4px rgba(0, 0, 0, 0.32);
     box-shadow: 0px 4px 16px 4px rgba(0, 0, 0, 0.32);
@@ -19,7 +19,7 @@
 }
 
 .text {
-    color: black;
+    color: var(--text-primary, black);
     font-family: Roboto;
     font-size: 0.9rem;
     text-align: center;
@@ -33,14 +33,14 @@
 
     pointer-events: all;
 
-    color: black;
+    color: var(--text-primary, black);
     font-family: Roboto;
     font-size: 0.9rem;
     text-wrap: nowrap;
 
     border: none;
     border-radius: 9999px;
-    background-color: rgba(0, 0, 0, 0);
+    background-color: rgba(var(--background-inverted-dec, 0, 0, 0), 0);
 
     height: 100%;
     aspect-ratio: 1;
@@ -51,12 +51,12 @@
     .close-button:hover {
         cursor: pointer;
 
-        background-color: rgba(0, 0, 0, 0.16);
+        background-color: rgba(var(--background-inverted-dec, 0, 0, 0), 0.16);
     }
 }
 
 .close-button:focus {
     cursor: pointer;
 
-    background-color: rgba(0, 0, 0, 0.24);
+    background-color: rgba(var(--background-inverted-dec, 0, 0, 0), 0.24);
 }

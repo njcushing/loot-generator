@@ -30,8 +30,8 @@
 
     pointer-events: all;
 
-    border: 1px solid #000;
-    background-color: #fff;
+    border: 1px solid var(--outline-primary, black);
+    background-color: var(--background-primary, white);
 
     width: 100%;
     padding: 8px;
@@ -42,7 +42,7 @@
     justify-content: center;
     align-items: center;
 
-    color: rgba(0, 0, 0, 0.8);
+    color: rgba(var(--text-primary-dec, 0, 0, 0), 0.8);
     font-style: italic;
     font-size: 0.9rem;
     text-align: center;

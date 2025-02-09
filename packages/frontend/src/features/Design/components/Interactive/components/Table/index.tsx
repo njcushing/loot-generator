@@ -67,7 +67,10 @@ export function Table({ id, displayMode = "normal", onClick, children }: TTable)
                         deleteTable(id);
                         if (onClick) onClick("delete");
                     },
-                    colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
+                    colours: {
+                        hover: "var(--background-entrydeleteoption-hover, rgb(255, 120, 120))",
+                        focus: "var(--background-entrydeleteoption-focus, rgb(255, 83, 83))",
+                    },
                 });
             }
             if (displayMode === "entry") {
@@ -93,15 +96,15 @@ export function Table({ id, displayMode = "normal", onClick, children }: TTable)
     }
 
     let colours = {
-        normal: "rgb(186, 240, 228)",
-        hover: "rgb(157, 224, 210)",
-        focus: "rgb(139, 206, 191)",
+        normal: "var(--background-table, rgb(186, 240, 228))",
+        hover: "var(--background-table-hover, rgb(157, 224, 210))",
+        focus: "var(--background-table-focus, rgb(139, 206, 191))",
     };
     if (displayMode === "entry" || displayMode === "entryViewOnly") {
         colours = {
-            normal: "rgb(181, 186, 255)",
-            hover: "rgb(164, 169, 252)",
-            focus: "rgb(155, 161, 252)",
+            normal: "var(--background-table-viewonly, rgb(181, 186, 255))",
+            hover: "var(--background-table-viewonly-hover, rgb(164, 169, 252))",
+            focus: "var(--background-table-viewonly-focus, rgb(155, 161, 252))",
         };
     }
 

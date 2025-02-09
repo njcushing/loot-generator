@@ -19,10 +19,14 @@
     --text-bold-font-weight: bold;
 
     /* Background */
-    --background-primary: rgb(206, 206, 206);
-    --background-secondary: rgb(247, 247, 247);
-    --background-tertiary: rgb(255, 255, 255);
+    --background-primary: rgb(255, 255, 255);
+    --background-secondary: rgb(226, 226, 226);
+    --background-tertiary: rgb(206, 206, 206);
+    --background-quaternary: rgb(190, 190, 190);
+    --background-inverted: rgb(0, 0, 0);
+    --background-inverted-dec: 0, 0, 0;
     --box-shadow-color: rgba(158, 158, 158, 1);
+    --background-pop-up-modal: rgb(240, 240, 240);
 
     /* Borders & Outlines */
     --border-primary: rgb(255, 255, 255);
@@ -74,6 +78,32 @@
     --button-secondary-focus: rgb(255, 255, 255);
     --button-secondary-disabled: rgb(255, 255, 255);
     --button-secondary-border: rgb(255, 255, 255);
+
+    /* Loot Generator */
+    --background-item: rgb(245, 158, 240);
+    --background-item-hover: rgb(235, 139, 230);
+    --background-item-focus: rgb(226, 125, 221);
+    --background-item-viewonly: rgb(181, 186, 255);
+    --background-item-viewonly-hover: rgb(164, 169, 252);
+    --background-item-viewonly-focus: rgb(155, 161, 252);
+    --background-table: rgb(186, 240, 228);
+    --background-table-hover: rgb(157, 224, 210);
+    --background-table-focus: rgb(139, 206, 191);
+    --background-table-viewonly: rgb(181, 186, 255);
+    --background-table-viewonly-hover: rgb(164, 169, 252);
+    --background-table-viewonly-focus: rgb(155, 161, 252);
+    --background-itementry: rgb(170, 238, 149);
+    --background-itementry-hover: rgb(151, 226, 128);
+    --background-itementry-focus: rgb(132, 206, 110);
+    --background-newentry: rgb(253, 222, 47);
+    --background-newentry-hover: rgb(240, 208, 31);
+    --background-newentry-focus: rgb(218, 187, 14);
+    --background-selectentry: rgb(181, 186, 255);
+    --background-selectentry-hover: rgb(164, 169, 252);
+    --background-selectentry-focus: rgb(155, 161, 252);
+    --background-entrydeleteoption-hover: rgb(255, 120, 120);
+    --background-entrydeleteoption-focus: rgb(255, 83, 83);
+    --togglebar-option-alpha: 0.5;
 }
 
 :root[theme|="dark"] {
@@ -96,10 +126,14 @@
     --text-bold-font-weight: normal;
 
     /* Background */
-    --background-primary: rgb(6, 6, 6);
-    --background-secondary: rgb(44, 44, 44);
-    --background-tertiary: rgb(28, 28, 28);
+    --background-primary: rgb(30, 30, 30);
+    --background-secondary: rgb(40, 40, 40);
+    --background-tertiary: rgb(20, 20, 20);
+    --background-quaternary: rgb(0, 0, 0);
+    --background-inverted: rgb(255, 255, 255);
+    --background-inverted-dec: 255, 255, 255;
     --box-shadow-color: transparent;
+    --background-pop-up-modal: rgb(20, 20, 20);
 
     /* Borders & Outlines */
     --border-primary: rgb(255, 255, 255);
@@ -151,4 +185,30 @@
     --button-secondary-focus: rgb(255, 255, 255);
     --button-secondary-disabled: rgb(255, 255, 255);
     --button-secondary-border: rgb(255, 255, 255);
+
+    /* Loot Generator */
+    --background-item: rgb(151, 41, 146);
+    --background-item-hover: rgb(145, 32, 139);
+    --background-item-focus: rgb(129, 21, 124);
+    --background-item-viewonly: rgb(45, 50, 116);
+    --background-item-viewonly-hover: rgb(32, 37, 102);
+    --background-item-viewonly-focus: rgb(22, 26, 85);
+    --background-table: rgb(25, 119, 131);
+    --background-table-hover: rgb(16, 110, 122);
+    --background-table-focus: rgb(12, 93, 104);
+    --background-table-viewonly: rgb(45, 50, 116);
+    --background-table-viewonly-hover: rgb(32, 37, 102);
+    --background-table-viewonly-focus: rgb(22, 26, 85);
+    --background-itementry: rgb(48, 136, 21);
+    --background-itementry-hover: rgb(39, 122, 14);
+    --background-itementry-focus: rgb(33, 112, 9);
+    --background-newentry: rgb(185, 154, 15);
+    --background-newentry-hover: rgb(168, 139, 7);
+    --background-newentry-focus: rgb(146, 120, 3);
+    --background-selectentry: rgb(45, 50, 116);
+    --background-selectentry-hover: rgb(32, 37, 102);
+    --background-selectentry-focus: rgb(22, 26, 85);
+    --background-entrydeleteoption-hover: rgb(190, 52, 52);
+    --background-entrydeleteoption-focus: rgb(163, 38, 38);
+    --togglebar-option-alpha: 0.8;
 }

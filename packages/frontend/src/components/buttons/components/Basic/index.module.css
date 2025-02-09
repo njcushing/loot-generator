@@ -29,13 +29,13 @@
 @media (hover: hover) {
     .button:hover:not(:disabled) {
         cursor: pointer;
-        outline: 3px solid var(--outline-tertiary, grey);
+        outline: 3px solid var(--outline-tertiary, black);
     }
 }
 
 .button:focus:not(:disabled) {
     cursor: pointer;
-    outline: 3px solid var(--outline-tertiary, grey);
+    outline: 3px solid var(--outline-tertiary, black);
 }
 
 .symbol {

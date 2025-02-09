@@ -31,7 +31,10 @@ export function Entry({ entry }: TEntry) {
                 onClick: () => {
                     if (pathToRoot[0].id) deleteEntry(pathToRoot[0].id, key);
                 },
-                colours: { hover: "rgb(255, 120, 120)", focus: "rgb(255, 83, 83)" },
+                colours: {
+                    hover: "var(--background-entrydeleteoption-hover, rgb(255, 120, 120))",
+                    focus: "var(--background-entrydeleteoption-focus, rgb(255, 83, 83))",
+                },
             });
         }
         return options;
@@ -45,9 +48,9 @@ export function Entry({ entry }: TEntry) {
                 style={{
                     size: "s",
                     colours: {
-                        normal: "rgb(253, 222, 47)",
-                        hover: "rgb(240, 208, 31)",
-                        focus: "rgb(218, 187, 14)",
+                        normal: "var(--background-newentry, rgb(253, 222, 47))",
+                        hover: "var(--background-newentry-hover, rgb(240, 208, 31))",
+                        focus: "var(--background-newentry-focus, rgb(218, 187, 14))",
                     },
                     nameFontStyle: "italic",
                 }}

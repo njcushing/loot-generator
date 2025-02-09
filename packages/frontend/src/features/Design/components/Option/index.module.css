@@ -7,42 +7,42 @@
 
     pointer-events: all;
 
-    color: black;
+    color: var(--text-primary, black);
     font-size: 1rem;
     text-wrap: nowrap;
 
-    border: 1px solid black;
-    background-color: rgb(209, 209, 209);
+    border: 1px solid var(--outline-primary, black);
+    background-color: var(--background-tertiary, rgb(216, 216, 216));
 
     padding: 4px;
 }
 
 .symbol {
-    color: rgb(90, 90, 90);
+    color: rgba(var(--text-primary-dec, 0, 0, 0), 0.6);
 }
 
 @media (hover: hover) {
     .option:hover {
         cursor: pointer;
 
-        background-color: rgb(223, 223, 223);
+        background-color: var(--background-secondary, rgb(226, 226, 226));
 
-        outline: 1px solid black;
+        outline: 1px solid var(--outline-primary, black);
     }
 
     .option:hover .symbol {
-        color: rgb(110, 110, 110);
+        color: rgba(var(--text-primary-dec, 0, 0, 0), 0.5);
     }
 }
 
 .option:focus {
     cursor: pointer;
 
-    background-color: rgb(189, 189, 189);
+    background-color: var(--background-quaternary, rgb(190, 190, 190));
 
-    outline: 1px solid black;
+    outline: 1px solid var(--outline-primary, black);
 }
 
 .option:focus .symbol {
-    color: rgb(70, 70, 70);
+    color: rgba(var(--text-primary-dec, 0, 0, 0), 0.7);
 }
