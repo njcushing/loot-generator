@@ -39,6 +39,32 @@
     padding: 3px 10px;
 }
 
+@media (hover: hover) {
+    .tab-button:hover:not(:disabled) {
+        position: relative;
+        z-index: 2;
+
+        cursor: pointer;
+
+        background-color: rgb(226, 226, 226);
+        -webkit-box-shadow: 0px 0px 0px 2px rgb(0, 0, 0);
+        -moz-box-shadow: 0px 0px 0px 2px rgb(0, 0, 0);
+        box-shadow: 0px 0px 0px 2px rgb(0, 0, 0);
+    }
+}
+
+.tab-button:focus {
+    position: relative;
+    z-index: 2;
+
+    cursor: pointer;
+
+    background-color: rgb(226, 226, 226);
+    -webkit-box-shadow: 0px 0px 0px 2px rgb(0, 0, 0);
+    -moz-box-shadow: 0px 0px 0px 2px rgb(0, 0, 0);
+    box-shadow: 0px 0px 0px 2px rgb(0, 0, 0);
+}
+
 .tab-selector.m .tab-button {
     font-size: 1rem;
 
