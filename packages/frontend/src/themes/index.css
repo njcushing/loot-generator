@@ -2,12 +2,13 @@
 :root {
     /* Text */
     --text-primary: rgb(0, 0, 0);
+    --text-primary-dec: 0, 0, 0;
     --text-primary-hover: rgb(255, 255, 255);
     --text-primary-focus: rgb(255, 255, 255);
-    --text-secondary: rgb(0, 0, 0);
+    --text-secondary: rgb(23, 23, 23);
     --text-secondary-hover: rgb(255, 255, 255);
     --text-secondary-focus: rgb(255, 255, 255);
-    --text-tertiary: rgb(0, 0, 0);
+    --text-tertiary: rgb(46, 46, 46);
     --text-tertiary-hover: rgb(255, 255, 255);
     --text-tertiary-focus: rgb(255, 255, 255);
     --text-active: rgb(255, 255, 255);
@@ -21,6 +22,7 @@
     --background-primary: rgb(206, 206, 206);
     --background-secondary: rgb(247, 247, 247);
     --background-tertiary: rgb(255, 255, 255);
+    --box-shadow-color: rgba(158, 158, 158, 1);
 
     /* Borders & Outlines */
     --border-primary: rgb(255, 255, 255);
@@ -29,6 +31,7 @@
     --outline-primary: rgb(0, 0, 0);
     --outline-secondary: rgb(0, 0, 0);
     --outline-tertiary: rgb(0, 0, 0);
+    --separator: rgb(114, 114, 114);
 
     /* Inputs */
     --input-text: rgb(0, 0, 0);
@@ -49,6 +52,8 @@
     --input-placeholder-disabled: rgb(77, 77, 77);
     --input-select-option-odd-background: rgb(255, 255, 255);
     --input-select-option-even-background: rgb(230, 253, 255);
+    --option-odd-background: rgba(0, 0, 0, 0.1);
+    --option-even-background: rgba(0, 0, 0, 0.16);
 
     /* Scrollbar */
     --scrollbar-track: rgba(0, 0, 0, 0.16);
@@ -59,8 +64,8 @@
     /* Buttons */
     --button-primary: transparent;
     --button-primary-text: rgb(0, 0, 0);
-    --button-primary-hover: rgba(0, 0, 0, 0.15);
-    --button-primary-focus: rgba(0, 0, 0, 0.25);
+    --button-primary-hover: rgba(0, 0, 0, 0.1);
+    --button-primary-focus: rgba(0, 0, 0, 0.2);
     --button-primary-disabled: transparent;
     --button-primary-border: transparent;
     --button-secondary: rgb(255, 255, 255);
@@ -73,13 +78,14 @@
 
 :root[theme|="dark"] {
     /* Text */
-    --text-primary: rgb(226, 226, 226);
+    --text-primary: rgb(255, 255, 255);
+    --text-primary-dec: 255, 255, 255;
     --text-primary-hover: rgb(255, 255, 255);
     --text-primary-focus: rgb(255, 255, 255);
-    --text-secondary: rgb(245, 245, 245);
+    --text-secondary: rgb(232, 232, 232);
     --text-secondary-hover: rgb(255, 255, 255);
     --text-secondary-focus: rgb(255, 255, 255);
-    --text-tertiary: rgb(255, 255, 255);
+    --text-tertiary: rgb(209, 209, 209);
     --text-tertiary-hover: rgb(255, 255, 255);
     --text-tertiary-focus: rgb(255, 255, 255);
     --text-active: rgb(255, 255, 255);
@@ -91,8 +97,9 @@
 
     /* Background */
     --background-primary: rgb(6, 6, 6);
-    --background-secondary: rgb(16, 16, 16);
-    --background-tertiary: rgb(66, 66, 66);
+    --background-secondary: rgb(44, 44, 44);
+    --background-tertiary: rgb(28, 28, 28);
+    --box-shadow-color: transparent;
 
     /* Borders & Outlines */
     --border-primary: rgb(255, 255, 255);
@@ -101,6 +108,7 @@
     --outline-primary: rgb(255, 255, 255);
     --outline-secondary: rgb(230, 230, 230);
     --outline-tertiary: rgb(200, 200, 200);
+    --separator: rgb(114, 114, 114);
 
     /* Inputs */
     --input-text: rgb(226, 226, 226);
@@ -121,6 +129,8 @@
     --input-placeholder-disabled: rgb(156, 156, 156);
     --input-select-option-odd-background: rgb(20, 20, 20);
     --input-select-option-even-background: rgb(34, 34, 34);
+    --option-odd-background: rgba(255, 255, 255, 0.1);
+    --option-even-background: rgba(255, 255, 255, 0.16);
 
     /* Scrollbar */
     --scrollbar-track: rgba(255, 255, 255, 0.16);
@@ -131,8 +141,8 @@
     /* Buttons */
     --button-primary: transparent;
     --button-primary-text: rgb(230, 230, 230);
-    --button-primary-hover: rgba(230, 230, 230, 0.15);
-    --button-primary-focus: rgba(230, 230, 230, 0.25);
+    --button-primary-hover: rgba(230, 230, 230, 0.1);
+    --button-primary-focus: rgba(230, 230, 230, 0.2);
     --button-primary-disabled: transparent;
     --button-primary-border: transparent;
     --button-secondary: rgb(255, 255, 255);
