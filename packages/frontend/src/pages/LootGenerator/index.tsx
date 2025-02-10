@@ -535,7 +535,7 @@ export function LootGenerator({ children }: TLootGenerator) {
                                 },
                                 about: {
                                     name: "About",
-                                    content: <p>About</p>,
+                                    content: <About />,
                                     position: "right",
                                 },
                             }}
