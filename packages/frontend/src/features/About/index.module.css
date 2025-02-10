@@ -1,44 +1,48 @@
 .about {
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    gap: 12px;
+    width: 100%;
+    height: 100%;
+}
 
-    overflow-y: auto;
-
-    pointer-events: all;
-
-    border: 1px solid var(--outline-secondary);
-    background-color: var(--background-tertiary);
+.section-container {
+    border: 1px solid var(--outline-primary, white);
+    background-color: var(--background-primary, white);
 
     width: 100%;
     height: 100%;
-    padding: 8px 16px;
+    padding: 8px;
+}
+
+.title {
+    color: var(--text-primary, black);
+    font-family: Roboto;
+    font-size: 1.25rem;
+    text-decoration: underline;
+    text-align: center;
 }
 
 .intro {
-    color: var(--text-secondary);
+    color: var(--text-primary, black);
     font-size: 1.1rem;
     text-align: center;
     line-height: 110%;
 }
 
 .separator {
-    background-color: var(--separator);
+    background-color: var(--separator, rgb(114, 114, 114));
 
     width: 100%;
     min-height: 2px;
 }
 
 .section-title {
-    color: var(--text-secondary);
+    color: var(--text-primary, black);
     font-size: 1.25rem;
     text-decoration: underline;
     text-align: left;
 }
 
 .section-text {
-    color: var(--text-secondary);
+    color: var(--text-primary, black);
     font-size: 1rem;
     text-align: left;
 }
@@ -52,7 +56,7 @@
 }
 
 .section-list-item {
-    color: var(--text-secondary);
+    color: var(--text-primary, black);
     font-size: 1rem;
     text-align: left;
 
