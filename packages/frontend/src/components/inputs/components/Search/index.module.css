@@ -15,6 +15,10 @@
     outline: 1px solid var(--outline-primary, black);
 }
 
+.search-input::placeholder {
+    font-style: italic;
+}
+
 .search-input:disabled {
     background-color: rgba(var(--background-inverted-dec, 0, 0, 0), 0.12);
 }

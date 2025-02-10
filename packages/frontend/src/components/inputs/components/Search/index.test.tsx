@@ -18,6 +18,13 @@ describe("The Search component...", () => {
         expect(input).toBeInTheDocument();
         expect((input as HTMLInputElement).value).toBe("test");
     });
+    test("Should have placeholder text equal to the value of the 'placeholder' prop", () => {
+        render(<Search placeholder="test" />);
+
+        const input = screen.getByRole("searchbox");
+        expect(input).toBeInTheDocument();
+        expect((input as HTMLInputElement).placeholder).toBe("test");
+    });
     test("Should, on change, invoke the callback function passed in the 'onChange' prop", async () => {
         const callback = vi.fn();
 
