@@ -74,7 +74,7 @@
 
     border: none;
     outline: 1px solid var(--outline-primary, black);
-    background-color: var(--background-tertiary, rgb(216, 216, 216));
+    background-color: var(--background-primary, white);
 
     min-width: 100px;
     width: 100%;

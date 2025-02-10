@@ -18,7 +18,7 @@
 
     border: none;
     outline: 1px solid var(--outline-primary, black);
-    background-color: var(--background-tertiary, rgb(216, 216, 216));
+    background-color: var(--background-primary, white);
 
     width: 100%;
     padding: 3px;
