@@ -22,7 +22,6 @@ import { LootTable, Items, Table, Tables, Loot, SortOptions } from "@/utils/type
 import { z } from "zod";
 import { itemsSchema, tablesSchema, lootSchema, sortOptionsSchema } from "@/utils/types/zod";
 import { Design } from "@/features/Design";
-import { About } from "@/features/About";
 import { updateFieldsInObject, TFieldToUpdate } from "@/utils/mutateFieldsInObject";
 import { v4 as uuid } from "uuid";
 import { sortOptions } from "@/utils/sortOptions";
@@ -533,11 +532,6 @@ export function LootGenerator({ children }: TLootGenerator) {
                                     content: <Design />,
                                     position: "left",
                                 },
-                                about: {
-                                    name: "About",
-                                    content: <About />,
-                                    position: "right",
-                                },
                             }}
                         />
                     </div>
@@ -573,11 +567,6 @@ export function LootGenerator({ children }: TLootGenerator) {
                             name: "Generate",
                             content: <Generate />,
                             position: "left",
-                        },
-                        about: {
-                            name: "About",
-                            content: <About />,
-                            position: "right",
                         },
                     }}
                 />
