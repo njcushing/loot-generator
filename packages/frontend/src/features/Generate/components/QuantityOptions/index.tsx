@@ -51,10 +51,9 @@ export function QuantityOptions() {
                         type="number"
                         value={lootGeneratorState.customQuantity}
                         onChange={(e) => {
-                            setLootGeneratorStateProperty(
-                                "customQuantity",
-                                Math.max(1, Number(e.target.value)),
-                            );
+                            const newCustomValue = Math.max(1, Number(e.target.value));
+                            setLootGeneratorStateProperty("quantitySelected", newCustomValue);
+                            setLootGeneratorStateProperty("customQuantity", newCustomValue);
                         }}
                         id="custom-quantity"
                     />
