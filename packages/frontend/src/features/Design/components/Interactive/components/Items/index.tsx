@@ -20,6 +20,7 @@ export function Items() {
             <div className={styles["items-tab-options"]}>
                 <Inputs.Search
                     value={currentSearch}
+                    placeholder="Filter by name..."
                     onChange={(value) => setCurrentSearch(value)}
                 />
             </div>
