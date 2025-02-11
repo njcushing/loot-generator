@@ -211,7 +211,11 @@ The 'Active' tab simply contains a copy of the uploaded table. All of its descen
 
 #### JSON Display
 
-Text
+The 'JSON' tab displays all the active table's properties, including the entries in its loot table, in a JSON format. There are a few options:
+
+-   Populate Entries: by clicking the 'table' button, all the entries that reference a table or item by id will be populated with that table/item's properties. Subtables will be recursively populated to the deepest level of nesting.
+-   Show Hidden Fields: by clicking the 'visibility' button, any hidden object fields (specified as a prop in the JSONDisplay component) will become visible on those objects. For example, the 'key' field present on all entries is hidden by default.
+-   Copy JSON: by clicking the 'content copy' button, the JSON currently displayed will be copied to the clipboard on the user's device. Unpopulated entries and hidden fields will be copied according to the current state of the above two options.
 
 <!-- ![JSON Display](image link) -->
 
@@ -219,7 +223,17 @@ Text
 
 ### Generate
 
-Text
+The 'Generate' tab is where the user can roll the active table a specified number of times. There are a few values provided (1, 10, 100 and 1000), in addition to a 'Custom' button which, when clicked, will cause a numeric input to be displayed where the user can specify an exact number of times to roll the table, with a minimum value of 1.
+
+Clicking the 'Generate' button will roll the active table the specified number of times.
+
+Clicking the 'Reset' button will clear any existing generated loot.
+
+There are also some sort options at the top of the tab:
+
+-   Name: can sort alphabetically, either ascending or descending.
+-   Quantity: can sort based on the total number of each item, either ascending or descending.
+-   Value: can sort based on the 'value' field for each item, either ascending or descending, and either the total value (quantity \* value) or just the base value for each item.
 
 <!-- ![Generate](image link) -->
 
