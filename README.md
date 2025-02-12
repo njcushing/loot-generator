@@ -193,7 +193,7 @@ To upload a base table to the active table so loot can be generated from it, cli
 
 In the image below, notice how the table and item entries that aren't referencing a preset table or item can have their properties such as the 'name' field edited directly in the entry itself.
 
-![Entries](https://res.cloudinary.com/djzqtvl9l/image/upload/v1739396343/loot-generator/entries_vqg49f.png)
+![Entries](https://res.cloudinary.com/djzqtvl9l/image/upload/v1739396889/loot-generator/entries_ugmzs6.png)
 
 <p align="right">(<a href="#readme-top">Back to Top</a>)</p>
 
