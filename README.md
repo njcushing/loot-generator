@@ -123,7 +123,7 @@ Locate and select the 'Design' tab. This tab should have two subtabs: 'Interacti
 
 Locate and select the 'Interactive' tab. This part of the application is where new items and tables can be created, and existing ones you have designed can be edited or deleted. The active table can also be set here. This tab should have three subtabs: 'Active', 'Tables' and 'Items'.
 
-##### Items
+#### Items
 
 The 'Items' tab is where the user's items can be managed. A new item can be created by clicking the '+' button at the bottom of the tab; this will enter a 'clean' item (with default properties, and no name) at the bottom of the list of items.
 
@@ -140,7 +140,7 @@ To filter items by name, type into the search bar above the list of items. This 
 
 <p align="right">(<a href="#readme-top">Back to Top</a>)</p>
 
-##### Tables
+#### Tables
 
 Similar to the 'Items' tab, the 'Tables' tab is where the user's tables are managed. They can be created, expanded/collapsed, deleted and filtered in the same way.
 
@@ -156,7 +156,7 @@ When expanded, a base-level table will only have one property:
 
 <p align="right">(<a href="#readme-top">Back to Top</a>)</p>
 
-###### Entries
+#### Entries
 
 Tables have a 'loot' array, which can only contain 'entries'. An entry can be one of five things:
 
@@ -197,7 +197,7 @@ In the image below, notice how the table and item entries that aren't referencin
 
 <p align="right">(<a href="#readme-top">Back to Top</a>)</p>
 
-##### Active
+#### Active
 
 The 'Active' tab simply contains a copy of the uploaded table. All of its descendant entries can be seen by expanding them, but none of the properties of the base table or any of its entries can be changed in this tab; it is purely a visual representation of the table for the user's convenience.
 
