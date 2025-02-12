@@ -64,13 +64,15 @@
 
 ## About the Project
 
-<!-- ![Overview](image link) -->
+![Overview](https://res.cloudinary.com/djzqtvl9l/image/upload/v1739394790/loot-generator/overview_w51qw1.png)
 
 This application allows the user to design numerous items and loot tables, then generate a random number of items from the specified loot table. Items and tables each have various properties that can be tuned to affect the outcome of a roll, for example the quantity of an item to add to the existing loot generated and the weighting of an item or subtable that will determine the likelihood it is selected within a loot array.
 
 The application uses a responsive layout; this makes it suitable for many screen sizes.
 
-<!-- <p align="center"><img src="image-link" alt="Mobile layout" style="width:285px;"/></p> -->
+<p align="center">
+    <img src="https://res.cloudinary.com/djzqtvl9l/image/upload/v1739394878/loot-generator/mobile_yc1e0e.png" alt="Mobile layout" style="width:285px;"/>
+</p>
 
 <p align="right">(<a href="#readme-top">Back to Top</a>)</p>
 
@@ -117,17 +119,9 @@ If you want to get this project running yourself, please follow these steps.
 
 Locate and select the 'Design' tab. This tab should have two subtabs: 'Interactive' and 'JSON'.
 
-<!-- ![Design](image link) -->
-
-<p align="right">(<a href="#readme-top">Back to Top</a>)</p>
-
 #### Interactive
 
 Locate and select the 'Interactive' tab. This part of the application is where new items and tables can be created, and existing ones you have designed can be edited or deleted. The active table can also be set here. This tab should have three subtabs: 'Active', 'Tables' and 'Items'.
-
-<!-- ![Interactive](image link) -->
-
-<p align="right">(<a href="#readme-top">Back to Top</a>)</p>
 
 ##### Items
 
@@ -142,7 +136,7 @@ To delete an item, simply click the delete button on the item's bar.
 
 To filter items by name, type into the search bar above the list of items. This will match items' names as long as any part of the strings match.
 
-<!-- ![Items](image link) -->
+![Items](https://res.cloudinary.com/djzqtvl9l/image/upload/v1739395408/loot-generator/items_tab_eulndb.png)
 
 <p align="right">(<a href="#readme-top">Back to Top</a>)</p>
 
@@ -158,7 +152,7 @@ When expanded, a base-level table will only have one property:
 
 -   Name: the name of the table that will be displayed at all times in the table's bar.
 
-<!-- ![Tables](image link) -->
+![Tables](https://res.cloudinary.com/djzqtvl9l/image/upload/v1739395408/loot-generator/tables_tab_xfuvze.png)
 
 <p align="right">(<a href="#readme-top">Back to Top</a>)</p>
 
@@ -197,7 +191,9 @@ The referenced table or item can be changed by clicking the edit button, and the
 
 To upload a base table to the active table so loot can be generated from it, click the upload button on its bar.
 
-<!-- ![Entries](image link) -->
+In the image below, notice how the table and item entries that aren't referencing a preset table or item can have their properties such as the 'name' field edited directly in the entry itself.
+
+![Entries](https://res.cloudinary.com/djzqtvl9l/image/upload/v1739396343/loot-generator/entries_vqg49f.png)
 
 <p align="right">(<a href="#readme-top">Back to Top</a>)</p>
 
@@ -205,7 +201,7 @@ To upload a base table to the active table so loot can be generated from it, cli
 
 The 'Active' tab simply contains a copy of the uploaded table. All of its descendant entries can be seen by expanding them, but none of the properties of the base table or any of its entries can be changed in this tab; it is purely a visual representation of the table for the user's convenience.
 
-<!-- ![Active](image link) -->
+![Active](https://res.cloudinary.com/djzqtvl9l/image/upload/v1739395407/loot-generator/active_tab_mgqk4d.png)
 
 <p align="right">(<a href="#readme-top">Back to Top</a>)</p>
 
@@ -217,7 +213,7 @@ The 'JSON' tab displays all the active table's properties, including the entries
 -   Show Hidden Fields: by clicking the 'visibility' button, any hidden object fields (specified as a prop in the JSONDisplay component) will become visible on those objects. For example, the 'key' field present on all entries is hidden by default.
 -   Copy JSON: by clicking the 'content copy' button, the JSON currently displayed will be copied to the clipboard on the user's device. Unpopulated entries and hidden fields will be copied according to the current state of the above two options.
 
-<!-- ![JSON Display](image link) -->
+![JSON Display](https://res.cloudinary.com/djzqtvl9l/image/upload/v1739395408/loot-generator/json_tab_uineuz.png)
 
 <p align="right">(<a href="#readme-top">Back to Top</a>)</p>
 
@@ -235,7 +231,7 @@ There are also some sort options at the top of the tab:
 -   Quantity: can sort based on the total number of each item, either ascending or descending.
 -   Value: can sort based on the 'value' field for each item, either ascending or descending, and either the total value (quantity \* value) or just the base value for each item.
 
-<!-- ![Generate](image link) -->
+![Generate](https://res.cloudinary.com/djzqtvl9l/image/upload/v1739395408/loot-generator/generate_tab_d5jd7k.png)
 
 <p align="right">(<a href="#readme-top">Back to Top</a>)</p>
 
@@ -253,16 +249,16 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Niall Cushing - [LinkedIn][linkedin-url]
 
-Project Link: [https://github.com/njcushing/poker-hand-calculator][project-link]
+Project Link: [https://github.com/njcushing/loot-generator][project-link]
 
 <p align="right">(<a href="#readme-top">Back to Top</a>)</p>
 
 <!-- Markdown Links & Images -->
 
 [npm-nodejs-install-tutorial-url]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
-[project-link]: https://github.com/njcushing/poker-hand-calculator
-[license-shield]: https://img.shields.io/github/license/njcushing/poker-hand-calculator.svg?style=for-the-badge
-[license-url]: https://github.com/njcushing/poker-hand-calculator/blob/main/LICENSE
+[project-link]: https://github.com/njcushing/loot-generator
+[license-shield]: https://img.shields.io/github/license/njcushing/loot-generator.svg?style=for-the-badge
+[license-url]: https://github.com/njcushing/loot-generator/blob/main/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white
 [linkedin-url]: https://linkedin.com/in/niall-cushing
 [TypeScript]: https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=FFF
